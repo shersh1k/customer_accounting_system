@@ -3,10 +3,10 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 
 import { simpleAction } from './action-creators/simpleAction';
-import './App.css';
+import './style/App.scss';
 
 interface iProps {
-  simpleAction: any
+  simpleAction?: any
 }
 interface iState {
   text: string;
