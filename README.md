@@ -1,2 +1,2 @@
-# customer_accounting_system
-Init
+# Customer_Accounting_System
+customer accounting system
