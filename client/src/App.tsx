@@ -1,12 +1,25 @@
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+
+import { simpleAction } from './action-creators/simpleAction';
 import './App.css';
 
-interface iProps { }
+interface iProps {
+  simpleAction: any
+}
 interface iState {
   text: string;
   title: string;
 }
+
+const mapStateToProps = (state: any) => ({
+  ...state
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  simpleAction: () => dispatch(simpleAction())
+})
 
 class App extends React.Component<iProps, iState> {
   constructor(props: iProps) {
@@ -26,6 +39,11 @@ class App extends React.Component<iProps, iState> {
     })
   }
 
+  simpleAction = (event: any) => {
+    this.props.simpleAction();
+    console.log(this.props)
+  }
+
   render() {
     return (
       <div>
@@ -35,9 +53,15 @@ class App extends React.Component<iProps, iState> {
         <div>
           {this.state.text}
         </div>
+        <button onClick={this.simpleAction}>Test redux action</button>
+        <pre>
+          {
+            JSON.stringify(this.props)
+          }
+        </pre>
       </div>
     );
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
