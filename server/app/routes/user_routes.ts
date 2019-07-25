@@ -18,15 +18,15 @@ export default function (app: express.Express, db: MongoClient.Db) {
     });
 
     app.post('/users', (req: express.Request, res: express.Response) => {
-        const note: IUser = {
+        const user: IUser = {
             registrationDate: new Date(),
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             birthDate: new Date(req.body.birthDate),
-            sex: req.body.firstName,
+            sex: req.body.sex,
             city: req.body.city,
         };
-        db.collection('notes').insertOne(note, (error, result) => {
+        db.collection('users').insertOne(user, (error, result) => {
             if (error) {
                 console.log(error);
                 res.send({ 'error': 'An error has occurred' });

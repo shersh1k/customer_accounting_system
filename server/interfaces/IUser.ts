@@ -1,4 +1,5 @@
 import * as MongoClient from "mongodb";
+import { Sex } from "../enums/userEnums";
 
 export interface IUser {
     _id?: MongoClient.ObjectID;
