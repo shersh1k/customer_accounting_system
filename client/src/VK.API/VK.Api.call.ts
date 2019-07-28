@@ -1,8 +1,8 @@
 let photos: iVKPhoto[] = [];
-let isPhotoCached: boolean = false;
+let isPhotosCached: boolean = false;
 
 export function VKGetPhotos(callback: Function) {
-    if (isPhotoCached) return callback(photos)
+    if (isPhotosCached) return callback(photos)
     return loadPhotos(0, 200);
 
     function loadPhotos(offset: number, count: number) {
@@ -20,7 +20,7 @@ export function VKGetPhotos(callback: Function) {
                     offset += 200 // максимальное количество фото которое можно получить за 1 запрос
                     return loadPhotos(offset, count)
                 } else {
-                    isPhotoCached = true;
+                    isPhotosCached = true;
                     return callback(photos);
                 }
             }
@@ -28,7 +28,11 @@ export function VKGetPhotos(callback: Function) {
     }
 }
 
-export function VKFriendsGet(callback: Function) {
+let friends: iVKPhoto[] = [];
+let isFriendsCached: boolean = false;
+
+export function VKGetFriends(callback: Function) {
+    if (isFriendsCached) return callback(friends)
     API(
         'friends.get',
         {
@@ -36,7 +40,11 @@ export function VKFriendsGet(callback: Function) {
                 ' education, online, relation, last_seen, status, can_write_private_message, can_see_all_posts, can_post, universities',
             v: '5.80'
         },
-        callback
+        (r: { response: iVKPhotoResponse }) => {
+            friends = r.response.items
+            isFriendsCached = true;
+            return callback(friends);
+        }
     )
 }
 
@@ -44,8 +52,6 @@ function API(command: string, options: any, callback: Function) {
     //eslint-disable-next-line no-undef
     VK.Api.call(command, options, callback)
 }
-
-
 
 export interface iVKPhoto {
     album_id: number;

@@ -1,4 +1,4 @@
 import VKLogin from "./VK.Auth.login";
-import { VKGetPhotos } from "./VK.Api.call";
+import { VKGetPhotos, VKGetFriends } from "./VK.Api.call";
 
-export { VKLogin, VKGetPhotos }
+export { VKLogin, VKGetPhotos, VKGetFriends }

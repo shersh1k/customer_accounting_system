@@ -1,5 +1,5 @@
 import { GET_FRIENDS_REQUEST, GET_FRIENDS_SUCCESS, GET_FRIENDS_FAIL } from "./types";
-import { VKFriendsGet } from "../../VK.API/VK.Api.call";
+import { VKGetFriends } from "../../VK.API";
 
 export function getFriends() {
     return (dispatch: any) => {
@@ -12,11 +12,11 @@ export function getFriends() {
 }
 
 function loadFriends(dispatch: Function) {
-    VKFriendsGet((r: { response: iVKPhotoResponse }) => {
+    VKGetFriends((friends: any[]) => {
         try {
             dispatch({
                 type: GET_FRIENDS_SUCCESS,
-                payload: r.response.items,
+                payload: friends,
             })
         } catch (e) {
             dispatch({
