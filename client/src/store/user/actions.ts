@@ -1,13 +1,15 @@
+import { VKLogin } from "../../VK.API/index";
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAIL = 'LOGIN_FAIL'
-/* global VK */
+
+
 export function handleLogin() {
     return function (dispatch: any) {
         dispatch({
             type: LOGIN_REQUEST,
         })
-        VK.Auth.login((r: any) => {
+        VKLogin((r: any) => {
             if (r.session) {
                 let username = r.session.user.first_name
                 dispatch({
@@ -21,6 +23,6 @@ export function handleLogin() {
                     payload: new Error('Ошибка авторизации'),
                 })
             }
-        }, 4)
+        })
     }
 }

@@ -3,19 +3,22 @@ import { connect } from 'react-redux';
 import { GoogleLogin } from "react-google-login";
 import { GoogleLogout } from 'react-google-login';
 import { User } from '../components/User'
-import { Page } from '../components/Page'
-import { getPhotos } from '../actions/PageActions'
-import { handleLogin } from '../actions/UserActions'
+import { Photos } from '../components/Photos'
+import { Friends } from '../components/Friends'
+import { getPhotos } from '../store/photos/actions'
+import { getFriends } from '../store/friends/actions'
+import { handleLogin } from '../store/user/actions'
 import axios from 'axios';
 import { IUser } from '../../../server/interfaces/IUser';
 // import app from '../style/App.module.scss';
 
 interface iProps {
-  simpleAction?: any
   user?: any,
-  page?: any,
-  getPhotosAction?: any,
-  handleLoginAction?: any
+  photos?: any,
+  friends?: any,
+  getPhotosAction: Function,
+  handleLoginAction: () => {},
+  getFriendsAction: Function
 }
 interface iState {
   text: string;
@@ -26,7 +29,8 @@ interface iState {
 const mapStateToProps = (store: any) => {
   return {
     user: store.user, // вытащили из стора (из редьюсера user все в переменную thid.props.user)
-    page: store.page,
+    photos: store.photos,
+    friends: store.friends
   }
 }
 
@@ -35,6 +39,7 @@ const mapDispatchToProps = (dispatch: any) => {
     getPhotosAction: (year: number) => dispatch(getPhotos(year)),
     // "приклеили" в this.props.handleLoginAction функцию, которая умеет диспатчить handleLogin
     handleLoginAction: () => dispatch(handleLogin()),
+    getFriendsAction: () => dispatch(getFriends()),
   }
 }
 
@@ -50,24 +55,16 @@ class App extends React.Component<iProps, iState> {
 
   async componentDidMount() {
     let data = await axios.get('/notes/5c37c32601bc411280c0c778');
-    console.log(data)
     this.setState({
       title: data.data.title,
       text: data.data.text
     })
   }
 
-  simpleAction = (event: any) => {
-    this.props.simpleAction();
-    console.log(this.props)
-  }
-
   responseGoogleonSuccess = (response: any) => {
     this.setState({ login: true })
-    console.log(response);
   }
   responseGoogleonFailure = (response: any) => {
-    console.log(response);
   }
   postUser = () => {
     let user: IUser = {
@@ -84,7 +81,7 @@ class App extends React.Component<iProps, iState> {
     this.setState({ login: false })
   }
   render() {
-    const { user, page, getPhotosAction, handleLoginAction } = this.props
+    const { user, photos, friends, getPhotosAction, handleLoginAction, getFriendsAction } = this.props
     return (
       <div>
         <div>
@@ -108,20 +105,19 @@ class App extends React.Component<iProps, iState> {
           <div>
             {this.state.text}
           </div>
-          <button onClick={this.simpleAction}>Test redux action</button>
           <button onClick={this.postUser}>postUSER</button>
-          <pre>
+          {/* <pre>
             {
               JSON.stringify(this.props)
             }
-          </pre>
+          </pre> */}
         </div>
 
         <div className="app">
-          <Page
-            photos={page.photos}
-            year={page.year}
-            isFetching={page.isFetching}
+          <Photos
+            photos={photos.photos}
+            year={photos.year}
+            isFetching={photos.isFetching}
             getPhotos={getPhotosAction}
           />
           {/* добавили новые props для User */}
@@ -130,6 +126,12 @@ class App extends React.Component<iProps, iState> {
             isFetching={user.isFetching}
             error={user.error}
             handleLogin={handleLoginAction}
+          />
+          _____________________________
+          <Friends
+            friends={friends.friends}
+            isFetching={friends.isFetching}
+            getFriends={getFriendsAction}
           />
         </div>
       </div>
