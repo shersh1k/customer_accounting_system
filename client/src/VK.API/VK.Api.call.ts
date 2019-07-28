@@ -18,7 +18,7 @@ export function VKGetPhotos(callback: Function) {
                 photos = [...photos, ...r.response.items]
                 if (offset <= r.response.count) {
                     offset += 200 // максимальное количество фото которое можно получить за 1 запрос
-                    loadPhotos(offset, count)
+                    return loadPhotos(offset, count)
                 } else {
                     isPhotoCached = true;
                     return callback(photos);
