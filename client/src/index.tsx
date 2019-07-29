@@ -1,18 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { BrowserRouter, Route } from "react-router-dom";
-import configureStore from "./store";
 import "./style/Index.module.scss";
 import App from "./containers/App";
 import * as serviceWorker from "./serviceWorker/serviceWorker";
+import { store, history } from "./store";
+
 
 ReactDOM.render(
-  <Provider store={configureStore()}>
-    <BrowserRouter>
-      <Route exact path="/" component={App} />
-      <div>asd</div>
-    </BrowserRouter>
+  <Provider store={store}>
+    <App history={history} />
   </Provider>,
   document.getElementById("root")
 );
