@@ -1,61 +1,29 @@
-import { GET_FRIENDS_REQUEST, GET_FRIENDS_SUCCESS, GET_FRIENDS_FAIL } from "./types";
+import {
+  GET_FRIENDS_REQUEST,
+  GET_FRIENDS_SUCCESS,
+  GET_FRIENDS_FAIL
+} from "./types";
 import { VKGetFriends } from "../../VK.API";
 
 export function getFriends() {
-    return (dispatch: any) => {
+  return (dispatch: Function) => {
+    dispatch({
+      type: GET_FRIENDS_REQUEST,
+      payload: "year"
+    });
+    try {
+      VKGetFriends((friends: any[]) => {
         dispatch({
-            type: GET_FRIENDS_REQUEST,
-            payload: 'year',
-        })
-        loadFriends(dispatch)
+          type: GET_FRIENDS_SUCCESS,
+          payload: friends
+        });
+      });
+    } catch (e) {
+      dispatch({
+        type: GET_FRIENDS_FAIL,
+        error: true,
+        payload: new Error(e)
+      });
     }
-}
-
-function loadFriends(dispatch: Function) {
-    VKGetFriends((friends: any[]) => {
-        try {
-            dispatch({
-                type: GET_FRIENDS_SUCCESS,
-                payload: friends,
-            })
-        } catch (e) {
-            dispatch({
-                type: GET_FRIENDS_FAIL,
-                error: true,
-                payload: new Error(e),
-            })
-        }
-    })
-}
-
-export interface iVKPhoto {
-    album_id: number;
-    date: number;
-    id: number;
-    likes: iVKPhoto_Likes;
-    owner_id: number;
-    post_id: number;
-    reposts: iVKPhoto_Reposts;
-    sizes: iVKPhoto_Sizes[];
-}
-
-interface iVKPhoto_Likes {
-    count: number;
-    user_likes: number;
-}
-
-interface iVKPhoto_Reposts {
-    count: number;
-}
-
-interface iVKPhoto_Sizes {
-    type: "m" | "o" | "p" | "q" | "r" | "s" | "x" | "y";
-    url: string;
-    width: number;
-    height: number;
-}
-
-interface iVKPhotoResponse {
-    count: number;
-    items: iVKPhoto[];
+  };
 }

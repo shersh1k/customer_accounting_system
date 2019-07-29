@@ -1,38 +1,39 @@
-import { GET_PHOTOS_REQUEST, GET_PHOTOS_SUCCESS, GET_PHOTOS_FAIL } from "./types";
-import { VKGetPhotos, iVKPhoto } from './../../VK.API/VK.Api.call';
+import {
+  GET_PHOTOS_REQUEST,
+  GET_PHOTOS_SUCCESS,
+  GET_PHOTOS_FAIL
+} from "./types";
+import { iVKPhoto } from "../../VK.API/types";
+import { VKGetPhotos } from "../../VK.API";
 
 export function getPhotos(year: number) {
-    return (dispatch: any) => {
+  return (dispatch: Function) => {
+    dispatch({
+      type: GET_PHOTOS_REQUEST,
+      payload: year
+    });
+    try {
+      VKGetPhotos((photos: iVKPhoto[]) => {
         dispatch({
-            type: GET_PHOTOS_REQUEST,
-            payload: year,
-        })
-        loadPhotos(year, dispatch)
+          type: GET_PHOTOS_SUCCESS,
+          payload: filterPhotosByYear(photos, year)
+        });
+      });
+    } catch (e) {
+      dispatch({
+        type: GET_PHOTOS_FAIL,
+        error: true,
+        payload: new Error(e)
+      });
     }
+  };
 }
 
-function loadPhotos(year: number, dispatch: Function) {
-    VKGetPhotos((photos: iVKPhoto[]) => {
-        try {
-            dispatch({
-                type: GET_PHOTOS_SUCCESS,
-                payload: makeYearPhotos(photos, year),
-            })
-        } catch (e) {
-            dispatch({
-                type: GET_PHOTOS_FAIL,
-                error: true,
-                payload: new Error(e),
-            })
-        }
-    })
-}
+const filterPhotosByYear = (photos: iVKPhoto[], selectedYear: number) => {
+  return photos
+    .filter(photo => selectedYear === getYear(photo.date))
+    .sort((a, b) => b.likes.count - a.likes.count);
+};
 
-const makeYearPhotos = (photos: iVKPhoto[], selectedYear: number) => {
-    return photos
-        .filter(photo => selectedYear === getYear(photo.date))
-        .sort((a, b) => b.likes.count - a.likes.count);
-}
-
-const getYear = (timeStampInSeconds: number) => new Date(timeStampInSeconds * 1000).getFullYear()
-
+const getYear = (timeStampInSeconds: number) =>
+  new Date(timeStampInSeconds * 1000).getFullYear();

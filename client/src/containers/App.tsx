@@ -1,24 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 import { GoogleLogin } from "react-google-login";
-import { GoogleLogout } from 'react-google-login';
-import { User } from '../components/User'
-import { Photos } from '../components/Photos'
-import { Friends } from '../components/Friends'
-import { getPhotos } from '../store/photos/actions'
-import { getFriends } from '../store/friends/actions'
-import { handleLogin } from '../store/user/actions'
-import axios from 'axios';
-import { IUser } from '../../../server/interfaces/IUser';
+import { GoogleLogout } from "react-google-login";
+import { User } from "../components/User";
+import { Photos } from "../components/Photos";
+import { Friends } from "../components/Friends";
+import { getPhotos } from "../store/photos/actions";
+import { getFriends } from "../store/friends/actions";
+import { handleLogin } from "../store/user/actions";
+import axios from "axios";
+import { IUser } from "../../../server/interfaces/IUser";
 // import app from '../style/App.module.scss';
 
 interface iProps {
-  user?: any,
-  photos?: any,
-  friends?: any,
-  getPhotosAction: Function,
-  handleLoginAction: () => {},
-  getFriendsAction: Function
+  user?: any;
+  photos?: any;
+  friends?: any;
+  getPhotosAction: Function;
+  handleLoginAction: () => {};
+  getFriendsAction: Function;
 }
 interface iState {
   text: string;
@@ -31,80 +31,83 @@ const mapStateToProps = (store: any) => {
     user: store.user, // вытащили из стора (из редьюсера user все в переменную thid.props.user)
     photos: store.photos,
     friends: store.friends
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     getPhotosAction: (year: number) => dispatch(getPhotos(year)),
     // "приклеили" в this.props.handleLoginAction функцию, которая умеет диспатчить handleLogin
     handleLoginAction: () => dispatch(handleLogin()),
-    getFriendsAction: () => dispatch(getFriends()),
-  }
-}
+    getFriendsAction: () => dispatch(getFriends())
+  };
+};
 
 class App extends React.Component<iProps, iState> {
   constructor(props: iProps) {
-    super(props)
+    super(props);
     this.state = {
-      title: '',
-      text: '',
+      title: "",
+      text: "",
       login: false
-    }
+    };
   }
 
   async componentDidMount() {
-    let data = await axios.get('/notes/5c37c32601bc411280c0c778');
+    let data = await axios.get("/notes/5c37c32601bc411280c0c778");
     this.setState({
       title: data.data.title,
       text: data.data.text
-    })
+    });
   }
 
   responseGoogleonSuccess = (response: any) => {
-    this.setState({ login: true })
-  }
-  responseGoogleonFailure = (response: any) => {
-  }
+    this.setState({ login: true });
+  };
+  responseGoogleonFailure = (response: any) => {};
   postUser = () => {
     let user: IUser = {
       birthDate: new Date(),
       registrationDate: new Date(),
-      firstName: 'andrew',
-      lastName: 'shersh',
+      firstName: "andrew",
+      lastName: "shersh",
       sex: 0,
-      city: 'gomel'
-    }
-    axios.post('/users', user)
-  }
+      city: "gomel"
+    };
+    axios.post("/users", user);
+  };
   logout = () => {
-    this.setState({ login: false })
-  }
+    this.setState({ login: false });
+  };
   render() {
-    const { user, photos, friends, getPhotosAction, handleLoginAction, getFriendsAction } = this.props
+    const {
+      user,
+      photos,
+      friends,
+      getPhotosAction,
+      handleLoginAction,
+      getFriendsAction
+    } = this.props;
     return (
       <div>
         <div>
-          {!this.state.login && <GoogleLogin
-            clientId="368685883712-akgclk6la1hnqle6tr0khs8hv5fisimm.apps.googleusercontent.com"
-            buttonText="Login"
-            onSuccess={this.responseGoogleonSuccess}
-            onFailure={this.responseGoogleonFailure}
-          />}
-          {this.state.login && <GoogleLogout
-            clientId="368685883712-akgclk6la1hnqle6tr0khs8hv5fisimm.apps.googleusercontent.com"
-            buttonText="Logout"
-            onLogoutSuccess={this.logout}
-          >
-          </GoogleLogout>
-
-          }
-          <div>
-            {this.state.title}
-          </div>
-          <div>
-            {this.state.text}
-          </div>
+          {!this.state.login && (
+            <GoogleLogin
+              clientId="368685883712-akgclk6la1hnqle6tr0khs8hv5fisimm.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={this.responseGoogleonSuccess}
+              onFailure={this.responseGoogleonFailure}
+            />
+          )}
+          {this.state.login && (
+            <GoogleLogout
+              clientId="368685883712-akgclk6la1hnqle6tr0khs8hv5fisimm.apps.googleusercontent.com"
+              buttonText="Logout"
+              onLogoutSuccess={this.logout}
+            />
+          )}
+          <div>{this.state.title}</div>
+          <div>{this.state.text}</div>
           <button onClick={this.postUser}>postUSER</button>
           {/* <pre>
             {
@@ -139,4 +142,7 @@ class App extends React.Component<iProps, iState> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
