@@ -31,8 +31,12 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    increment: () => dispatch(increment()),
-    decrement: () => dispatch(decrement())
+    increment: () => dispatch(increment({
+      user: 'a',
+      message: 'a',
+      timestamp: 1
+    })),
+    decrement: () => dispatch(decrement(2))
   };
 };
 
