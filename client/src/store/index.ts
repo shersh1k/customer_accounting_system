@@ -8,12 +8,14 @@ import { connectRouter } from "connected-react-router";
 import { photosReducer } from "./photos/reducers";
 import { friendsReducer } from "./friends/reducers";
 import { userReducer } from "./user/reducers";
+import { counterReducer } from "./counter/reducers";
 
 export const history = createBrowserHistory();
 
 const rootReducer = (history: History<any>) =>
   combineReducers({
     router: connectRouter(history),
+    counter: counterReducer,
     photos: photosReducer,
     friends: friendsReducer,
     user: userReducer
@@ -29,6 +31,7 @@ function configureStore() {
   return store;
 }
 export interface State {
+  counter: any;
   user: any;
   photos: any;
   friends: any;

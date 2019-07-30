@@ -43,7 +43,7 @@ class App extends React.Component<iProps> {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/hello" component={Hello} />
-              <Route path="/counter" component={Counter} />
+              <Route path="/counter" component={Counter} count={1}/>
               <Route component={NoMatch} />
             </Switch>
           </div>

@@ -1,40 +1,42 @@
-import React from 'react'
-import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
-import { RouteComponentProps } from 'react-router'
-import { RouterState } from 'connected-react-router';
+import React from "react";
+// import { Dispatch } from "redux";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
+import { State } from "../store";
+import { increment, decrement } from "../store/counter/actions";
 
-const Counter = (props: RouteComponentProps<any> & StateProps & DispatchProps) => (
-  <div>
-    Counter: {props.count}
-    <button onClick={props.increment}>+</button>
-    <button onClick={props.decrement}>-</button>
-  </div>
-)
+const Counter = (
+  props: RouteComponentProps<any> & StateProps & DispatchProps
+) => {
+  return (
+    <div>
+      Counter: {props.count}
+      <button onClick={props.increment}>+</button>
+      <button onClick={props.decrement}>-</button>
+    </div>
+  );
+};
 
 interface StateProps {
-  count: number
-}
-interface State {
-  count: number
-  router: RouterState
+  count: number;
 }
 interface DispatchProps {
-  increment: () => void
-  decrement: () => void
+  increment: () => void;
+  decrement: () => void;
 }
 
-const mapStateToProps = (state: any) => ({
-  count: state.count,
-})
+const mapStateToProps = (state: State) => ({
+  count: state.counter.count
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  increment: () => dispatch({
-    type: 'INCREMENT',
-  }),
-  decrement: () => dispatch({
-    type: 'DECREMENT',
-  }),
-})
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    increment: () => dispatch(increment()),
+    decrement: () => dispatch(decrement())
+  };
+};
 
-export default connect<StateProps, DispatchProps, RouteComponentProps<any>>(mapStateToProps, mapDispatchToProps)(Counter)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Counter);
