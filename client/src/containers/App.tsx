@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { getPhotos } from "../store/photos/actions";
 import { getFriends } from "../store/friends/actions";
 import { handleLogin } from "../store/user/actions";
-import { ConnectedRouter } from 'connected-react-router';
-import { History } from 'history';
+import { ConnectedRouter } from "connected-react-router";
+import { History } from "history";
 import { State } from "../store";
 import NavBar from "../components/NavBar";
 import { Switch, Route } from "react-router";
@@ -12,9 +12,9 @@ import Home from "../components/Home";
 import Hello from "../components/Hello";
 import Counter from "../components/Counter";
 import NoMatch from "../components/NoMatch";
-import app from '../style/App.module.scss';
+import app from "../style/App.module.scss";
 interface iProps {
-  history: History
+  history: History;
 }
 
 const mapStateToProps = (store: State) => {
@@ -25,13 +25,11 @@ const mapStateToProps = (store: State) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    getPhotosAction: (year: number) => dispatch(getPhotos(year)),
-    handleLoginAction: () => dispatch(handleLogin()),
-    getFriendsAction: () => dispatch(getFriends())
-  };
-};
+const mapDispatchToProps = (dispatch: any) => ({
+  getPhotosAction: (year: number) => dispatch(getPhotos(year)),
+  handleLoginAction: () => dispatch(handleLogin()),
+  getFriendsAction: () => dispatch(getFriends())
+});
 
 class App extends React.Component<iProps> {
   render() {
@@ -43,7 +41,7 @@ class App extends React.Component<iProps> {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/hello" component={Hello} />
-              <Route path="/counter" component={Counter} count={1}/>
+              <Route path="/counter" component={Counter} count={1} />
               <Route component={NoMatch} />
             </Switch>
           </div>

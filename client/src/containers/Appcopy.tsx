@@ -124,7 +124,6 @@ class App extends React.Component<iProps, iState> {
             isFetching={photos.isFetching}
             getPhotos={getPhotosAction}
           />
-          {/* добавили новые props для User */}
           <User
             name={user.name}
             isFetching={user.isFetching}

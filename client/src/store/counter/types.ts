@@ -1,5 +1,13 @@
-export const COUNTER_INCREMENT = "COUNTER_INCREMENT";
-export const COUNTER_DECREMENT = "COUNTER_DECREMENT";
+export interface incrementType {
+  type: 'COUNTER_INCREMENT'
+}
+export interface decrementType {
+  type: 'COUNTER_DECREMENT'
+}
+
+export type Action = incrementType | decrementType
+
+
 
 // Describing the shape of the chat's slice of state
 export interface Message {
