@@ -64,9 +64,9 @@ export interface iArticle extends mongoose.Document {
   description: string;
   body: string;
   favoritesCount: { type: Number; default: 0 };
-  comments: iComment[];
+  comments: iComment['_id'][];
   tagList: [{ type: string }];
-  author: iUser;
+  author: iUser['_id'];
   slugify: () => void;
   updateFavoriteCount: () => Promise<any>;
   toJSONFor: (user: iUser | null) => void;

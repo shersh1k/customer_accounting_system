@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import * as uniqueValidator from "mongoose-unique-validator";
 import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
+import { iArticle } from "./Article";
 
 const secret = "secret";
 
@@ -123,8 +124,8 @@ export interface iUser extends mongoose.Document {
   bio: string;
   image: string;
   token: string;
-  favorites: [{ type: mongoose.Schema.Types.ObjectId; ref: "Article" }];
-  following: [{ type: mongoose.Schema.Types.ObjectId; ref: "User" }];
+  favorites: iArticle["_id"][];
+  following: iUser["_id"][];
   hash: string;
   salt: string;
   validPassword: () => void;

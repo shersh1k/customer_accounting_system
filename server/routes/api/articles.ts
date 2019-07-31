@@ -289,24 +289,22 @@ router.get("/:article/comments", auth.optional, function(req, res, next) {
 });
 
 // create a new comment
-router.post("/:article/comments", auth.required, function(req: any, res, next) {
+router.post("/:article/comments", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
-      if (!user) {
-        return res.sendStatus(401);
-      }
+      if (!user) return res.sendStatus(401);
 
-      var comment = new Comment(req.body.comment);
+      let comment = new Comment(req.body.comment);
       comment.article = req.article;
       comment.author = user;
 
-      return comment.save().then(function() {
+      comment.save().then(function() {
         req.article.comments.push(comment);
-
         return req.article.save().then(function(article: iArticle) {
           res.json({ comment: comment.toJSONFor(user) });
         });
       });
+      return;
     })
     .catch(next);
 });

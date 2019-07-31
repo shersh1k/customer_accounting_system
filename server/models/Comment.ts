@@ -23,8 +23,8 @@ CommentSchema.methods.toJSONFor = function(user: mongoose.Model<mongoose.Documen
 
 export interface iComment extends mongoose.Document {
   body: string;
-  author: iUser;
-  article: iArticle;
+  author: iUser['_id'];
+  article: iArticle['_id'];
   toJSONFor: (user: iUser | null) => void;
 }
 export default mongoose.model<iComment>("Comment", CommentSchema);
