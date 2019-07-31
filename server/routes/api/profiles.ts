@@ -20,12 +20,11 @@ router.param("username", function(req: any, res: any, next: any, username: any) 
 });
 
 router.get("/:username", auth.optional, function(req: any, res: any, next: any) {
-  if (req.payload) {
-    User.findById(req.payload.id).then(function(user: any) {
+  if (req.user) {
+    User.findById(req.user.id).then(function(user: any) {
       if (!user) {
         return res.json({ profile: req.profile.toProfileJSONFor(false) });
       }
-
       return res.json({ profile: req.profile.toProfileJSONFor(user) });
     });
   } else {
@@ -36,7 +35,7 @@ router.get("/:username", auth.optional, function(req: any, res: any, next: any) 
 router.post("/:username/follow", auth.required, function(req: any, res: any, next: any) {
   var profileId = req.profile._id;
 
-  User.findById(req.payload.id)
+  User.findById(req.user.id)
     .then(function(user: any) {
       if (!user) {
         return res.sendStatus(401);
@@ -52,7 +51,7 @@ router.post("/:username/follow", auth.required, function(req: any, res: any, nex
 router.delete("/:username/follow", auth.required, function(req: any, res: any, next: any) {
   var profileId = req.profile._id;
 
-  User.findById(req.payload.id)
+  User.findById(req.user.id)
     .then(function(user: any) {
       if (!user) {
         return res.sendStatus(401);

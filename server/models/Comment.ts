@@ -1,4 +1,6 @@
 import * as mongoose from "mongoose";
+import { iUser } from "./User";
+import { iArticle } from './Article';
 
 var CommentSchema = new mongoose.Schema(
   {
@@ -19,5 +21,10 @@ CommentSchema.methods.toJSONFor = function(user: mongoose.Model<mongoose.Documen
   };
 };
 
-mongoose.model("Comment", CommentSchema);
-export default CommentSchema;
+export interface iComment extends mongoose.Document {
+  body: string;
+  author: iUser;
+  article: iArticle;
+  toJSONFor: (user: iUser | null) => void;
+}
+export default mongoose.model<iComment>("Comment", CommentSchema);

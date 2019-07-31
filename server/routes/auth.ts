@@ -13,15 +13,15 @@ function getTokenFromHeader(req: express.Request) {
   return null;
 }
 
-export const auth: any = {
+export const auth = {
   required: jwt({
     secret: secret,
-    userProperty: "payload",
+    userProperty: "user",
     getToken: getTokenFromHeader
   }),
   optional: jwt({
     secret: secret,
-    userProperty: "payload",
+    userProperty: "user",
     credentialsRequired: false,
     getToken: getTokenFromHeader
   })

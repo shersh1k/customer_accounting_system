@@ -1,26 +1,22 @@
 import * as express from "express";
-import * as mongoose from "mongoose";
 import * as passport from "passport";
 import { auth } from "../auth";
+import User from "../../models/User";
 
 const router = express.Router();
-var User = mongoose.model("User");
 
-router.get("/user", auth.required, function(req: any, res: any, next: any) {
-  User.findById(req.payload.id)
-    .then(function(user: any) {
-      if (!user) {
-        return res.sendStatus(401);
-      }
-
+router.get("/user", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
+      if (!user) return res.sendStatus(401);
       return res.json({ user: user.toAuthJSON() });
     })
     .catch(next);
 });
 
-router.put("/user", auth.required, function(req: any, res: any, next: any) {
-  User.findById(req.payload.id)
-    .then(function(user: any) {
+router.put("/user", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
       if (!user) {
         return res.sendStatus(401);
       }
@@ -49,7 +45,7 @@ router.put("/user", auth.required, function(req: any, res: any, next: any) {
     .catch(next);
 });
 
-router.post("/users/login", function(req: any, res: any, next: any) {
+router.post("/users/login", function(req, res, next) {
   if (!req.body.user.email) {
     return res.status(422).json({ errors: { email: "can't be blank" } });
   }
@@ -58,7 +54,7 @@ router.post("/users/login", function(req: any, res: any, next: any) {
     return res.status(422).json({ errors: { password: "can't be blank" } });
   }
 
-  passport.authenticate("local", { session: false }, function(err: any, user: any, info: any) {
+  passport.authenticate("local", { session: false }, function(err, user, info) {
     if (err) {
       return next(err);
     }
@@ -70,10 +66,11 @@ router.post("/users/login", function(req: any, res: any, next: any) {
       return res.status(422).json(info);
     }
   })(req, res, next);
+  return;
 });
 
-router.post("/users", function(req: any, res: any, next: any) {
-  var user: any = new User();
+router.post("/users", function(req, res, next) {
+  var user = new User();
 
   user.username = req.body.user.username;
   user.email = req.body.user.email;

@@ -1,43 +1,31 @@
 import * as express from "express";
-import * as mongoose from "mongoose";
 import { auth } from "./../auth";
+import Article, { iArticle } from "./../../models/Article";
+import Comment, { iComment } from "./../../models/Comment";
+import User from "./../../models/User";
 
 const router = express.Router();
-
-const Article = mongoose.model("Article");
-const Comment = mongoose.model("Comment");
-const User = mongoose.model("User");
-
-interface RequestArticle extends express.Request {
-  article?: mongoose.Document | null;
-}
-
-interface RequestComment extends express.Request {
-  comment?: mongoose.Document | null;
-}
-
-interface iQuery {
-  tagList?: any;
-  author?: any;
-  _id?: any;
+declare global {
+  namespace Express {
+    interface Request {
+      comment: iComment;
+      article: iArticle;
+    }
+  }
 }
 // Preload article objects on routes with ':article'
-router.param("article", function(req: RequestArticle, res, next, slug) {
+router.param("article", function(req, res, next, slug) {
   Article.findOne({ slug: slug })
     .populate("author")
     .then(function(article) {
-      if (!article) {
-        return res.sendStatus(404);
-      }
-
+      if (!article) return res.sendStatus(404);
       req.article = article;
-
       return next();
     })
     .catch(next);
 });
 
-router.param("comment", function(req: RequestComment, res, next, id) {
+router.param("comment", function(req, res, next, id) {
   Comment.findById(id)
     .then(function(comment) {
       if (!comment) {
@@ -51,8 +39,8 @@ router.param("comment", function(req: RequestComment, res, next, id) {
     .catch(next);
 });
 
-router.get("/", auth.optional, function(req: any, res, next) {
-  var query: iQuery = {};
+router.get("/", auth.optional, function(req, res, next) {
+  var query: any = {};
   var limit = 20;
   var offset = 0;
 
@@ -72,7 +60,7 @@ router.get("/", auth.optional, function(req: any, res, next) {
     req.query.author ? User.findOne({ username: req.query.author }) : null,
     req.query.favorited ? User.findOne({ username: req.query.favorited }) : null
   ])
-    .then(function(results: any) {
+    .then(function(results) {
       var author = results[0];
       var favoriter = results[1];
 
@@ -94,14 +82,14 @@ router.get("/", auth.optional, function(req: any, res, next) {
           .populate("author")
           .exec(),
         Article.count(query).exec(),
-        req.payload ? User.findById(req.payload.id) : null
+        req.user ? User.findById(req.user.id) : null
       ]).then(function(results) {
         var articles = results[0];
         var articlesCount = results[1];
         var user = results[2];
 
         return res.json({
-          articles: articles.map(function(article: any) {
+          articles: articles.map(function(article) {
             return article.toJSONFor(user);
           }),
           articlesCount: articlesCount
@@ -111,7 +99,7 @@ router.get("/", auth.optional, function(req: any, res, next) {
     .catch(next);
 });
 
-router.get("/feed", auth.required, function(req: any, res, next) {
+router.get("/feed", auth.required, function(req, res, next) {
   var limit = 20;
   var offset = 0;
 
@@ -123,7 +111,7 @@ router.get("/feed", auth.required, function(req: any, res, next) {
     offset = req.query.offset;
   }
 
-  User.findById(req.payload.id).then(function(user: any) {
+  User.findById(req.user.id).then(function(user) {
     if (!user) {
       return res.sendStatus(401);
     }
@@ -141,7 +129,7 @@ router.get("/feed", auth.required, function(req: any, res, next) {
         var articlesCount = results[1];
 
         return res.json({
-          articles: articles.map(function(article: any) {
+          articles: articles.map(function(article) {
             return article.toJSONFor(user);
           }),
           articlesCount: articlesCount
@@ -152,14 +140,14 @@ router.get("/feed", auth.required, function(req: any, res, next) {
   });
 });
 
-router.post("/", auth.required, function(req: any, res, next) {
-  User.findById(req.payload.id)
+router.post("/", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401);
       }
 
-      var article: any = new Article(req.body.article);
+      var article = new Article(req.body.article);
 
       article.author = user;
 
@@ -172,8 +160,8 @@ router.post("/", auth.required, function(req: any, res, next) {
 });
 
 // return a article
-router.get("/:article", auth.optional, function(req: any, res, next) {
-  Promise.all([req.payload ? User.findById(req.payload.id) : null, req.article.populate("author").execPopulate()])
+router.get("/:article", auth.optional, function(req, res, next) {
+  Promise.all([req.user ? User.findById(req.user.id) : null, req.article.populate("author").execPopulate()])
     .then(function(results) {
       var user = results[0];
 
@@ -183,9 +171,9 @@ router.get("/:article", auth.optional, function(req: any, res, next) {
 });
 
 // update article
-router.put("/:article", auth.required, function(req: any, res, next) {
-  User.findById(req.payload.id).then(function(user) {
-    if (req.article.author._id.toString() === req.payload.id.toString()) {
+router.put("/:article", auth.required, function(req, res, next) {
+  User.findById(req.user.id).then(function(user) {
+    if (req.article.author._id.toString() === req.user.id.toString()) {
       if (typeof req.body.article.title !== "undefined") {
         req.article.title = req.body.article.title;
       }
@@ -204,7 +192,7 @@ router.put("/:article", auth.required, function(req: any, res, next) {
 
       req.article
         .save()
-        .then(function(article: any) {
+        .then(function(article: iArticle) {
           return res.json({ article: article.toJSONFor(user) });
         })
         .catch(next);
@@ -216,14 +204,14 @@ router.put("/:article", auth.required, function(req: any, res, next) {
 });
 
 // delete article
-router.delete("/:article", auth.required, function(req: any, res, next) {
-  User.findById(req.payload.id)
+router.delete("/:article", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401);
       }
 
-      if (req.article.author._id.toString() === req.payload.id.toString()) {
+      if (req.article.author._id.toString() === req.user.id.toString()) {
         return req.article.remove().then(function() {
           return res.sendStatus(204);
         });
@@ -235,17 +223,17 @@ router.delete("/:article", auth.required, function(req: any, res, next) {
 });
 
 // Favorite an article
-router.post("/:article/favorite", auth.required, function(req: any, res, next) {
+router.post("/:article/favorite", auth.required, function(req, res, next) {
   var articleId = req.article._id;
 
-  User.findById(req.payload.id)
-    .then(function(user: any) {
+  User.findById(req.user.id)
+    .then(function(user) {
       if (!user) {
         return res.sendStatus(401);
       }
 
       return user.favorite(articleId).then(function() {
-        return req.article.updateFavoriteCount().then(function(article: any) {
+        return req.article.updateFavoriteCount().then(function(article: iArticle) {
           return res.json({ article: article.toJSONFor(user) });
         });
       });
@@ -254,17 +242,17 @@ router.post("/:article/favorite", auth.required, function(req: any, res, next) {
 });
 
 // Unfavorite an article
-router.delete("/:article/favorite", auth.required, function(req: any, res, next) {
+router.delete("/:article/favorite", auth.required, function(req, res, next) {
   var articleId = req.article._id;
 
-  User.findById(req.payload.id)
-    .then(function(user: any) {
+  User.findById(req.user.id)
+    .then(function(user) {
       if (!user) {
         return res.sendStatus(401);
       }
 
       return user.unfavorite(articleId).then(function() {
-        return req.article.updateFavoriteCount().then(function(article: any) {
+        return req.article.updateFavoriteCount().then(function(article: iArticle) {
           return res.json({ article: article.toJSONFor(user) });
         });
       });
@@ -273,8 +261,8 @@ router.delete("/:article/favorite", auth.required, function(req: any, res, next)
 });
 
 // return an article's comments
-router.get("/:article/comments", auth.optional, function(req: any, res, next) {
-  Promise.resolve(req.payload ? User.findById(req.payload.id) : null)
+router.get("/:article/comments", auth.optional, function(req, res, next) {
+  Promise.resolve(req.user ? User.findById(req.user.id) : null)
     .then(function(user) {
       return req.article
         .populate({
@@ -289,9 +277,9 @@ router.get("/:article/comments", auth.optional, function(req: any, res, next) {
           }
         })
         .execPopulate()
-        .then(function(article: any) {
+        .then(function(article: iArticle) {
           return res.json({
-            comments: req.article.comments.map(function(comment: any) {
+            comments: req.article.comments.map(function(comment: iComment) {
               return comment.toJSONFor(user);
             })
           });
@@ -302,20 +290,20 @@ router.get("/:article/comments", auth.optional, function(req: any, res, next) {
 
 // create a new comment
 router.post("/:article/comments", auth.required, function(req: any, res, next) {
-  User.findById(req.payload.id)
+  User.findById(req.user.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401);
       }
 
-      var comment: any = new Comment(req.body.comment);
+      var comment = new Comment(req.body.comment);
       comment.article = req.article;
       comment.author = user;
 
       return comment.save().then(function() {
         req.article.comments.push(comment);
 
-        return req.article.save().then(function(article: any) {
+        return req.article.save().then(function(article: iArticle) {
           res.json({ comment: comment.toJSONFor(user) });
         });
       });
@@ -324,7 +312,7 @@ router.post("/:article/comments", auth.required, function(req: any, res, next) {
 });
 
 router.delete("/:article/comments/:comment", auth.required, function(req: any, res, next) {
-  if (req.comment.author.toString() === req.payload.id.toString()) {
+  if (req.comment.author.toString() === req.user.id.toString()) {
     req.article.comments.remove(req.comment._id);
     req.article
       .save()

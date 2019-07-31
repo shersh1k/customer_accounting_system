@@ -1,6 +1,8 @@
 import * as mongoose from "mongoose";
 import * as uniqueValidator from "mongoose-unique-validator";
 import * as slug from "slug";
+import { iUser } from "./User";
+import { iComment } from "./Comment";
 const User = mongoose.model("User");
 
 var ArticleSchema = new mongoose.Schema(
@@ -56,5 +58,17 @@ ArticleSchema.methods.toJSONFor = function(user: any) {
   };
 };
 
-mongoose.model("Article", ArticleSchema);
-export default ArticleSchema;
+export interface iArticle extends mongoose.Document {
+  slug: string;
+  title: string;
+  description: string;
+  body: string;
+  favoritesCount: { type: Number; default: 0 };
+  comments: iComment[];
+  tagList: [{ type: string }];
+  author: iUser;
+  slugify: () => void;
+  updateFavoriteCount: () => Promise<any>;
+  toJSONFor: (user: iUser | null) => void;
+}
+export default mongoose.model<iArticle>("Article", ArticleSchema);

@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 
-UserSchema.methods.validPassword = function(password: any) {
+UserSchema.methods.validPassword = function(password: string) {
   var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, "sha512").toString("hex");
   return this.hash === hash;
 };
@@ -53,8 +53,8 @@ UserSchema.methods.generateJWT = function() {
   return jwt.sign(
     {
       id: this._id,
-      username: this.username
-      // exp: parseInt(exp.getTime() / 1000)
+      username: this.username,
+      exp: exp.getTime() / 1000
     },
     secret
   );
@@ -111,12 +111,33 @@ UserSchema.methods.unfollow = function(id: any) {
   return this.save();
 };
 
-UserSchema.methods.isFollowing = function(id: any) {
-  return this.following.some(function(followId: any) {
+UserSchema.methods.isFollowing = function(id: number) {
+  return this.following.some(function(followId: number) {
     return followId.toString() === id.toString();
   });
 };
 
-mongoose.model("User", UserSchema);
+export interface iUser extends mongoose.Document {
+  username: string;
+  email: string;
+  bio: string;
+  image: string;
+  token: string;
+  favorites: [{ type: mongoose.Schema.Types.ObjectId; ref: "Article" }];
+  following: [{ type: mongoose.Schema.Types.ObjectId; ref: "User" }];
+  hash: string;
+  salt: string;
+  validPassword: () => void;
+  setPassword: (password: string) => void;
+  generateJWT: () => void;
+  toAuthJSON: () => iUser;
+  toProfileJSONFor: () => void;
+  favorite: (articleId: string) => Promise<any>;
+  unfavorite: (articleId: string) => Promise<any>;
+  isFavorite: () => void;
+  follow: () => void;
+  unfollow: () => void;
+  isFollowing: () => void;
+}
 
-export default UserSchema;
+export default mongoose.model<iUser>("User", UserSchema);
