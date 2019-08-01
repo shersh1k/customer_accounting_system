@@ -1,30 +1,36 @@
-import * as mongoose from "mongoose";
-import { iUser } from "./User";
-import { iArticle } from './Article';
+import { Schema, Document, Model, model } from "mongoose";
+import { iUserModel } from "./User";
+import { iArticle } from "./Article";
 
-var CommentSchema = new mongoose.Schema(
+var CommentSchema = new Schema<iCommentModel>(
   {
     body: String,
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    article: { type: mongoose.Schema.Types.ObjectId, ref: "Article" }
+    author: { type: Schema.Types.ObjectId, ref: "User" },
+    article: { type: Schema.Types.ObjectId, ref: "Article" }
   },
   { timestamps: true }
 );
 
 // Requires population of author
-CommentSchema.methods.toJSONFor = function(user: mongoose.Model<mongoose.Document, {}>) {
+CommentSchema.methods.toJSONFor = function(user: iUserModel) {
   return {
     id: this._id,
     body: this.body,
     createdAt: this.createdAt,
-    author: this.author.toProfileJSONFor(user)
+    author: this.author.toProfileJSONFor(user) as iUserModel  // TODO чето надо сделать тут
   };
 };
-
-export interface iComment extends mongoose.Document {
+export interface iCommentJSON {
+  // id?: any;
   body: string;
-  author: iUser['_id'];
-  article: iArticle['_id'];
-  toJSONFor: (user: iUser | null) => void;
+  author: iUserModel;
+  createdAt: Date;
 }
-export default mongoose.model<iComment>("Comment", CommentSchema);
+export interface iCommentModel extends Document, iCommentJSON {
+  author: iUserModel;
+  article: iArticle;
+  createdAt: Date;
+  updatedAt: Date;
+  toJSONFor: (user: iUserModel) => iCommentJSON;
+}
+export default model<iCommentModel>("Comment", CommentSchema);

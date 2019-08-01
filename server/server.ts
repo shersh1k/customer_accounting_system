@@ -25,7 +25,7 @@ app.use(session({ secret: "conduit", cookie: { maxAge: 60000 }, resave: false, s
 mongoose.connect(config.url, { useNewUrlParser: true });
 app.use(routes);
 
-const server = app.listen(/* process.env.PORT ||  */ 3000, function(a: any, ane: any) {
+const server = app.listen(8000, function(a: any, ane: any) {
   console.log("Listening on port ");
   console.log(server.address());
 });

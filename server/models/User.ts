@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
 import * as uniqueValidator from "mongoose-unique-validator";
 import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
@@ -6,7 +6,7 @@ import { iArticle } from "./Article";
 
 const secret = "secret";
 
-const UserSchema = new mongoose.Schema(
+const UserSchema = new Schema<iUserModel>(
   {
     username: {
       type: String,
@@ -26,8 +26,8 @@ const UserSchema = new mongoose.Schema(
     },
     bio: String,
     image: String,
-    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    favorites: [{ type: Schema.Types.ObjectId, ref: "Article" }],
+    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
     hash: String,
     salt: String
   },
@@ -41,7 +41,7 @@ UserSchema.methods.validPassword = function(password: string) {
   return this.hash === hash;
 };
 
-UserSchema.methods.setPassword = function(password: any) {
+UserSchema.methods.setPassword = function(password: string) {
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, "sha512").toString("hex");
 };
@@ -71,7 +71,7 @@ UserSchema.methods.toAuthJSON = function() {
   };
 };
 
-UserSchema.methods.toProfileJSONFor = function(user: any) {
+UserSchema.methods.toProfileJSONFor = function(user: iUserModel) {
   return {
     username: this.username,
     bio: this.bio,
@@ -80,7 +80,7 @@ UserSchema.methods.toProfileJSONFor = function(user: any) {
   };
 };
 
-UserSchema.methods.favorite = function(id: any) {
+UserSchema.methods.favorite = function(id: string) {
   if (this.favorites.indexOf(id) === -1) {
     this.favorites.push(id);
   }
@@ -88,18 +88,18 @@ UserSchema.methods.favorite = function(id: any) {
   return this.save();
 };
 
-UserSchema.methods.unfavorite = function(id: any) {
+UserSchema.methods.unfavorite = function(id: string) {
   this.favorites.remove(id);
   return this.save();
 };
 
-UserSchema.methods.isFavorite = function(id: any) {
-  return this.favorites.some(function(favoriteId: any) {
+UserSchema.methods.isFavorite = function(id: string) {
+  return this.favorites.some(function(favoriteId) {
     return favoriteId.toString() === id.toString();
   });
 };
 
-UserSchema.methods.follow = function(id: any) {
+UserSchema.methods.follow = function(id: string) {
   if (this.following.indexOf(id) === -1) {
     this.following.push(id);
   }
@@ -107,38 +107,42 @@ UserSchema.methods.follow = function(id: any) {
   return this.save();
 };
 
-UserSchema.methods.unfollow = function(id: any) {
+UserSchema.methods.unfollow = function(id: string) {
   this.following.remove(id);
   return this.save();
 };
 
 UserSchema.methods.isFollowing = function(id: number) {
-  return this.following.some(function(followId: number) {
+  return this.following.some(function(followId) {
     return followId.toString() === id.toString();
   });
 };
-
-export interface iUser extends mongoose.Document {
+export interface iUserJSON {
   username: string;
-  email: string;
   bio: string;
   image: string;
-  token: string;
-  favorites: iArticle["_id"][];
-  following: iUser["_id"][];
+  email?: string;
+  token?: string | void;
+  following?: any; // TODO чето надо сделать тут
+}
+export interface iUserModel extends Document, iUserJSON {
+  following: Types.Array<iUserModel>;
+  favorites: Types.Array<iArticle>;
   hash: string;
   salt: string;
-  validPassword: () => void;
+  createdAt: Date;
+  updatedAt: Date;
+  validPassword: (password: string) => boolean;
   setPassword: (password: string) => void;
-  generateJWT: () => void;
-  toAuthJSON: () => iUser;
-  toProfileJSONFor: () => void;
-  favorite: (articleId: string) => Promise<any>;
-  unfavorite: (articleId: string) => Promise<any>;
-  isFavorite: () => void;
-  follow: () => void;
-  unfollow: () => void;
-  isFollowing: () => void;
+  generateJWT: () => string;
+  toAuthJSON: () => iUserJSON;
+  toProfileJSONFor: (user: iUserModel) => iUserJSON;
+  favorite: (articleId: string) => Promise<iUserModel>;
+  unfavorite: (articleId: string) => Promise<iUserModel>;
+  isFavorite: (id: string) => void;
+  follow: (id: string) => void;
+  unfollow: (id: string) => void;
+  isFollowing: (id: number) => boolean;
 }
 
-export default mongoose.model<iUser>("User", UserSchema);
+export default model<iUserModel>("User", UserSchema);
