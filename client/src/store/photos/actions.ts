@@ -3,8 +3,8 @@ import {
   GET_PHOTOS_SUCCESS,
   GET_PHOTOS_FAIL
 } from "./types";
-import { iVKPhoto } from "../../VK.API/types";
-import { VKGetPhotos } from "../../VK.API";
+import { iVKPhoto } from "../../helpers/VK.API/types";
+import { VKGetPhotos } from "../../helpers/VK.API";
 
 export function getPhotos(year: number) {
   return (dispatch: Function) => {

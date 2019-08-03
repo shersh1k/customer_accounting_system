@@ -7,9 +7,8 @@ import { Photos } from "../components/Photos";
 import { Friends } from "../components/Friends";
 import { getPhotos } from "../store/photos/actions";
 import { getFriends } from "../store/friends/actions";
-import { handleLogin } from "../store/user/actions";
+import { submitLoginVK } from "../store/user/actions";
 import axios from "axios";
-import { IUser } from "../../../server/interfaces/IUser";
 // import app from '../style/App.module.scss';
 
 interface iProps {
@@ -39,7 +38,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getPhotosAction: (year: number) => dispatch(getPhotos(year)),
     // "приклеили" в this.props.handleLoginAction функцию, которая умеет диспатчить handleLogin
-    handleLoginAction: () => dispatch(handleLogin()),
+    handleLoginAction: () => dispatch(submitLoginVK()),
     getFriendsAction: () => dispatch(getFriends())
   };
 };
@@ -67,7 +66,7 @@ class App extends React.Component<iProps, iState> {
   };
   responseGoogleonFailure = (response: any) => { };
   postUser = () => {
-    let user: IUser = {
+    let user = {
       birthDate: new Date(),
       registrationDate: new Date(),
       firstName: "andrew",

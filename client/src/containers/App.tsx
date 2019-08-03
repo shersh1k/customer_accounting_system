@@ -1,42 +1,56 @@
 import React from "react";
-import { Switch, Route } from "react-router";
+import { Switch, Route, Redirect } from "react-router";
 import { ConnectedRouter } from "connected-react-router";
 import { connect } from "react-redux";
 import { History } from "history";
 
-import { handleLogin } from "../store/user/actions";
 import { State } from "../store";
 
 import NavBar from "../components/NavBar";
-import Home from "../components/Home";
+import Main from "../components/Main";
 import Hello from "../components/Hello";
 import Counter from "../components/Counter";
 import NoMatch from "../components/NoMatch";
+import Login from './Login';
 
 import app from "../style/App.module.scss";
+
 interface iProps {
   history: History;
+  user: any;
 }
 
-const mapStateToProps = (store: State) => {
-  return {
-    user: store.user,
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  handleLoginAction: () => dispatch(handleLogin()),
-});
+interface iUser {
+  name: string;
+  email: string;
+  token: string;
+}
 
 class App extends React.Component<iProps> {
+
+  redirectToLogin = () => (
+    <>
+      <Redirect to="/login" />
+      <Login />
+    </>
+  )
+
+  redirectToMain = () => {
+    if (!this.props.user.token) return (<Login />)
+    else return (<Redirect to="/" />)
+  }
+
   render() {
+    const { user, history } = this.props
     return (
-      <ConnectedRouter history={this.props.history}>
+      <ConnectedRouter history={history}>
         <div className={app.appRoot}>
-          <NavBar className={app.navbar} />
+          {user.token && <NavBar className={app.navbar} />}
           <div className={app.content}>
             <Switch>
-              <Route exact path="/" component={Home} />
+              {!user.token && <Route path="/" render={this.redirectToLogin} />}
+              <Route exact path="/" component={Main} />
+              <Route path="/login" render={this.redirectToMain} />
               <Route path="/hello" component={Hello} />
               <Route path="/counter" component={Counter} count={1} />
               <Route component={NoMatch} />
@@ -48,7 +62,11 @@ class App extends React.Component<iProps> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+const mapStateToProps = (store: State) => ({
+  user: store.user
+});
+
+const mapDispatchToProps = {
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -9,7 +9,7 @@ import { photosReducer } from "./photos/reducers";
 import { friendsReducer } from "./friends/reducers";
 import { userReducer } from "./user/reducers";
 import { counterReducer } from "./counter/reducers";
-
+import { UserState } from "./user/types";
 export const history = createBrowserHistory();
 
 const rootReducer = (history: History<any>) =>
@@ -24,18 +24,15 @@ const rootReducer = (history: History<any>) =>
 function configureStore() {
   const middlewares = [thunkMiddleware, routerMiddleware(history)];
   const middleWareEnhancer = applyMiddleware(...middlewares, logger);
-  const store = createStore(
-    rootReducer(history),
-    composeWithDevTools(middleWareEnhancer)
-  );
+  const store = createStore(rootReducer(history), composeWithDevTools(middleWareEnhancer));
   return store;
 }
 export interface State {
+  router: RouterState;
+  user: UserState;
   counter: any;
-  user: any;
   photos: any;
   friends: any;
-  router: RouterState;
 }
 
 export const store = configureStore();

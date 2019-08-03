@@ -3,7 +3,7 @@ import {
   GET_FRIENDS_SUCCESS,
   GET_FRIENDS_FAIL
 } from "./types";
-import { VKGetFriends } from "../../VK.API";
+import { VKGetFriends } from "../../helpers/VK.API";
 
 export function getFriends() {
   return (dispatch: Function) => {

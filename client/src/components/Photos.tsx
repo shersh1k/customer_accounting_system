@@ -1,5 +1,5 @@
 import React from "react";
-import { iVKPhoto } from "../VK.API/types";
+import { iVKPhoto } from "../helpers/VK.API/types";
 
 interface iProps {
   year: number;
