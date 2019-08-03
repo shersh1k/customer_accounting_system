@@ -17,6 +17,13 @@ export default function NavBar(props: iProps) {
   return (
     <Drawer className={props.className} variant="permanent" anchor="left">
       <List component="nav">
+        <ListItem component={Link} to="/orders/neworder" button >
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Новый заказ" />
+        </ListItem>
+        <ListItem divider />
         <ListItem component={Link} to="/" button>
           <ListItemIcon>
             <InboxIcon />

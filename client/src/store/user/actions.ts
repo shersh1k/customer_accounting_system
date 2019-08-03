@@ -1,64 +1,28 @@
 import { Dispatch } from "redux";
 import { VKLogin } from "../../helpers/VK.API/index";
-import { Register, Login } from "../../helpers/API/Login";
+import { Register, Login } from "../../helpers/API/Methods";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  REGISTER_EMAIL_CHANGE,
-  REGISTER_NAME_CHANGE,
-  REGISTER_PASSWORD_CHANGE,
-  REGISTER_SUBMIT_REQUEST,
-  REGISTER_SUBMIT_SUCCESS,
-  REGISTER_SUBMIT_FAIL,
-  LOGOUT
+  REGISTER_REQUEST,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  LOGOUT,
+  LoginActionTypes
 } from "./types";
 
-export function emailChange(value: string) {
-  return {
-    type: REGISTER_EMAIL_CHANGE,
-    email: value
-  };
-}
-
-export function nameChange(value: string) {
-  return {
-    type: REGISTER_NAME_CHANGE,
-    name: value
-  };
-}
-
-export function passwordChange(value: string) {
-  return {
-    type: REGISTER_PASSWORD_CHANGE,
-    password: value
-  };
-}
-
-export function logout() {
-  localStorage.removeItem("user");
-  return {
-    type: LOGOUT,
-    password: undefined,
-    email: undefined,
-    username: undefined,
-    isFetching: undefined,
-    error: undefined,
-    token: undefined
-  };
-}
-
 export function submitRegister(email: string, password: string, username: string) {
-  return (dispatch: Dispatch) => {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
-      type: REGISTER_SUBMIT_REQUEST,
+      type: REGISTER_REQUEST,
       isFetching: true
     });
     Register({ email, password, username }).then(
       response => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         dispatch({
-          type: REGISTER_SUBMIT_SUCCESS,
+          type: REGISTER_SUCCESS,
           isFetching: false,
           password: undefined,
           ...response.data.user
@@ -66,9 +30,10 @@ export function submitRegister(email: string, password: string, username: string
       },
       response => {
         dispatch({
-          type: REGISTER_SUBMIT_FAIL,
+          type: REGISTER_FAIL,
           isFetching: false,
-          error: true
+          error: true,
+          errorMessage: response.response.data.message
         });
       }
     );
@@ -76,7 +41,7 @@ export function submitRegister(email: string, password: string, username: string
 }
 
 export function submitLogin(email: string, password: string) {
-  return (dispatch: Dispatch) => {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: LOGIN_REQUEST,
       isFetching: true
@@ -95,7 +60,8 @@ export function submitLogin(email: string, password: string) {
         dispatch({
           type: LOGIN_FAIL,
           isFetching: false,
-          error: true
+          error: true,
+          errorMessage: response.response.data.message
         });
       }
     );
@@ -103,25 +69,40 @@ export function submitLogin(email: string, password: string) {
 }
 
 export function submitLoginVK() {
-  return function(dispatch: Dispatch) {
+  return function(dispatch: Dispatch<LoginActionTypes>) {
     dispatch({
       type: LOGIN_REQUEST,
       isFetching: true
     });
     VKLogin((r: any) => {
       if (r.session) {
-        let username = r.session.user.first_name;
         dispatch({
           type: LOGIN_SUCCESS,
-          payload: username
+          isFetching: false,
+          password: undefined,
+          ...r.session.data.user
         });
       } else {
         dispatch({
           type: LOGIN_FAIL,
+          isFetching: false,
           error: true,
-          payload: new Error("Ошибка авторизации")
+          errorMessage: r.session.response.data.message
         });
       }
     });
+  };
+}
+
+export function logout() {
+  localStorage.removeItem("user");
+  return {
+    type: LOGOUT,
+    password: undefined,
+    email: undefined,
+    username: undefined,
+    isFetching: undefined,
+    error: undefined,
+    token: undefined
   };
 }

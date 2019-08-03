@@ -1,14 +1,14 @@
 import * as express from "express";
 import users from "./users";
 import profiles from "./profiles";
-import articles from "./articles";
+import orders from "./orders";
 import tags from "./tags";
 
 const router = express.Router();
 
 router.use("/", users);
 router.use("/profiles", profiles);
-router.use("/articles", articles);
+router.use("/orders", orders);
 router.use("/tags", tags);
 
 router.use(function(err: any, req: any, res: any, next: any) {

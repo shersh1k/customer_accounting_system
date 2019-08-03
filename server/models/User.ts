@@ -2,7 +2,7 @@ import { Schema, Document, model, Types } from "mongoose";
 import * as uniqueValidator from "mongoose-unique-validator";
 import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
-import { iArticle } from "./Article";
+import { iOrder } from "./Order";
 
 const secret = "secret";
 
@@ -26,7 +26,7 @@ const UserSchema = new Schema<iUserModel>(
     },
     bio: String,
     image: String,
-    favorites: [{ type: Schema.Types.ObjectId, ref: "Article" }],
+    favorites: [{ type: Schema.Types.ObjectId, ref: "Order" }],
     following: [{ type: Schema.Types.ObjectId, ref: "User" }],
     hash: String,
     salt: String
@@ -127,7 +127,7 @@ export interface iUserJSON {
 }
 export interface iUserModel extends Document, iUserJSON {
   following: Types.Array<iUserModel>;
-  favorites: Types.Array<iArticle>;
+  favorites: Types.Array<iOrder>;
   hash: string;
   salt: string;
   createdAt: Date;
@@ -137,8 +137,8 @@ export interface iUserModel extends Document, iUserJSON {
   generateJWT: () => string;
   toAuthJSON: () => iUserJSON;
   toProfileJSONFor: (user: iUserModel) => iUserJSON;
-  favorite: (articleId: string) => Promise<iUserModel>;
-  unfavorite: (articleId: string) => Promise<iUserModel>;
+  favorite: (orderId: string) => Promise<iUserModel>;
+  unfavorite: (orderId: string) => Promise<iUserModel>;
   isFavorite: (id: string) => void;
   follow: (id: string) => void;
   unfollow: (id: string) => void;

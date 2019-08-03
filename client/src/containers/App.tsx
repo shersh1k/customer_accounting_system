@@ -7,13 +7,14 @@ import { History } from "history";
 import { State } from "../store";
 
 import NavBar from "../components/NavBar";
-import Main from "../components/Main";
+import Main from "./Main/Main";
 import Hello from "../components/Hello";
 import Counter from "../components/Counter";
 import NoMatch from "../components/NoMatch";
-import Login from './Login';
+import Login from './Login/Login';
 
 import app from "../style/App.module.scss";
+import NewOrder from './Main/NewOrder';
 
 interface iProps {
   history: History;
@@ -52,6 +53,7 @@ class App extends React.Component<iProps> {
               <Route exact path="/" component={Main} />
               <Route path="/login" render={this.redirectToMain} />
               <Route path="/hello" component={Hello} />
+              <Route path="/orders/neworder" component={NewOrder} />
               <Route path="/counter" component={Counter} count={1} />
               <Route component={NoMatch} />
             </Switch>

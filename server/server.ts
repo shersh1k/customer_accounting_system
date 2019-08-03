@@ -7,12 +7,12 @@ import * as favicon from "serve-favicon";
 import * as path from "path";
 import config from "./_config/db";
 import User from "./models/User";
-import Article from "./models/Article";
+import Order from "./models/Order";
 import Comment from "./models/Comment";
 import passport from "./passport/passport";
 import routes from "./routes";
 User;
-Article;
+Order;
 Comment;
 passport;
 

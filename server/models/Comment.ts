@@ -1,12 +1,12 @@
-import { Schema, Document, Model, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 import { iUserModel } from "./User";
-import { iArticle } from "./Article";
+import { iOrder } from "./Order";
 
 var CommentSchema = new Schema<iCommentModel>(
   {
     body: String,
     author: { type: Schema.Types.ObjectId, ref: "User" },
-    article: { type: Schema.Types.ObjectId, ref: "Article" }
+    order: { type: Schema.Types.ObjectId, ref: "Order" }
   },
   { timestamps: true }
 );
@@ -17,7 +17,7 @@ CommentSchema.methods.toJSONFor = function(user: iUserModel) {
     id: this._id,
     body: this.body,
     createdAt: this.createdAt,
-    author: this.author.toProfileJSONFor(user) as iUserModel  // TODO чето надо сделать тут
+    author: this.author.toProfileJSONFor(user) as iUserModel // TODO чето надо сделать тут
   };
 };
 export interface iCommentJSON {
@@ -28,7 +28,7 @@ export interface iCommentJSON {
 }
 export interface iCommentModel extends Document, iCommentJSON {
   author: iUserModel;
-  article: iArticle;
+  order: iOrder;
   createdAt: Date;
   updatedAt: Date;
   toJSONFor: (user: iUserModel) => iCommentJSON;

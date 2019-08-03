@@ -1,10 +1,12 @@
 .navbar {
-  width: 160px;
+  width: 200px;
 }
 .content {
+  min-height: 100vh;
   flex-grow: 1;
   display: flex;
-  min-height: 100vh;
+  // align-items: center;
+  justify-content: center;
 }
 .appRoot {
   display: flex;

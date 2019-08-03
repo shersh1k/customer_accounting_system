@@ -2,14 +2,13 @@ import * as jwt from "express-jwt";
 import * as express from "express";
 const secret = "secret";
 
-function getTokenFromHeader(req: express.Request) {
-  if (
-    (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Token") ||
-    (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer")
-  ) {
-    return req.headers.authorization.split(" ")[1];
-  }
+const isToken = (auth?: string) => auth && auth.split(" ")[0] === "Token";
+const isBearer = (auth?: string) => auth && auth.split(" ")[0] === "Bearer";
+const token = (auth?: string) => auth && auth.split(" ")[1];
 
+function getTokenFromHeader(req: express.Request) {
+  const auth = req.headers.authorization;
+  if (isToken(auth) || isBearer(auth)) return token(auth);
   return null;
 }
 

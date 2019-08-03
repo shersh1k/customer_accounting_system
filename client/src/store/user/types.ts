@@ -1,9 +1,6 @@
-export const REGISTER_PASSWORD_CHANGE = "REGISTER_PASSWORD_CHANGE";
-export const REGISTER_EMAIL_CHANGE = "REGISTER_EMAIL_CHANGE";
-export const REGISTER_NAME_CHANGE = "REGISTER_NAME_CHANGE";
-export const REGISTER_SUBMIT_REQUEST = "REGISTER_SUBMIT_REQUEST";
-export const REGISTER_SUBMIT_SUCCESS = "REGISTER_SUBMIT_SUCCESS";
-export const REGISTER_SUBMIT_FAIL = "REGISTER_SUBMIT_FAIL";
+export const REGISTER_REQUEST = "REGISTER_REQUEST";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
@@ -15,34 +12,25 @@ export interface UserState {
   username?: string;
   isFetching?: boolean;
   error?: boolean;
-}
-interface PasswordChange {
-  type: typeof REGISTER_PASSWORD_CHANGE;
-  password: string;
-}
-interface EmailChange {
-  type: typeof REGISTER_EMAIL_CHANGE;
-  email: string;
-}
-interface NameChange {
-  type: typeof REGISTER_NAME_CHANGE;
-  username: string;
+  errorMessage?: string;
+  token?: string;
 }
 interface SubmitRegisterRequest {
-  type: typeof REGISTER_SUBMIT_REQUEST;
+  type: typeof REGISTER_REQUEST;
   isFetching: boolean;
 }
 interface SubmitRegisterSuccess {
-  type: typeof REGISTER_SUBMIT_SUCCESS;
+  type: typeof REGISTER_SUCCESS;
   user: UserState;
   isFetching: boolean;
   password: undefined;
 }
 
 interface SubmitRegisterFail {
-  type: typeof REGISTER_SUBMIT_FAIL;
-  error: boolean;
+  type: typeof REGISTER_FAIL;
   isFetching: boolean;
+  error: boolean;
+  errorMessage: string;
 }
 
 interface LoginRequest {
@@ -57,8 +45,9 @@ interface LoginSuccess {
 }
 interface LoginFail {
   type: typeof LOGIN_FAIL;
-  error: boolean;
   isFetching: boolean;
+  error: boolean;
+  errorMessage: string;
 }
 
 interface Logout {
@@ -72,9 +61,6 @@ interface Logout {
 }
 
 export type LoginActionTypes =
-  | PasswordChange
-  | EmailChange
-  | NameChange
   | SubmitRegisterRequest
   | SubmitRegisterSuccess
   | SubmitRegisterFail
