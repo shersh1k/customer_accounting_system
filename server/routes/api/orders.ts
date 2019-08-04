@@ -91,6 +91,7 @@ router.get("/orders", auth.required, function(req, res, next) {
       let orders = Order.find({ author: user.id });
       return orders.exec(function(err, docs) {
         if (err) return new Error(err.message);
+        docs.reverse() //sort по дате какойнить
         return res.json(docs);
       });
       // return res.json({ order: req.order.toJSONFor(user) });

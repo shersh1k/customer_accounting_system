@@ -29,9 +29,10 @@ class Main extends React.Component<iProps, iState> {
       <div>
         {this.state.arr.map((item, index) => (
           <div key={index}>
-            <span style={{ color: "red" }}>{item.title}</span>
-            :
-            <span style={{ color: "blue" }}>{item.description}</span>
+            <span style={{ color: "red" }}>{item.title}: </span>
+            <span style={{ color: "blue" }}>{item.description} ___</span>
+            <span style={{ color: "brown" }}>матриалы = {item.priceMaterials}</span> 
+            <span style={{ color: "green" }}>заработок = {item.priceOrder}</span>
           </div>
         ))}
       </div>
