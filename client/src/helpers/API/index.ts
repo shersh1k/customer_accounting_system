@@ -7,7 +7,7 @@ export enum HTTP {
   PUT = "put",
   DELETE = "delete"
 }
-export default function API(http: HTTP, url: string, data: any, auth: boolean = false) {
+export default function API(http: HTTP, url: string, auth: boolean = false, data?: any) {
   /* может потом имеет смысл много интерфейсов пихнуть в data */
   if (auth) return Authorized(http, url, data);
   else return Guest(http, url, data);

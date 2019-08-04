@@ -84,6 +84,20 @@ router.post("/", auth.required, function(req, res, next) {
     .catch(next);
 });
 
+router.get("/orders", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
+      if (!user) throw new Error("Нет такого пользователя");
+      let orders = Order.find({ author: user.id });
+      return orders.exec(function(err, docs) {
+        if (err) return new Error(err.message);
+        return res.json(docs);
+      });
+      // return res.json({ order: req.order.toJSONFor(user) });
+    })
+    .catch(next);
+});
+
 // return a order
 router.get("/:order", auth.optional, function(req, res, next) {
   Promise.all([req.user ? User.findById(req.user.id) : null, req.order.populate("author").execPopulate()])

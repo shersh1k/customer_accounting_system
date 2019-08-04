@@ -2,7 +2,7 @@ import React from 'react'
 
 const NoMatch = () => (
   <div>
-    No Match
+    404
   </div>
 )
 

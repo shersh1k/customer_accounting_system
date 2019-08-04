@@ -30,18 +30,6 @@ export default function NavBar(props: iProps) {
           </ListItemIcon>
           <ListItemText primary="Главная" />
         </ListItem>
-        <ListItem component={Link} to="/hello" button>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="ТЕСТ" />
-        </ListItem>
-        <ListItem component={Link} to="/counter" button>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Счетчик" />
-        </ListItem>
         <ListItem button onClick={() => store.dispatch(logout())}>
           <ListItemIcon>
             <InboxIcon />

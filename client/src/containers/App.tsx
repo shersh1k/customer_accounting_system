@@ -8,8 +8,6 @@ import { State } from "../store";
 
 import NavBar from "../components/NavBar";
 import Main from "./Main/Main";
-import Hello from "../components/Hello";
-import Counter from "../components/Counter";
 import NoMatch from "../components/NoMatch";
 import Login from './Login/Login';
 
@@ -52,9 +50,7 @@ class App extends React.Component<iProps> {
               {!user.token && <Route path="/" render={this.redirectToLogin} />}
               <Route exact path="/" component={Main} />
               <Route path="/login" render={this.redirectToMain} />
-              <Route path="/hello" component={Hello} />
               <Route path="/orders/neworder" component={NewOrder} />
-              <Route path="/counter" component={Counter} count={1} />
               <Route component={NoMatch} />
             </Switch>
           </div>

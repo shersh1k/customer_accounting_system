@@ -1,18 +1,39 @@
 import React from 'react';
-import { postOrder } from '../../helpers/API/Methods';
+import API, { HTTP } from '../../helpers/API';
 
 interface iProps {
 
 }
 
-class Main extends React.Component<iProps> {
-  createOrder = () => {
-    postOrder({ "title": "How to train your dragon", "description": "Ever wonder how?" })
+interface iState {
+  arr: any[];
+}
+
+class Main extends React.Component<iProps, iState> {
+  constructor(props: iProps) {
+    super(props)
+    this.state = {
+      arr: []
+    }
+  }
+
+  componentDidMount() {
+    API(HTTP.GET, "api/orders/orders", true).then((res) => {
+      console.log(res)
+      this.setState({ arr: res.data })
+    })
   }
 
   render() {
     return (
       <div>
+        {this.state.arr.map((item, index) => (
+          <div key={index}>
+            <span style={{ color: "red" }}>{item.title}</span>
+            :
+            <span style={{ color: "blue" }}>{item.description}</span>
+          </div>
+        ))}
       </div>
     )
   }
