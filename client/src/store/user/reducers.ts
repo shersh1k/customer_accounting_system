@@ -10,9 +10,18 @@ import {
   LoginActionTypes
 } from "./types";
 
-let user: UserState = {};
-let userString = localStorage.getItem("user");
-if (userString) user = JSON.parse(userString);
+let user: UserState;
+const userString = localStorage.getItem("user");
+if (userString) {
+  user = JSON.parse(userString);
+  user.error = false;
+  user.isFetching = false;
+} else {
+  user = {
+    error: false,
+    isFetching: false
+  };
+}
 
 const initialState: UserState = user;
 

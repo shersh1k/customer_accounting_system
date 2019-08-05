@@ -1,57 +1,71 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, TextField, Grid } from '@material-ui/core';
-import { postOrder } from '../../helpers/API/Methods';
 import newOrderClasses from "../../style/Order.module.scss";
 import { Button } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker, MaterialUiPickersDate } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import ruLocale from 'date-fns/locale/ru';
+import { API_PostOrder } from '../../helpers/API/Methods';
+import { iOrder } from '../../store/orders/types';
 
-interface iProps { }
-interface iState {
-    title?: string;
-    description?: string;
-    dateOrder?: Date,
-    dateStarWork?: Date,
-    dateFinishWork?: Date,
-    datePay?: Date
-    priceOrder?: number,
-    priceMaterials?: number
+interface iProps {
+    postedOrder: Function;
+    isFetching: boolean;
 }
 
-class NewOrder extends React.Component<iProps, iState> {
+interface iState {
+    order: iOrder;
+    isFetching: boolean,
+    error: boolean,
+    errorMessage?: string
+}
+
+export default class NewOrder extends React.Component<iProps, iState> {
     constructor(props: iProps) {
         super(props)
         this.state = {
-            title: "Новый заказ"
+            order: {},
+            isFetching: false,
+            error: false
         }
     }
 
-    onSubmitRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    onSubmitRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const { title, description } = this.state;
-        if (title && description)
-            postOrder({ ...this.state })
+        try {
+            this.setState({ isFetching: true })
+            await API_PostOrder({ ...this.state.order })
+            this.setState({ order: {}, isFetching: false })
+        } catch (error) {
+            this.setState({
+                isFetching: false,
+                error: true,
+                errorMessage: error
+            })
+        }
     }
 
     handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.currentTarget;
-        this.setState({ [name]: value });
+        const order: any = this.state.order;
+        order[name] = value
+        this.setState({ order: order });
     }
 
     handleDateChange = (date: MaterialUiPickersDate, name: string) => {
-        this.setState({ [name]: date });
+        const order: any = this.state.order;
+        order[name] = date
+        this.setState({ order: order });
     }
 
     render() {
-        let { title, dateOrder, dateStarWork, dateFinishWork, datePay } = this.state
-        if (!title) title = "Новый заказ"
+        let { title, description, dateOrder, dateStarWork, priceOrder, priceMaterials } = this.state.order;
         return (
             <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main}>
                 <Card>
                     <CardHeader
                         className={newOrderClasses.header}
-                        title={title}
+                        title={title || "Новый заказ"}
                         action={<Button size="large" type="submit" variant="contained" color="primary">Зарегистрировать</Button>}
                     />
                     <CardContent className={newOrderClasses.content}>
@@ -60,6 +74,7 @@ class NewOrder extends React.Component<iProps, iState> {
                                 <TextField
                                     required
                                     fullWidth
+                                    value={title}
                                     name="title"
                                     type="text"
                                     label="Название заказа"
@@ -72,8 +87,10 @@ class NewOrder extends React.Component<iProps, iState> {
                                     required
                                     fullWidth
                                     multiline
+                                    value={description}
                                     name="description"
                                     label="Описание"
+                                    type="text"
                                     margin="dense"
                                     onChange={this.handleInput}
                                 />
@@ -85,6 +102,7 @@ class NewOrder extends React.Component<iProps, iState> {
                                         fullWidth
                                         label="Принят"
                                         name="dateOrder"
+                                        format="d MMMM yyyy"
                                         value={dateOrder}
                                         onChange={(date) => this.handleDateChange(date, "dateOrder")}
                                         margin="dense"
@@ -92,32 +110,14 @@ class NewOrder extends React.Component<iProps, iState> {
                                 </Grid>
                                 <Grid item xs={5} >
                                     <DatePicker
-                                        required
                                         fullWidth
-                                        label="Оплачен"
-                                        name="datePay"
-                                        value={datePay}
-                                        onChange={(date) => this.handleDateChange(date, "datePay")}
-                                        margin="dense"
-                                    />
-                                </Grid>
-                                <Grid item xs={5} >
-                                    <DatePicker
-                                        fullWidth
+                                        minDate={dateOrder || new Date()}
+                                        minDateMessage="Дата начала работы не может быть меньше даты принятия заказа"
                                         label="Начат"
                                         name="dateStarWork"
+                                        format="d MMMM yyyy"
                                         value={dateStarWork}
                                         onChange={(date) => this.handleDateChange(date, "dateStarWork")}
-                                        margin="dense"
-                                    />
-                                </Grid>
-                                <Grid item xs={5} >
-                                    <DatePicker
-                                        fullWidth
-                                        label="Закончен"
-                                        name="dateFinishWork"
-                                        value={dateFinishWork}
-                                        onChange={(date) => this.handleDateChange(date, "dateFinishWork")}
                                         margin="dense"
                                     />
                                 </Grid>
@@ -128,7 +128,9 @@ class NewOrder extends React.Component<iProps, iState> {
                                     fullWidth
                                     name="priceOrder"
                                     label="Цена"
+                                    type="number"
                                     margin="dense"
+                                    value={priceOrder}
                                     onChange={this.handleInput}
                                 />
                             </Grid>
@@ -139,6 +141,7 @@ class NewOrder extends React.Component<iProps, iState> {
                                     name="priceMaterials"
                                     type="number"
                                     label="Затраты"
+                                    value={priceMaterials}
                                     margin="dense"
                                     onChange={this.handleInput}
                                 />
@@ -151,5 +154,3 @@ class NewOrder extends React.Component<iProps, iState> {
         )
     }
 }
-
-export default NewOrder

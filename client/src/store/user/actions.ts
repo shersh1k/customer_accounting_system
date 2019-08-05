@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { VKLogin } from "../../helpers/VK.API/index";
-import { Register, Login } from "../../helpers/API/Methods";
+import { API_Register, API_Login } from "../../helpers/API/Methods";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -18,7 +18,7 @@ export function submitRegister(email: string, password: string, username: string
       type: REGISTER_REQUEST,
       isFetching: true
     });
-    Register({ email, password, username }).then(
+    API_Register({ email, password, username }).then(
       response => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         dispatch({
@@ -46,7 +46,7 @@ export function submitLogin(email: string, password: string) {
       type: LOGIN_REQUEST,
       isFetching: true
     });
-    Login({ email, password }).then(
+    API_Login({ email, password }).then(
       response => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         dispatch({

@@ -10,8 +10,8 @@ export interface UserState {
   password?: string;
   email?: string;
   username?: string;
-  isFetching?: boolean;
-  error?: boolean;
+  isFetching: boolean;
+  error: boolean;
   errorMessage?: string;
   token?: string;
 }
@@ -55,8 +55,8 @@ interface Logout {
   password: undefined;
   email: undefined;
   username: undefined;
-  isFetching: undefined;
-  error: undefined;
+  isFetching: false;
+  error: false;
   token: undefined;
 }
 
@@ -68,3 +68,9 @@ export type LoginActionTypes =
   | LoginFail
   | LoginSuccess
   | Logout;
+
+export interface iUser {
+  email: string;
+  password: string;
+  username?: string;
+}

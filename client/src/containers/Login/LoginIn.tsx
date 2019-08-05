@@ -1,6 +1,7 @@
 import React from 'react';
 import { Paper, TextField, Button, CircularProgress, Snackbar } from '@material-ui/core';
 import loginClasses from "../../style/Login.module.scss";
+import UIClasses from "../../style/UI.module.scss";
 import { connect } from 'react-redux';
 import { State } from '../../store';
 import { submitLogin, submitLoginVK } from '../../store/user/actions';
@@ -52,9 +53,9 @@ class LoginIn extends React.Component<iProps, iState> {
                         margin="dense"
                         onChange={this.handleInput}
                     />
-                    <div className={loginClasses.fetcingWrapper}>
+                    <div className={UIClasses.fetcingWrapper}>
                         <Button type="submit" variant="contained" color="primary" disabled={isFetching}>Войти</Button>
-                        {isFetching && <CircularProgress size={24} className={loginClasses.fetching} />}
+                        {isFetching && <CircularProgress size={24} className={UIClasses.fetching} />}
                     </div>
                 </form>
                 <Snackbar open={error} message={<span style={{ color: "orangered" }}>{errorMessage}</span>} />
