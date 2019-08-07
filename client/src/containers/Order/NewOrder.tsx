@@ -26,9 +26,10 @@ export default class NewOrder extends React.Component<iProps, iState> {
         title: '',
         description: '',
         dateOrder: new Date(),
-        dateStarWork: new Date(),
+        dateStartWork: new Date(),
         priceOrder: 0,
-        priceMaterials: 0
+        priceMaterials: 0,
+        dateFinishWork: new Date(2019,9,5)
     };
     constructor(props: iProps) {
         super(props)
@@ -77,7 +78,7 @@ export default class NewOrder extends React.Component<iProps, iState> {
     }
     
     render() {
-        let { title, description, dateOrder, dateStarWork, priceOrder, priceMaterials } = this.state.order;
+        let { title, description, dateOrder, dateStartWork, priceOrder, priceMaterials } = this.state.order;
         return (
             <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete="off">
                 <Card className={newOrderClasses.main}>
@@ -136,10 +137,10 @@ export default class NewOrder extends React.Component<iProps, iState> {
                                         minDate={dateOrder || new Date()}
                                         minDateMessage="Дата начала работы не может быть меньше даты принятия заказа"
                                         label="Начат"
-                                        name="dateStarWork"
+                                        name="dateStartWork"
                                         format="d MMMM yyyy"
-                                        value={dateStarWork}
-                                        onChange={(date) => this.handleDateChange(date, "dateStarWork")}
+                                        value={dateStartWork}
+                                        onChange={(date) => this.handleDateChange(date, "dateStartWork")}
                                         margin="dense"
                                     />
                                 </Grid>

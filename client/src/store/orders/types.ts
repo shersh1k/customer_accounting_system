@@ -40,7 +40,7 @@ export interface iOrder {
   dateFinishWork?: Date;
   dateOrder?: Date;
   datePay?: Date;
-  dateStarWork?: Date;
+  dateStartWork?: Date;
   comments?: string[]; // | iComment
   recipient?: string; // | iRecipient;
   createdAt?: Date;

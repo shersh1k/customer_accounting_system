@@ -9,7 +9,7 @@ var OrderSchema = new Schema<iOrder>(
     slug: { type: String, lowercase: true, unique: true },
     title: String,
     dateOrder: Date,
-    dateStarWork: Date,
+    dateStartWork: Date,
     dateFinishWork: Date,
     datePay: Date,
     recipient: [String], // Заказчик
@@ -65,7 +65,7 @@ interface iOrderJSON {
 }
 
 export interface iOrder extends Document, iOrderJSON {
-  dateStarWork?: Date;
+  dateStartWork?: Date;
   dateFinishWork?: Date;
   description?: string;
   comments: Types.Array<iCommentModel>; //коменты типа (по ходу работы заметки?)

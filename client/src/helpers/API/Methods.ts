@@ -14,6 +14,10 @@ export function API_PostOrder(data: iOrder) {
   return API(HTTP.POST, "/api/orders", true, { order: { ...data } });
 }
 
-export function API_GetOrders() {
-  return API(HTTP.GET, "/api/orders", true);
+export function API_GetOrdersByDateStartWork() {
+  return API(HTTP.GET, "/api/orders/byDateStartWork", true);
+}
+
+export function API_GetOrdersByDateFinishWork() {
+  return API(HTTP.GET, "/api/orders/byDateFinishWork", true);
 }
