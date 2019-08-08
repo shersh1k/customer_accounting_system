@@ -13,6 +13,7 @@ export interface OrdersState {
 interface GetOrderRequest {
   type: typeof GET_ORDERS_REQUEST;
   isFetching: boolean;
+  ordersList: iOrder[];
 }
 
 interface GetOrderSuccess {

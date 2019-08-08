@@ -3,7 +3,8 @@ import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, OrdersState, L
 const initialState: OrdersState = {
   ordersList: [],
   isFetching: false,
-  error: false
+  error: false,
+  errorMessage: "Operation canceled by another operation"
 };
 
 export function ordersReducer(state = initialState, action: LoginActionTypes) {
@@ -13,6 +14,7 @@ export function ordersReducer(state = initialState, action: LoginActionTypes) {
     case GET_ORDERS_SUCCESS:
       return { ...state, ...action };
     case GET_ORDERS_FAIL:
+      if (state.errorMessage === "Operation canceled by another operation") action.isFetching = true;
       return { ...state, ...action };
 
     default:

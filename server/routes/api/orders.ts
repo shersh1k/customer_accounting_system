@@ -84,20 +84,31 @@ router.post("/", auth.required, function(req, res, next) {
     .catch(next);
 });
 
+router.get("/", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
+      if (!user) throw new Error("Нет такого пользователя");
+      Order.find({ author: user.id }, function(err, docs) {
+        if (err) return new Error(err.message);
+        console.log(docs);
+        return res.json(docs);
+      });
+    })
+    .catch(next);
+});
+
 router.get("/byDateStartWork", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
       if (!user) throw new Error("Нет такого пользователя");
-      let orders = Order.find({ author: user.id });
-      return orders.exec(function(err, docs) {
+      Order.find({ author: user.id }, function(err, docs) {
         if (err) return new Error(err.message);
         docs = docs
           .filter(item => item.dateStartWork)
           .sort((a: any, b: any) => new Date(a.dateStartWork).getTime() - new Date(b.dateStartWork).getTime());
-        //sort по дате какойнить
+        console.log(docs);
         return res.json(docs);
       });
-      // return res.json({ order: req.order.toJSONFor(user) });
     })
     .catch(next);
 });
@@ -106,16 +117,14 @@ router.get("/byDateFinishWork", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
       if (!user) throw new Error("Нет такого пользователя");
-      let orders = Order.find({ author: user.id });
-      return orders.exec(function(err, docs) {
+      Order.find({ author: user.id }, function(err, docs) {
         if (err) return new Error(err.message);
         docs = docs
           .filter(item => item.dateFinishWork)
           .sort((a: any, b: any) => new Date(b.dateFinishWork).getTime() - new Date(a.dateFinishWork).getTime());
-        //sort по дате какойнить
+        console.log(docs);
         return res.json(docs);
       });
-      // return res.json({ order: req.order.toJSONFor(user) });
     })
     .catch(next);
 });

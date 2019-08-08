@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { State } from "../../store";
 import { iOrder } from "../../store/orders/types";
-import { getOrdersByDateStartWork, getOrdersByDateFinishWork } from "../../store/orders/actions";
+import { getOrdersByDateStartWork, getOrdersByDateFinishWork, getAllOrders } from "../../store/orders/actions";
 import { Card, CardHeader, CardContent, List, ListItem, Tabs, Tab, CircularProgress } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 
@@ -11,10 +11,11 @@ interface iProps {
   isFetching: boolean;
   getOrdersByDateStartWork: Function;
   getOrdersByDateFinishWork: Function;
+  getAllOrders: Function;
 }
 
 interface iState {
-  showedTab: "OrdersByDateStartWork" | "OrdersByDateFinishWork";
+  showedTab: "OrdersByDateStartWork" | "OrdersByDateFinishWork" | "All";
 }
 
 class Orders extends React.Component<iProps, iState> {
@@ -24,11 +25,13 @@ class Orders extends React.Component<iProps, iState> {
   }
 
   componentDidMount() {
-    if (this.state.showedTab === "OrdersByDateStartWork") this.props.getOrdersByDateStartWork();
-    else if (this.state.showedTab === "OrdersByDateFinishWork") this.props.getOrdersByDateFinishWork();
+    this.props.getOrdersByDateStartWork();
   }
 
-  handleChange = (event: React.ChangeEvent<{}>, newValue: "OrdersByDateStartWork" | "OrdersByDateFinishWork") => {
+  handleChange = (
+    event: React.ChangeEvent<{}>,
+    newValue: "OrdersByDateStartWork" | "OrdersByDateFinishWork" | "All"
+  ) => {
     if (newValue === "OrdersByDateFinishWork") {
       this.setState({ showedTab: "OrdersByDateFinishWork" });
       this.props.getOrdersByDateFinishWork();
@@ -36,6 +39,10 @@ class Orders extends React.Component<iProps, iState> {
     if (newValue === "OrdersByDateStartWork") {
       this.setState({ showedTab: "OrdersByDateStartWork" });
       this.props.getOrdersByDateStartWork();
+    }
+    if (newValue === "All") {
+      this.setState({ showedTab: "All" });
+      this.props.getAllOrders();
     }
   };
 
@@ -51,12 +58,19 @@ class Orders extends React.Component<iProps, iState> {
         >
           <Tab label="В очереди" value="OrdersByDateStartWork" />
           <Tab label="Подходят к концу срока" value="OrdersByDateFinishWork" />
+          <Tab label="ВСЕ" value="All" />
         </Tabs>
         <div style={{ textAlign: "center" }}>
           {this.props.isFetching && <CircularProgress style={{ margin: 10 }} size={30} />}
           {this.props.ordersList.map((item, index) => (
             <Card key={index} style={{}}>
-              <CardHeader title={<span style={{ color: "darkgreen" }}>Название: {item.title}</span>} />
+              <CardHeader
+                title={
+                  <span style={{ color: "darkgreen" }}>
+                    {index + 1}. Название: {item.title}
+                  </span>
+                }
+              />
               <CardContent>
                 <List>
                   <ListItem>
@@ -68,7 +82,7 @@ class Orders extends React.Component<iProps, iState> {
                   <ListItem>
                     <span style={{ color: "green" }}>Цена заказа: {item.priceOrder}</span>
                   </ListItem>
-                  {this.state.showedTab === "OrdersByDateStartWork" && (
+                  {(this.state.showedTab === "OrdersByDateStartWork" || this.state.showedTab === "All") && (
                     <ListItem>
                       {item.dateStartWork && (
                         <span style={{ color: "black" }}>
@@ -77,11 +91,11 @@ class Orders extends React.Component<iProps, iState> {
                       )}
                     </ListItem>
                   )}
-                  {this.state.showedTab === "OrdersByDateFinishWork" && (
+                  {(this.state.showedTab === "OrdersByDateFinishWork" || this.state.showedTab === "All") && (
                     <ListItem>
                       {item.dateFinishWork && (
                         <span style={{ color: "black" }}>
-                          Дата начала работы: {new Date(item.dateFinishWork).toLocaleString()}
+                          Дата конца работы: {new Date(item.dateFinishWork).toLocaleString()}
                         </span>
                       )}
                     </ListItem>
@@ -104,7 +118,8 @@ const mapStateToProps = (store: State) => ({
 
 const mapDispatchToProps = {
   getOrdersByDateStartWork: getOrdersByDateStartWork,
-  getOrdersByDateFinishWork: getOrdersByDateFinishWork
+  getOrdersByDateFinishWork: getOrdersByDateFinishWork,
+  getAllOrders: getAllOrders
 };
 
 export default connect(
