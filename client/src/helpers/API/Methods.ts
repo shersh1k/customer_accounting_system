@@ -22,6 +22,10 @@ export function API_GetOrdersByDateFinishWork() {
   return API(HTTP.GET, "/api/orders/byDateFinishWork", true);
 }
 
+export function API_GetLastTenOrders() {
+  return API(HTTP.GET, "/api/orders/lastTen", true);
+}
+
 export function API_GetAllOrders() {
   return API(HTTP.GET, "/api/orders", true);
 }

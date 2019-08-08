@@ -26,11 +26,11 @@ export default class NewOrder extends React.Component<iProps, iState> {
         title: '',
         description: '',
         dateOrder: new Date(),
-        dateStartWork: new Date(),
+        dateStartWork: this.increaseDate(new Date(), 5),//new Date(new Date().setDate(new Date().getDate() + 5)),
         priceOrder: 0,
         priceMaterials: 0,
-        dateFinishWork: new Date(2019,9,5)
     };
+
     constructor(props: iProps) {
         super(props)
         this.state = {
@@ -76,9 +76,9 @@ export default class NewOrder extends React.Component<iProps, iState> {
             </div>
         )
     }
-    
+
     render() {
-        let { title, description, dateOrder, dateStartWork, priceOrder, priceMaterials } = this.state.order;
+        let { title, description, dateOrder, dateFinishWork, priceOrder, priceMaterials } = this.state.order;
         return (
             <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete="off">
                 <Card className={newOrderClasses.main}>
@@ -135,12 +135,12 @@ export default class NewOrder extends React.Component<iProps, iState> {
                                         disabled={this.state.isFetching}
                                         fullWidth
                                         minDate={dateOrder || new Date()}
-                                        minDateMessage="Дата начала работы не может быть меньше даты принятия заказа"
-                                        label="Начат"
-                                        name="dateStartWork"
+                                        minDateMessage="Дедлайнне не может быть раньше даты принятия заказа"
+                                        label="Планируемое завершение"
+                                        name="dateFinishWork"
                                         format="d MMMM yyyy"
-                                        value={dateStartWork}
-                                        onChange={(date) => this.handleDateChange(date, "dateStartWork")}
+                                        value={dateFinishWork}
+                                        onChange={(date) => this.handleDateChange(date, "dateFinishWork")}
                                         margin="dense"
                                     />
                                 </Grid>
@@ -148,7 +148,6 @@ export default class NewOrder extends React.Component<iProps, iState> {
                             <Grid item xs={5} >
                                 <TextField
                                     disabled={this.state.isFetching}
-                                    required
                                     fullWidth
                                     name="priceOrder"
                                     label="Цена"
@@ -161,7 +160,6 @@ export default class NewOrder extends React.Component<iProps, iState> {
                             <Grid item xs={5} >
                                 <TextField
                                     disabled={this.state.isFetching}
-                                    required
                                     fullWidth
                                     name="priceMaterials"
                                     type="number"
@@ -177,5 +175,9 @@ export default class NewOrder extends React.Component<iProps, iState> {
                 </Card >
             </form >
         )
+    }
+
+    private increaseDate(date: Date, number: number) {
+        return new Date(date.setDate(date.getDate() + number))
     }
 }

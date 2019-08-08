@@ -2,9 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { State } from "../../store";
 import { iOrder } from "../../store/orders/types";
-import { getOrdersByDateStartWork, getOrdersByDateFinishWork, getAllOrders } from "../../store/orders/actions";
-import { Card, CardHeader, CardContent, List, ListItem, Tabs, Tab, CircularProgress } from "@material-ui/core";
+import { getOrdersByDateStartWork, getOrdersByDateFinishWork, getLastTenOrders, getAllOrders } from "../../store/orders/actions";
+import { Tabs, Tab, CircularProgress } from "@material-ui/core";
 import { Container } from "@material-ui/core";
+import OrderCard from "./OrderCard";
 
 interface iProps {
   ordersList: iOrder[];
@@ -12,35 +13,39 @@ interface iProps {
   getOrdersByDateStartWork: Function;
   getOrdersByDateFinishWork: Function;
   getAllOrders: Function;
+  getLastTenOrders: Function;
 }
 
 interface iState {
-  showedTab: "OrdersByDateStartWork" | "OrdersByDateFinishWork" | "All";
+  showedTab: iShowedTabs;
 }
+
+type iShowedTabs = "DateFinishWork" | "DateStartWork" | "LastTen" | "All"
 
 class Orders extends React.Component<iProps, iState> {
   constructor(props: iProps) {
     super(props);
-    this.state = { showedTab: "OrdersByDateStartWork" };
+    this.state = { showedTab: "DateFinishWork" };
   }
 
   componentDidMount() {
-    this.props.getOrdersByDateStartWork();
+    this.props.getOrdersByDateFinishWork();
   }
 
-  handleChange = (
-    event: React.ChangeEvent<{}>,
-    newValue: "OrdersByDateStartWork" | "OrdersByDateFinishWork" | "All"
-  ) => {
-    if (newValue === "OrdersByDateFinishWork") {
-      this.setState({ showedTab: "OrdersByDateFinishWork" });
+  handleChange = (event: React.ChangeEvent<{}>, tab: iShowedTabs) => {
+    if (tab === "DateFinishWork") {
+      this.setState({ showedTab: "DateFinishWork" });
       this.props.getOrdersByDateFinishWork();
     }
-    if (newValue === "OrdersByDateStartWork") {
-      this.setState({ showedTab: "OrdersByDateStartWork" });
+    if (tab === "DateStartWork") {
+      this.setState({ showedTab: "DateStartWork" });
       this.props.getOrdersByDateStartWork();
     }
-    if (newValue === "All") {
+    if (tab === "LastTen") {
+      this.setState({ showedTab: "LastTen" });
+      this.props.getLastTenOrders();
+    }
+    if (tab === "All") {
       this.setState({ showedTab: "All" });
       this.props.getAllOrders();
     }
@@ -56,53 +61,15 @@ class Orders extends React.Component<iProps, iState> {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="В очереди" value="OrdersByDateStartWork" />
-          <Tab label="Подходят к концу срока" value="OrdersByDateFinishWork" />
+          <Tab label="Дедлайн" value="DateFinishWork" />
+          <Tab label="В очереди" value="DateStartWork" />
+          <Tab label="Недавние" value="LastTen" />
           <Tab label="ВСЕ" value="All" />
         </Tabs>
-        <div style={{ textAlign: "center" }}>
+        <div style={{ overflow: "auto", maxHeight: "calc(100vh - 50px)" }}>
           {this.props.isFetching && <CircularProgress style={{ margin: 10 }} size={30} />}
-          {this.props.ordersList.map((item, index) => (
-            <Card key={index} style={{}}>
-              <CardHeader
-                title={
-                  <span style={{ color: "darkgreen" }}>
-                    {index + 1}. Название: {item.title}
-                  </span>
-                }
-              />
-              <CardContent>
-                <List>
-                  <ListItem>
-                    <span style={{ color: "blue" }}>Описание: {item.description}</span>
-                  </ListItem>
-                  <ListItem>
-                    <span style={{ color: "red" }}>Цена материалов: {item.priceMaterials} </span>
-                  </ListItem>
-                  <ListItem>
-                    <span style={{ color: "green" }}>Цена заказа: {item.priceOrder}</span>
-                  </ListItem>
-                  {(this.state.showedTab === "OrdersByDateStartWork" || this.state.showedTab === "All") && (
-                    <ListItem>
-                      {item.dateStartWork && (
-                        <span style={{ color: "black" }}>
-                          Дата начала работы: {new Date(item.dateStartWork).toLocaleString()}
-                        </span>
-                      )}
-                    </ListItem>
-                  )}
-                  {(this.state.showedTab === "OrdersByDateFinishWork" || this.state.showedTab === "All") && (
-                    <ListItem>
-                      {item.dateFinishWork && (
-                        <span style={{ color: "black" }}>
-                          Дата конца работы: {new Date(item.dateFinishWork).toLocaleString()}
-                        </span>
-                      )}
-                    </ListItem>
-                  )}
-                </List>
-              </CardContent>
-            </Card>
+          {this.props.ordersList.map((order, index) => (
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
           ))}
         </div>
         <div />
@@ -119,6 +86,7 @@ const mapStateToProps = (store: State) => ({
 const mapDispatchToProps = {
   getOrdersByDateStartWork: getOrdersByDateStartWork,
   getOrdersByDateFinishWork: getOrdersByDateFinishWork,
+  getLastTenOrders: getLastTenOrders,
   getAllOrders: getAllOrders
 };
 
