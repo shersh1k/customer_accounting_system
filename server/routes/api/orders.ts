@@ -93,7 +93,7 @@ router.get("/byDateStartWork", auth.required, function(req, res, next) {
         if (err) return new Error(err.message);
         docs = docs
           .filter(item => item.dateStartWork)
-          .sort((a: any, b: any) => new Date(b.dateStartWork).getTime() - new Date(a.dateStartWork).getTime());
+          .sort((a: any, b: any) => new Date(a.dateStartWork).getTime() - new Date(b.dateStartWork).getTime());
         //sort по дате какойнить
         return res.json(docs);
       });
