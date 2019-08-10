@@ -19,7 +19,7 @@ router.param("username", function(req: any, res: any, next: any, username: any) 
     .catch(next);
 });
 
-router.get("/:username", auth.optional, function(req: any, res: any, next: any) {
+/* router.get("/:username", auth.optional, function(req: any, res: any, next: any) {
   if (req.user) {
     User.findById(req.user.id).then(function(user: any) {
       if (!user) {
@@ -30,7 +30,7 @@ router.get("/:username", auth.optional, function(req: any, res: any, next: any) 
   } else {
     return res.json({ profile: req.profile.toProfileJSONFor(false) });
   }
-});
+}); */
 
 router.post("/:username/follow", auth.required, function(req: any, res: any, next: any) {
   var profileId = req.profile._id;

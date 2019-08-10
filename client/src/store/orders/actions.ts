@@ -3,7 +3,8 @@ import {
   API_GetOrdersByDateStartWork,
   API_GetOrdersByDateFinishWork,
   API_GetLastTenOrders,
-  API_GetAllOrders
+  API_GetAllOrders,
+  API_GetOrder
 } from "../../helpers/API/Methods";
 import { cancel } from "../../helpers/API"; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
 import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, LoginActionTypes } from "./types";
@@ -109,6 +110,34 @@ export function getLastTenOrders() {
         dispatch({
           type: GET_ORDERS_FAIL,
           isFetching: false,
+          error: true,
+          errorMessage: response.message
+        });
+      });
+  };
+}
+
+export function getOrder(slug: string) {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
+    if (cancel) cancel("cancelled");
+    dispatch({
+      type: GET_ORDERS_REQUEST,
+      isFetching: true,
+      currentOrder: {}
+    });
+    return API_GetOrder(slug)
+      .then(response => {
+        dispatch({
+          type: GET_ORDERS_SUCCESS,
+          isFetching: false,
+          currentOrder: response.data
+        });
+      })
+      .catch(response => {
+        dispatch({
+          type: GET_ORDERS_FAIL,
+          isFetching: false,
+          currentOrder: {},
           error: true,
           errorMessage: response.message
         });

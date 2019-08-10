@@ -6,69 +6,6 @@ import User from "../../models/User";
 
 const router = express.Router();
 
-// Preload order objects on routes with ':order'
-router.param("order", function(req, res, next, slug) {
-  Order.findOne({ slug: slug })
-    .populate("author")
-    .then(function(order) {
-      if (!order) return res.sendStatus(404);
-      req.order = order;
-      return next();
-    })
-    .catch(next);
-});
-
-router.param("comment", function(req, res, next, id) {
-  Comment.findById(id)
-    .then(function(comment) {
-      if (!comment) return res.sendStatus(404);
-      req.comment = comment;
-      return next();
-    })
-    .catch(next);
-});
-
-router.get("/feed", auth.required, function(req, res, next) {
-  let limit = 20;
-  let offset = 0;
-
-  if (typeof req.query.limit !== "undefined") {
-    limit = req.query.limit;
-  }
-
-  if (typeof req.query.offset !== "undefined") {
-    offset = req.query.offset;
-  }
-
-  User.findById(req.user.id).then(function(user) {
-    if (!user) {
-      return res.sendStatus(401);
-    }
-
-    Promise.all([
-      Order.find({ author: { $in: user.following } })
-        .limit(Number(limit))
-        .skip(Number(offset))
-        .populate("author")
-        .exec(),
-      Order.count({ author: { $in: user.following } })
-    ])
-      .then(function(results) {
-        let orders = results[0];
-        let ordersCount = results[1];
-
-        return res.json({
-          orders: orders.map(function(order) {
-            return order.toJSONFor(user);
-          }),
-          ordersCount: ordersCount
-        });
-      })
-      .catch(next);
-    return;
-  });
-});
-
 router.post("/", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
@@ -140,12 +77,14 @@ router.get("/byDateFinishWork", auth.required, function(req, res, next) {
 });
 
 // return a order
-router.get("/:order", auth.optional, function(req, res, next) {
-  Promise.all([req.user ? User.findById(req.user.id) : null, req.order.populate("author").execPopulate()])
-    .then(function(results) {
-      let user = results[0];
-      if (!user) return;
-      return res.json({ order: req.order.toJSONFor(user) });
+router.get("/:order", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
+      if (!user) throw new Error("Нет такого пользователя");
+      Order.findOne({ author: user.id, slug: req.params.order }, function(err, docs) {
+        if (err) return new Error(err.message);
+        return res.json(docs);
+      });
     })
     .catch(next);
 });
@@ -191,6 +130,39 @@ router.delete("/:order", auth.required, function(req, res, next) {
       } else {
         return res.sendStatus(403);
       }
+    })
+    .catch(next);
+});
+
+export default router;
+declare global {
+  namespace Express {
+    interface Request {
+      comment: iCommentModel;
+      order: iOrder;
+    }
+  }
+}
+
+/* 
+// Preload order objects on routes with ':order'
+router.param("order", function(req, res, next, slug) {
+  Order.findOne({ slug: slug })
+    .populate("author")
+    .then(function(order) {
+      if (!order) return res.sendStatus(404);
+      req.order = order;
+      return next();
+    })
+    .catch(next);
+});
+
+router.param("comment", function(req, res, next, id) {
+  Comment.findById(id)
+    .then(function(comment) {
+      if (!comment) return res.sendStatus(404);
+      req.comment = comment;
+      return next();
     })
     .catch(next);
 });
@@ -263,17 +235,47 @@ router.delete("/:order/comments/:comment", auth.required, function(req: any, res
   }
 });
 
-export default router;
-declare global {
-  namespace Express {
-    interface Request {
-      comment: iCommentModel;
-      order: iOrder;
-    }
-  }
-}
+router.get("/feed", auth.required, function(req, res, next) {
+  let limit = 20;
+  let offset = 0;
 
-/* 
+  if (typeof req.query.limit !== "undefined") {
+    limit = req.query.limit;
+  }
+
+  if (typeof req.query.offset !== "undefined") {
+    offset = req.query.offset;
+  }
+
+  User.findById(req.user.id).then(function(user) {
+    if (!user) {
+      return res.sendStatus(401);
+    }
+
+    Promise.all([
+      Order.find({ author: { $in: user.following } })
+        .limit(Number(limit))
+        .skip(Number(offset))
+        .populate("author")
+        .exec(),
+      Order.count({ author: { $in: user.following } })
+    ])
+      .then(function(results) {
+        let orders = results[0];
+        let ordersCount = results[1];
+
+        return res.json({
+          orders: orders.map(function(order) {
+            return order.toJSONFor(user);
+          }),
+          ordersCount: ordersCount
+        });
+      })
+      .catch(next);
+    return;
+  });
+});
+
 router.get("/", auth.optional, function(req, res, next) {
   let query: any = {};
   let limit = 20;

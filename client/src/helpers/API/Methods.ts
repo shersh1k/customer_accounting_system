@@ -29,3 +29,7 @@ export function API_GetLastTenOrders() {
 export function API_GetAllOrders() {
   return API(HTTP.GET, "/api/orders", true);
 }
+
+export function API_GetOrder(slug: string) {
+  return API(HTTP.GET, `/api/orders/${slug}`, true);
+}

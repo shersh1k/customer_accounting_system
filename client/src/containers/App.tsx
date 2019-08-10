@@ -10,6 +10,7 @@ import NavBar from "../components/NavBar";
 import Orders from "./Order/Orders";
 import NoMatch from "../components/NoMatch";
 import Login from './Login/Login';
+import Order from './Order/Order';
 
 import app from "../style/App.module.scss";
 import NewOrder from './Order/NewOrder';
@@ -51,6 +52,7 @@ class App extends React.Component<iProps> {
               <Route exact path="/" component={Orders} />
               <Route path="/login" render={this.redirectToMain} />
               <Route path="/orders/neworder" component={NewOrder} />
+              <Route path="/orders/:order" component={Order} />
               <Route component={NoMatch} />
             </Switch>
           </div>

@@ -4,7 +4,8 @@ const initialState: OrdersState = {
   ordersList: [],
   isFetching: false,
   error: false,
-  errorMessage: "cancelled"
+  errorMessage: "cancelled",
+  currentOrder: {}
 };
 
 export function ordersReducer(state = initialState, action: LoginActionTypes) {

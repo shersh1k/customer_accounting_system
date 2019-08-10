@@ -40,7 +40,7 @@ OrderSchema.methods.toJSONFor = function(user: iUserModel) {
     slug: this.slug,
     title: this.title,
     dateOrder: this.dateOrder,
-    datePay: this.datePay,
+    dateDeadline: this.dateDeadline,
     recipient: this.recipient,
     priceOrder: this.priceOrder,
     priceMaterials: this.priceMaterials,
@@ -55,7 +55,7 @@ interface iOrderJSON {
   slug: string; //для url-строки
   title: string;
   dateOrder: Date;
-  datePay: Date;
+  dateDeadline: Date;
   recipient: any[]; // Заказчик
   priceOrder: number; //стоимость заказа
   priceMaterials: number; //стоимость материалов
@@ -67,8 +67,9 @@ interface iOrderJSON {
 export interface iOrder extends Document, iOrderJSON {
   dateStartWork?: Date;
   dateFinishWork?: Date;
+  datePay?: Date;
   description?: string;
-  comments: Types.Array<iCommentModel>; //коменты типа (по ходу работы заметки?)
+  notes: Types.Array<iCommentModel>; //коменты типа (по ходу работы заметки?)
   slugify: () => void;
   toJSONFor: (user: iUserModel) => iOrderJSON;
 }

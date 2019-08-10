@@ -3,23 +3,24 @@ export const GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS";
 export const GET_ORDERS_FAIL = "GET_ORDERS_FAIL";
 
 export interface OrdersState {
-  ordersList: iOrder[]; //iOrder
   isFetching: boolean;
   error: boolean;
-  lastPostedOrder?: iOrder;
+  ordersList: iOrder[]; //iOrder
   errorMessage?: string;
+  currentOrder: iOrder;
 }
 
 interface GetOrderRequest {
   type: typeof GET_ORDERS_REQUEST;
   isFetching: boolean;
-  ordersList: iOrder[];
+  ordersList?: iOrder[];
 }
 
 interface GetOrderSuccess {
   type: typeof GET_ORDERS_SUCCESS;
   isFetching: boolean;
-  ordersList: iOrder[];
+  ordersList?: iOrder[];
+  currentOrder?: iOrder;
 }
 
 interface GetOrderFail {
@@ -27,6 +28,7 @@ interface GetOrderFail {
   isFetching: boolean;
   error: boolean;
   errorMessage: string;
+  currentOrder?: iOrder;
 }
 
 export type LoginActionTypes = GetOrderRequest | GetOrderSuccess | GetOrderFail;
@@ -36,12 +38,13 @@ export interface iOrder {
   title?: string;
   slug?: string;
   description?: string;
+  dateOrder?: Date;
+  dateStartWork?: Date;
+  dateDeadline?: Date;
+  dateFinishWork?: Date;
+  datePay?: Date;
   priceMaterials?: number;
   priceOrder?: number;
-  dateFinishWork?: Date;
-  dateOrder?: Date;
-  datePay?: Date;
-  dateStartWork?: Date;
   comments?: string[]; // | iComment
   recipient?: string; // | iRecipient;
   createdAt?: Date;

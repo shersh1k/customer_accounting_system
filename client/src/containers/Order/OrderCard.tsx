@@ -1,6 +1,11 @@
 import React from "react";
 import { iOrder } from "../../store/orders/types";
-import { Card, CardHeader, CardContent, List, ListItem } from "@material-ui/core";
+import { Card, CardHeader, CardContent, List, ListItem, CardActions, Button } from "@material-ui/core";
+import AddComment from "@material-ui/icons/AddComment";
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import Edit from "@material-ui/icons/Edit";
+import Check from "@material-ui/icons/Check";
+import { Link } from "react-router-dom";
 
 interface iProps {
     order: iOrder;
@@ -12,9 +17,14 @@ interface iState {
 
 export default class OrderCard extends React.Component<iProps, iState> {
     Title() {
-        const { order/* , showedTab */ } = this.props;
+        const { order, showedTab } = this.props;
         return (
-            <span> Название: {order.title}, <span style={{ color: "red" }}>дней до дедлайна {this.countDaysToDeadLine(order.dateFinishWork)}</span></span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Link to={`/orders/${this.props.order.slug}`}>{order.title}</Link>
+                {showedTab === "DateFinishWork" && <div style={{ color: "red", fontSize: 20 }}>
+                    Осталось {this.countDaysToDeadLine(order.dateFinishWork)} дней
+                </div>}
+            </div>
         )
     }
 
@@ -34,35 +44,20 @@ export default class OrderCard extends React.Component<iProps, iState> {
                 <CardContent>
                     <List>
                         <ListItem>
-                            <span style={{ color: "blue" }}>Описание: {order.description}</span>
+                            <span>{order.description}</span>
                         </ListItem>
                         <ListItem>
-                            <span style={{ color: "red" }}>Цена материалов: {order.priceMaterials} </span>
+                            <span style={{ color: "blue" }}>TODO: Здесь буду заметки</span>
                         </ListItem>
-                        <ListItem>
-                            <span style={{ color: "green" }}>Цена заказа: {order.priceOrder}</span>
-                        </ListItem>
-                        {(showedTab === "DateStartWork" || showedTab === "All") && (
-                            <ListItem>
-                                {order.dateStartWork && (
-                                    <span style={{ color: "black" }}>
-                                        Дата начала работы: {new Date(order.dateStartWork).toLocaleString()}
-                                    </span>
-                                )}
-                            </ListItem>
-                        )}
-                        {(showedTab === "DateFinishWork" || showedTab === "All") && (
-                            <ListItem>
-                                {order.dateFinishWork && (
-                                    <span style={{ color: "black" }}>
-                                        Дата конца работы: {new Date(order.dateFinishWork).toLocaleString()}
-                                    </span>
-                                )}
-                            </ListItem>
-                        )}
                     </List>
                 </CardContent>
-            </Card>
+                <CardActions>
+                    <Button title="Добавить заметку"><AddComment /></Button>
+                    <Button color="secondary" title="Добавить расход"><AttachMoney /></Button>
+                    <Button><Edit /><Link to={`/orders/${this.props.order.slug}`}>Редактировать</Link></Button>
+                    <Button color="primary">Выполнено<Check /></Button>
+                </CardActions>
+            </Card >
         )
     }
 }

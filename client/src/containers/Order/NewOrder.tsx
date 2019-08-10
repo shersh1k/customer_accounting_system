@@ -78,7 +78,7 @@ export default class NewOrder extends React.Component<iProps, iState> {
     }
 
     render() {
-        let { title, description, dateOrder, dateFinishWork, priceOrder, priceMaterials } = this.state.order;
+        let { title, description, dateOrder, dateDeadline, priceOrder, priceMaterials } = this.state.order;
         return (
             <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete="off">
                 <Card className={newOrderClasses.main}>
@@ -133,14 +133,15 @@ export default class NewOrder extends React.Component<iProps, iState> {
                                 <Grid item xs={5} >
                                     <DatePicker
                                         disabled={this.state.isFetching}
+                                        required
                                         fullWidth
                                         minDate={dateOrder || new Date()}
-                                        minDateMessage="Дедлайнне не может быть раньше даты принятия заказа"
-                                        label="Планируемое завершение"
-                                        name="dateFinishWork"
+                                        minDateMessage="Дедлайн не может быть раньше даты принятия заказа"
+                                        label="Дедлайн"
+                                        name="dateDeadline"
                                         format="d MMMM yyyy"
-                                        value={dateFinishWork}
-                                        onChange={(date) => this.handleDateChange(date, "dateFinishWork")}
+                                        value={dateDeadline}
+                                        onChange={(date) => this.handleDateChange(date, "dateDeadline")}
                                         margin="dense"
                                     />
                                 </Grid>
