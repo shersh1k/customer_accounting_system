@@ -1,15 +1,16 @@
 import React from "react";
-import { iOrder } from "../../store/orders/types";
+import { iOrder } from "../../../store/orders/types";
 import { Card, CardHeader, CardContent, List, ListItem, CardActions, Button } from "@material-ui/core";
 import AddComment from "@material-ui/icons/AddComment";
 import AttachMoney from "@material-ui/icons/AttachMoney";
 import Edit from "@material-ui/icons/Edit";
 import Check from "@material-ui/icons/Check";
 import { Link } from "react-router-dom";
+import { iShowedTabs } from "..";
 
 interface iProps {
     order: iOrder;
-    showedTab: string
+    showedTab: iShowedTabs
 }
 
 interface iState {
@@ -21,8 +22,8 @@ export default class OrderCard extends React.Component<iProps, iState> {
         return (
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Link to={`/orders/${this.props.order.slug}`}>{order.title}</Link>
-                {showedTab === "DateFinishWork" && <div style={{ color: "red", fontSize: 20 }}>
-                    Осталось {this.countDaysToDeadLine(order.dateFinishWork)} дней
+                {showedTab === "DateDeadline" && <div style={{ color: "red", fontSize: 20 }}>
+                    Осталось {this.countDaysToDeadLine(order.dateDeadline)} дней
                 </div>}
             </div>
         )
@@ -37,7 +38,7 @@ export default class OrderCard extends React.Component<iProps, iState> {
     }
 
     render() {
-        const { order, showedTab } = this.props
+        const { order } = this.props
         return (
             <Card style={{ margin: "10px 5px" }}>
                 <CardHeader title={this.Title()} />

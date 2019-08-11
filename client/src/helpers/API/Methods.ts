@@ -14,12 +14,20 @@ export function API_PostOrder(data: iOrder) {
   return API(HTTP.POST, "/api/orders", true, { order: { ...data } });
 }
 
+export function API_UpdateOrder(data: iOrder) {
+  return API(HTTP.PUT, "/api/orders", true, { order: { ...data } });
+}
+
 export function API_GetOrdersByDateStartWork() {
   return API(HTTP.GET, "/api/orders/byDateStartWork", true);
 }
 
 export function API_GetOrdersByDateFinishWork() {
-  return API(HTTP.GET, "/api/orders/byDateFinishWork", true);
+  return API(HTTP.GET, "/api/orders/byDateDeadline", true);
+}
+
+export function API_GetNotPayedOrders() {
+  return API(HTTP.GET, "/api/orders/notPayed", true);
 }
 
 export function API_GetLastTenOrders() {

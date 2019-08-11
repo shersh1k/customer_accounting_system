@@ -10,6 +10,7 @@ var OrderSchema = new Schema<iOrder>(
     title: String,
     dateOrder: Date,
     dateStartWork: Date,
+    dateDeadline: Date,
     dateFinishWork: Date,
     datePay: Date,
     recipient: [String], // Заказчик

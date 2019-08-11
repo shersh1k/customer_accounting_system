@@ -3,6 +3,7 @@ import { auth } from "../auth";
 import Order, { iOrder } from "../../models/Order";
 import Comment, { iCommentModel } from "../../models/Comment";
 import User from "../../models/User";
+import { isNull } from "util";
 
 const router = express.Router();
 
@@ -46,6 +47,22 @@ router.get("/lastTen", auth.required, function(req, res, next) {
     .catch(next);
 });
 
+router.get("/notPayed", auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
+      if (!user) throw new Error("Нет такого пользователя");
+      Order.find({ author: user.id, dateFinishWork: { $exists: true }, datePay: { $exists: false } }, function(
+        err,
+        docs
+      ) {
+        if (err) return new Error(err.message);
+        docs = docs.slice(0, 10);
+        return res.json(docs);
+      });
+    })
+    .catch(next);
+});
+
 router.get("/byDateStartWork", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
@@ -61,15 +78,15 @@ router.get("/byDateStartWork", auth.required, function(req, res, next) {
     .catch(next);
 });
 
-router.get("/byDateFinishWork", auth.required, function(req, res, next) {
+router.get("/byDateDeadline", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
       if (!user) throw new Error("Нет такого пользователя");
       Order.find({ author: user.id }, function(err, docs) {
         if (err) return new Error(err.message);
         docs = docs
-          .filter(item => item.dateFinishWork)
-          .sort((a: any, b: any) => new Date(a.dateFinishWork).getTime() - new Date(b.dateFinishWork).getTime());
+          .filter(item => item.dateDeadline)
+          .sort((a: any, b: any) => new Date(a.dateDeadline).getTime() - new Date(b.dateDeadline).getTime());
         return res.json(docs);
       });
     })
@@ -90,9 +107,18 @@ router.get("/:order", auth.required, function(req, res, next) {
 });
 
 // update order
-router.put("/:order", auth.required, function(req, res, next) {
+router.put("/", auth.required, function(req, res, next) {
   User.findById(req.user.id).then(function(user) {
-    if (req.order.author._id.toString() === req.user.id.toString()) {
+    if (!user) throw new Error("Нет такого пользователя");
+    Order.findById(req.body.order._id, function(err, docs) {
+      if (err) return new Error(err.message);
+      if (isNull(docs)) return new Error("Не нашелся заказ для обновления");
+      docs.title = req.body.order.title;
+      docs.priceOrder = req.body.order.priceOrder;
+      docs.save().then(() => res.json(docs));
+      return res.json(docs);
+    });
+    /* if (req.order.author._id.toString() === req.user.id.toString()) {
       if (typeof req.body.order.title !== "undefined") {
         req.order.title = req.body.order.title;
       }
@@ -111,7 +137,7 @@ router.put("/:order", auth.required, function(req, res, next) {
     } else {
       return res.sendStatus(403);
     }
-    return;
+    return; */
   });
 });
 

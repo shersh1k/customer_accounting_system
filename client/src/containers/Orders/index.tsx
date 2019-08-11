@@ -2,40 +2,44 @@ import React from "react";
 import { connect } from "react-redux";
 import { State } from "../../store";
 import { iOrder } from "../../store/orders/types";
-import { getOrdersByDateStartWork, getOrdersByDateFinishWork, getLastTenOrders, getAllOrders } from "../../store/orders/actions";
+import { getOrdersByDateStartWork, getOrdersByDateDeadline, getLastTenOrders, getNotPayedOrders } from "../../store/orders/actions";
 import { Tabs, Tab, CircularProgress } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import OrderCard from "./OrderCard";
 
 interface iProps {
-  ordersList: iOrder[];
+  deadlineList: iOrder[];
+  startWorkList: iOrder[];
+  notPayedList: iOrder[];
+  lastTenList: iOrder[];
+  allOrdersList: iOrder[];
   isFetching: boolean;
   getOrdersByDateStartWork: Function;
-  getOrdersByDateFinishWork: Function;
-  getAllOrders: Function;
+  getOrdersByDateDeadline: Function;
   getLastTenOrders: Function;
+  getNotPayedOrders: Function;
 }
 
 interface iState {
   showedTab: iShowedTabs;
 }
 
-type iShowedTabs = "DateFinishWork" | "DateStartWork" | "LastTen" | "All"
+export type iShowedTabs = "DateDeadline" | "DateStartWork" | "LastTen" | "NotPayed"
 
 class Orders extends React.Component<iProps, iState> {
   constructor(props: iProps) {
     super(props);
-    this.state = { showedTab: "DateFinishWork" };
+    this.state = { showedTab: "DateDeadline" };
   }
 
   componentDidMount() {
-    this.props.getOrdersByDateFinishWork();
+    this.props.getOrdersByDateDeadline();
   }
 
   handleChange = (event: React.ChangeEvent<{}>, tab: iShowedTabs) => {
-    if (tab === "DateFinishWork") {
-      this.setState({ showedTab: "DateFinishWork" });
-      this.props.getOrdersByDateFinishWork();
+    if (tab === "DateDeadline") {
+      this.setState({ showedTab: "DateDeadline" });
+      this.props.getOrdersByDateDeadline();
     }
     if (tab === "DateStartWork") {
       this.setState({ showedTab: "DateStartWork" });
@@ -45,9 +49,9 @@ class Orders extends React.Component<iProps, iState> {
       this.setState({ showedTab: "LastTen" });
       this.props.getLastTenOrders();
     }
-    if (tab === "All") {
-      this.setState({ showedTab: "All" });
-      this.props.getAllOrders();
+    if (tab === "NotPayed") {
+      this.setState({ showedTab: "NotPayed" });
+      this.props.getNotPayedOrders();
     }
   };
 
@@ -61,14 +65,23 @@ class Orders extends React.Component<iProps, iState> {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Дедлайн" value="DateFinishWork" />
+          <Tab label="Дедлайн" value="DateDeadline" />
           <Tab label="В очереди" value="DateStartWork" />
+          <Tab label="Неоплаченные" value="NotPayed" />
           <Tab label="Недавние" value="LastTen" />
-          <Tab label="ВСЕ" value="All" />
         </Tabs>
         <div style={{ overflow: "auto", maxHeight: "calc(100vh - 50px)" }}>
           {this.props.isFetching && <CircularProgress style={{ margin: 10 }} size={30} />}
-          {this.props.ordersList.map((order, index) => (
+          {this.state.showedTab === "DateDeadline" && this.props.deadlineList.map((order, index) => (
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+          ))}
+          {this.state.showedTab === "DateStartWork" && this.props.startWorkList.map((order, index) => (
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+          ))}
+          {this.state.showedTab === "NotPayed" && this.props.notPayedList.map((order, index) => (
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+          ))}
+          {this.state.showedTab === "LastTen" && this.props.lastTenList.map((order, index) => (
             <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
           ))}
         </div>
@@ -79,15 +92,18 @@ class Orders extends React.Component<iProps, iState> {
 }
 
 const mapStateToProps = (store: State) => ({
-  ordersList: store.orders.ordersList,
+  deadlineList: store.orders.deadlineList,
+  startWorkList: store.orders.startWorkList,
+  notPayedList: store.orders.notPayedList,
+  lastTenList: store.orders.lastTenList,
   isFetching: store.orders.isFetching
 });
 
 const mapDispatchToProps = {
   getOrdersByDateStartWork: getOrdersByDateStartWork,
-  getOrdersByDateFinishWork: getOrdersByDateFinishWork,
+  getOrdersByDateDeadline: getOrdersByDateDeadline,
+  getNotPayedOrders: getNotPayedOrders,
   getLastTenOrders: getLastTenOrders,
-  getAllOrders: getAllOrders
 };
 
 export default connect(

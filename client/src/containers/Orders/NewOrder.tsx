@@ -26,7 +26,7 @@ export default class NewOrder extends React.Component<iProps, iState> {
         title: '',
         description: '',
         dateOrder: new Date(),
-        dateStartWork: this.increaseDate(new Date(), 5),//new Date(new Date().setDate(new Date().getDate() + 5)),
+        dateDeadline: this.increaseDate(new Date(), 5),
         priceOrder: 0,
         priceMaterials: 0,
     };
@@ -78,7 +78,7 @@ export default class NewOrder extends React.Component<iProps, iState> {
     }
 
     render() {
-        let { title, description, dateOrder, dateDeadline, priceOrder, priceMaterials } = this.state.order;
+        let { title, description, dateOrder, dateDeadline, priceOrder } = this.state.order;
         return (
             <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete="off">
                 <Card className={newOrderClasses.main}>
@@ -89,7 +89,7 @@ export default class NewOrder extends React.Component<iProps, iState> {
                     />
                     <CardContent className={newOrderClasses.content}>
                         <Grid container spacing={3} justify="space-around" alignContent="space-between">
-                            <Grid item xs={8} >
+                            <Grid item xs={6} >
                                 <TextField
                                     disabled={this.state.isFetching}
                                     required
@@ -99,6 +99,18 @@ export default class NewOrder extends React.Component<iProps, iState> {
                                     type="text"
                                     label="Название заказа"
                                     margin="dense"
+                                    onChange={this.handleInput}
+                                />
+                            </Grid>
+                            <Grid item xs={2} >
+                                <TextField
+                                    disabled={this.state.isFetching}
+                                    fullWidth
+                                    name="priceOrder"
+                                    label="Цена"
+                                    type="number"
+                                    margin="dense"
+                                    value={priceOrder}
                                     onChange={this.handleInput}
                                 />
                             </Grid>
@@ -146,30 +158,6 @@ export default class NewOrder extends React.Component<iProps, iState> {
                                     />
                                 </Grid>
                             </MuiPickersUtilsProvider>
-                            <Grid item xs={5} >
-                                <TextField
-                                    disabled={this.state.isFetching}
-                                    fullWidth
-                                    name="priceOrder"
-                                    label="Цена"
-                                    type="number"
-                                    margin="dense"
-                                    value={priceOrder}
-                                    onChange={this.handleInput}
-                                />
-                            </Grid>
-                            <Grid item xs={5} >
-                                <TextField
-                                    disabled={this.state.isFetching}
-                                    fullWidth
-                                    name="priceMaterials"
-                                    type="number"
-                                    label="Затраты"
-                                    value={priceMaterials}
-                                    margin="dense"
-                                    onChange={this.handleInput}
-                                />
-                            </Grid>
                             <div>***TODO: КТО заказал (новая сущность recipient)***</div>
                         </Grid>
                     </CardContent >
