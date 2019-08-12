@@ -1,26 +1,26 @@
 import React from 'react';
 import { Card, CardHeader, CardActions } from '@material-ui/core';
 import { MaterialUiPickersDate } from "@material-ui/pickers";
-import { iOrder } from '../../../store/orders/types';
+import { iOrder } from '../../../store/order/types';
 import { connect } from 'react-redux';
 import { State } from '../../../store';
-import { getOrder } from '../../../store/orders/actions';
+import { getOrder, updateOrder, toggleEditState } from '../../../store/order/actions';
 import { Title } from './Title';
 import { Content } from './Content';
-import { API_UpdateOrder } from '../../../helpers/API/Methods';
 
 interface iProps {
-    edit: boolean;
+    isFetching: boolean;
+    error: boolean;
+    errorMessage?: string;
+    isEdit: boolean;
+    currentOrder: iOrder;
+    getOrder: (slug: string) => Promise<void>;
+    updateOrder: (order: iOrder) => Promise<void>;
+    toggleEditState: Function
     slug: string;
-    order: iOrder;
-    getOrder: (slug: string) => Promise<void>
 }
 
 interface iState {
-    edit: boolean;
-    isFetching: boolean;
-    error: boolean;
-    errorMessage: string;
     order: iOrder;
 }
 
@@ -28,38 +28,19 @@ class Order extends React.Component<iProps, iState> {
     constructor(props: iProps) {
         super(props)
         this.state = {
-            edit: this.props.edit,
-            isFetching: false,
-            error: false,
-            errorMessage: '',
             order: {}
         }
     }
 
     async componentDidMount() {
-        this.setState({ isFetching: true })
         await this.props.getOrder(this.props.slug)
-        const order = Object.assign({}, this.props.order)
-        this.setState({ order: order, isFetching: false })
+        const order = Object.assign({}, this.props.currentOrder)
+        this.setState({ order: order })
     }
 
     submitButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        try {
-            this.setState({ isFetching: true })
-            const updatedOrder = await API_UpdateOrder({ ...this.state.order })
-            this.setState({
-                order: updatedOrder.data,
-                isFetching: false,
-                edit: false
-            })
-        } catch (error) {
-            this.setState({
-                isFetching: false,
-                error: true,
-                errorMessage: error,
-            })
-        }
+        this.props.updateOrder({ ...this.state.order });
     }
 
     handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,30 +51,27 @@ class Order extends React.Component<iProps, iState> {
     }
 
     handleDateChange = (date: MaterialUiPickersDate, name: string) => {
-        /* const order: any = this.state.order;
+        const order: any = this.state.order;
         order[name] = date
-        this.setState({ order: order }); */
+        this.setState({ order: order });
     }
 
     toggleEditMode = (event: React.MouseEvent<HTMLButtonElement>) => {
-        const order = Object.assign({}, this.props.order)
-        this.setState({
-            edit: this.state.edit ? false : true,
-            order: order,
-        })
+        this.props.toggleEditState(this.props.isEdit);
     }
 
     render() {
         return (
             <Card style={{ width: "90%" }}>
-                <CardHeader title={<Title {...{
-                    ...this.state,
-                    toggleEditMode: this.toggleEditMode,
-                    submitButton: this.submitButton,
-                    handleInput: this.handleInput
-                }}
+                <CardHeader title={<Title
+                    order={this.state.order}
+                    edit={this.props.isEdit}
+                    toggleEditMode={this.toggleEditMode}
+                    submitButton={this.submitButton}
+                    handleInput={this.handleInput}
+                    handleDateChange={this.handleDateChange}
                 />} />
-                <Content {...this.state} />
+                <Content {...this.props} />
                 <CardActions></CardActions>
             </Card>
         )
@@ -102,11 +80,17 @@ class Order extends React.Component<iProps, iState> {
 
 const mapStateToProps = (store: State) => ({
     slug: store.router.location.pathname.split('/')[2],
-    order: store.orders.currentOrder
+    currentOrder: store.order.currentOrder,
+    isFetching: store.order.isFetching,
+    isEdit: store.order.isEdit,
+    error: store.order.error,
+    errorMessage: store.order.errorMessage,
 });
 
 const mapDispatchToProps = {
-    getOrder: getOrder
+    getOrder: getOrder,
+    updateOrder: updateOrder,
+    toggleEditState: toggleEditState
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Order)

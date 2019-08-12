@@ -1,6 +1,6 @@
 import API, { HTTP } from ".";
 import { iUser } from "../../store/user/types";
-import { iOrder } from "../../store/orders/types";
+import { iOrder } from "../../store/order/types";
 
 export function API_Register(data: iUser) {
   return API(HTTP.POST, "/api/users", false, { user: { ...data } });
@@ -12,10 +12,6 @@ export function API_Login(data: iUser) {
 
 export function API_PostOrder(data: iOrder) {
   return API(HTTP.POST, "/api/orders", true, { order: { ...data } });
-}
-
-export function API_UpdateOrder(data: iOrder) {
-  return API(HTTP.PUT, "/api/orders", true, { order: { ...data } });
 }
 
 export function API_GetOrdersByDateStartWork() {
@@ -40,4 +36,8 @@ export function API_GetAllOrders() {
 
 export function API_GetOrder(slug: string) {
   return API(HTTP.GET, `/api/orders/${slug}`, true);
+}
+
+export function API_UpdateOrder(data: iOrder) {
+  return API(HTTP.PUT, "/api/orders", true, { order: { ...data } });
 }

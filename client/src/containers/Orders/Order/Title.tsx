@@ -2,8 +2,9 @@
 import React from "react";
 import { Button, TextField } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import { iOrder } from '../../../store/orders/types';
+import { iOrder } from '../../../store/order/types';
 import { Steps } from "./Steps";
+import { MaterialUiPickersDate } from '@material-ui/pickers';
 
 interface iProps {
     order: iOrder;
@@ -11,11 +12,12 @@ interface iProps {
     toggleEditMode: (event: React.MouseEvent<HTMLButtonElement>) => void;
     submitButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleDateChange: (date: MaterialUiPickersDate, name: string) => void;
 }
 
 export function Title(props: iProps) {
     const { title, priceOrder } = props.order;
-    const { edit, toggleEditMode, submitButton, handleInput } = props;
+    const { edit, toggleEditMode, submitButton, handleInput, handleDateChange } = props;
 
     return (
         <div style={{ display: "flex", flexFlow: "column" }}>
@@ -30,7 +32,11 @@ export function Title(props: iProps) {
                 <Button onClick={toggleEditMode} color="primary">Отменить</Button>
                 <Button onClick={submitButton} color="primary">Сохранить</Button>
             </div>}
-            <Steps {...props} />
+            <Steps
+                currentOrder={props.order}
+                edit={props.edit}
+                handleDateChange={handleDateChange}
+            />
         </div>
     )
 }

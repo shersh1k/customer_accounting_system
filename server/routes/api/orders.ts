@@ -82,13 +82,19 @@ router.get("/byDateDeadline", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
       if (!user) throw new Error("Нет такого пользователя");
-      Order.find({ author: user.id }, function(err, docs) {
-        if (err) return new Error(err.message);
-        docs = docs
-          .filter(item => item.dateDeadline)
-          .sort((a: any, b: any) => new Date(a.dateDeadline).getTime() - new Date(b.dateDeadline).getTime());
-        return res.json(docs);
-      });
+      Order.find(
+        {
+          author: user.id,
+          $or: [{ dateStartWork: { $exists: false } }, { dateStartWork: { $lte: new Date() } }]
+        },
+        function(err, docs) {
+          if (err) return new Error(err.message);
+          docs = docs
+            .filter(item => item.dateDeadline)
+            .sort((a: any, b: any) => new Date(a.dateDeadline).getTime() - new Date(b.dateDeadline).getTime());
+          return res.json(docs);
+        }
+      );
     })
     .catch(next);
 });
@@ -113,9 +119,10 @@ router.put("/", auth.required, function(req, res, next) {
     Order.findById(req.body.order._id, function(err, docs) {
       if (err) return new Error(err.message);
       if (isNull(docs)) return new Error("Не нашелся заказ для обновления");
-      docs.title = req.body.order.title;
-      docs.priceOrder = req.body.order.priceOrder;
-      docs.save().then(() => res.json(docs));
+      if (req.body.order.title) docs.title = req.body.order.title;
+      if (req.body.order.dateStartWork) docs.dateStartWork = req.body.order.dateStartWork;
+      if (req.body.order.priceOrder) docs.priceOrder = req.body.order.priceOrder;
+      docs.save() /* .then(() => res.json(docs)) */;
       return res.json(docs);
     });
     /* if (req.order.author._id.toString() === req.user.id.toString()) {

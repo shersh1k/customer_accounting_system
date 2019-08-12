@@ -5,13 +5,15 @@ import { createBrowserHistory, History } from "history";
 import thunkMiddleware from "redux-thunk";
 import logger from "redux-logger";
 
-import { photosReducer } from "./photos/reducers";
-import { friendsReducer } from "./friends/reducers";
+// import { photosReducer } from "./photos/reducers";
+// import { friendsReducer } from "./friends/reducers";
 import { userReducer } from "./user/reducers";
-import { ordersReducer } from "./orders/reducers";
+import { orderListsReducer } from "./orderLists/reducers";
+import { orderReducer } from "./order/reducers";
 
 import { UserState } from "./user/types";
-import { OrdersState } from "./orders/types";
+import { OrderListsState } from "./orderLists/types";
+import { OrderState } from "./order/types";
 
 export const history = createBrowserHistory();
 
@@ -19,9 +21,10 @@ const rootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
     user: userReducer,
-    orders: ordersReducer,
-    photos: photosReducer,
-    friends: friendsReducer
+    order: orderReducer,
+    orderLists: orderListsReducer
+    // photos: photosReducer,
+    // friends: friendsReducer
   });
 
 function configureStore() {
@@ -33,9 +36,10 @@ function configureStore() {
 export interface State {
   router: RouterState;
   user: UserState;
-  orders: OrdersState;
-  photos: any;
-  friends: any;
+  orderLists: OrderListsState;
+  order: OrderState;
+  // photos: any;
+  // friends: any;
 }
 
 export const store = configureStore();

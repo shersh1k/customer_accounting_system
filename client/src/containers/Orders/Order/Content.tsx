@@ -4,10 +4,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { iOrder } from "../../../store/archive/types";
 
 interface iProps {
-    order: iOrder;
+    currentOrder: iOrder;
 }
 export function Content(props: iProps) {
-    const { description/* , priceMaterials , comments as notes*/ } = props.order
+    const { description/* , priceMaterials , comments as notes*/ } = props.currentOrder
 
     return (
         <CardContent>

@@ -5,7 +5,7 @@ import { MuiPickersUtilsProvider, DatePicker, MaterialUiPickersDate } from "@mat
 import DateFnsUtils from '@date-io/date-fns';
 import ruLocale from 'date-fns/locale/ru';
 import { API_PostOrder } from '../../helpers/API/Methods';
-import { iOrder } from '../../store/orders/types';
+import { iOrder } from '../../store/order/types';
 import newOrderClasses from "../../style/Order.module.scss";
 import UIClasses from "../../style/UI.module.scss";
 
@@ -140,6 +140,8 @@ export default class NewOrder extends React.Component<iProps, iState> {
                                         value={dateOrder}
                                         onChange={(date) => this.handleDateChange(date, "dateOrder")}
                                         margin="dense"
+                                        maxDate={new Date()}
+                                        maxDateMessage="Вы из будущего? :)"
                                     />
                                 </Grid>
                                 <Grid item xs={5} >

@@ -1,34 +1,41 @@
 import { Dispatch } from "redux";
+import { cancel } from "../../helpers/API"; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
+import { iOrder } from "../order/types";
 import {
   API_GetOrdersByDateStartWork,
   API_GetOrdersByDateFinishWork,
   API_GetNotPayedOrders,
   API_GetLastTenOrders,
-  API_GetAllOrders,
-  API_GetOrder
+  API_UpdateOrder
 } from "../../helpers/API/Methods";
-import { cancel } from "../../helpers/API"; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
-import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, LoginActionTypes } from "./types";
+import {
+  GET_ORDERS_REQUEST,
+  GET_ORDERS_SUCCESS,
+  GET_ORDERS_FAIL,
+  PUT_ORDER_REQUEST,
+  PUT_ORDER_SUCCESS,
+  PUT_ORDER_FAIL,
+  LoginActionTypes,
+} from "./types";
 
-export function getOrder(slug: string) {
+export function updateOrder(order: iOrder) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
     if (cancel) cancel("cancelled");
     dispatch({
-      type: GET_ORDERS_REQUEST,
-      isFetching: true,
-      currentOrder: {}
+      type: PUT_ORDER_REQUEST,
+      isFetching: true
     });
-    return API_GetOrder(slug)
+    return API_UpdateOrder(order)
       .then(response => {
         dispatch({
-          type: GET_ORDERS_SUCCESS,
+          type: PUT_ORDER_SUCCESS,
           isFetching: false,
           currentOrder: response.data
         });
       })
       .catch(response => {
         dispatch({
-          type: GET_ORDERS_FAIL,
+          type: PUT_ORDER_FAIL,
           isFetching: false,
           currentOrder: {},
           error: true,
@@ -89,6 +96,7 @@ export function getOrdersByDateStartWork() {
       });
   };
 }
+
 export function getNotPayedOrders() {
   return (dispatch: Dispatch<LoginActionTypes>) => {
     if (cancel) cancel("cancelled");
@@ -128,32 +136,6 @@ export function getLastTenOrders() {
           type: GET_ORDERS_SUCCESS,
           isFetching: false,
           lastTenList: response.data
-        });
-      })
-      .catch(response => {
-        dispatch({
-          type: GET_ORDERS_FAIL,
-          isFetching: false,
-          error: true,
-          errorMessage: response.message
-        });
-      });
-  };
-}
-
-export function getAllOrders() {
-  return (dispatch: Dispatch<LoginActionTypes>) => {
-    if (cancel) cancel("cancelled");
-    dispatch({
-      type: GET_ORDERS_REQUEST,
-      isFetching: true
-    });
-    return API_GetAllOrders()
-      .then(response => {
-        dispatch({
-          type: GET_ORDERS_SUCCESS,
-          isFetching: false,
-          allOrdersList: response.data
         });
       })
       .catch(response => {

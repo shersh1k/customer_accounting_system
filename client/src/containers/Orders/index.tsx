@@ -1,23 +1,24 @@
 import React from "react";
 import { connect } from "react-redux";
 import { State } from "../../store";
-import { iOrder } from "../../store/orders/types";
-import { getOrdersByDateStartWork, getOrdersByDateDeadline, getLastTenOrders, getNotPayedOrders } from "../../store/orders/actions";
+import { iOrder } from "../../store/order/types";
+import { getOrdersByDateStartWork, getOrdersByDateDeadline, getLastTenOrders, getNotPayedOrders } from "../../store/orderLists/actions";
 import { Tabs, Tab, CircularProgress } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import OrderCard from "./OrderCard";
+import { updateOrder } from '../../store/orderLists/actions';
 
 interface iProps {
   deadlineList: iOrder[];
   startWorkList: iOrder[];
   notPayedList: iOrder[];
   lastTenList: iOrder[];
-  allOrdersList: iOrder[];
   isFetching: boolean;
   getOrdersByDateStartWork: Function;
   getOrdersByDateDeadline: Function;
   getLastTenOrders: Function;
   getNotPayedOrders: Function;
+  updateOrder: Function;
 }
 
 interface iState {
@@ -73,16 +74,16 @@ class Orders extends React.Component<iProps, iState> {
         <div style={{ overflow: "auto", maxHeight: "calc(100vh - 50px)" }}>
           {this.props.isFetching && <CircularProgress style={{ margin: 10 }} size={30} />}
           {this.state.showedTab === "DateDeadline" && this.props.deadlineList.map((order, index) => (
-            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} updateOrder={this.props.updateOrder} />
           ))}
           {this.state.showedTab === "DateStartWork" && this.props.startWorkList.map((order, index) => (
-            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} updateOrder={this.props.updateOrder} />
           ))}
           {this.state.showedTab === "NotPayed" && this.props.notPayedList.map((order, index) => (
-            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} updateOrder={this.props.updateOrder} />
           ))}
           {this.state.showedTab === "LastTen" && this.props.lastTenList.map((order, index) => (
-            <OrderCard key={index} order={order} showedTab={this.state.showedTab} />
+            <OrderCard key={index} order={order} showedTab={this.state.showedTab} updateOrder={this.props.updateOrder} />
           ))}
         </div>
         <div />
@@ -92,11 +93,13 @@ class Orders extends React.Component<iProps, iState> {
 }
 
 const mapStateToProps = (store: State) => ({
-  deadlineList: store.orders.deadlineList,
-  startWorkList: store.orders.startWorkList,
-  notPayedList: store.orders.notPayedList,
-  lastTenList: store.orders.lastTenList,
-  isFetching: store.orders.isFetching
+  deadlineList: store.orderLists.deadlineList,
+  startWorkList: store.orderLists.startWorkList,
+  notPayedList: store.orderLists.notPayedList,
+  lastTenList: store.orderLists.lastTenList,
+  isFetching: store.orderLists.isFetching,
+  error: store.orderLists.error,
+  errorMessage: store.orderLists.errorMessage
 });
 
 const mapDispatchToProps = {
@@ -104,9 +107,7 @@ const mapDispatchToProps = {
   getOrdersByDateDeadline: getOrdersByDateDeadline,
   getNotPayedOrders: getNotPayedOrders,
   getLastTenOrders: getLastTenOrders,
+  updateOrder: updateOrder
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Orders);
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);
