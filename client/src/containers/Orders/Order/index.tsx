@@ -57,6 +57,8 @@ class Order extends React.Component<iProps, iState> {
     }
 
     toggleEditMode = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const order = Object.assign({}, this.props.currentOrder)
+        this.setState({ order: order })
         this.props.toggleEditState(this.props.isEdit);
     }
 

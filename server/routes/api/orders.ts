@@ -67,13 +67,19 @@ router.get("/byDateStartWork", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
       if (!user) throw new Error("Нет такого пользователя");
-      Order.find({ author: user.id }, function(err, docs) {
-        if (err) return new Error(err.message);
-        docs = docs
-          .filter(item => item.dateStartWork)
-          .sort((a: any, b: any) => new Date(a.dateStartWork).getTime() - new Date(b.dateStartWork).getTime());
-        return res.json(docs);
-      });
+      Order.find(
+        {
+          author: user.id,
+          $and: [{ dateStartWork: { $exists: true } }, { dateStartWork: { $gte: new Date() } }]
+        },
+        function(err, docs) {
+          if (err) return new Error(err.message);
+          docs = docs.sort(
+            (a: any, b: any) => new Date(a.dateStartWork).getTime() - new Date(b.dateStartWork).getTime()
+          );
+          return res.json(docs);
+        }
+      );
     })
     .catch(next);
 });
@@ -85,13 +91,12 @@ router.get("/byDateDeadline", auth.required, function(req, res, next) {
       Order.find(
         {
           author: user.id,
-          $or: [{ dateStartWork: { $exists: false } }, { dateStartWork: { $lte: new Date() } }]
+          $or: [{ dateStartWork: { $exists: false } }, { dateStartWork: { $lte: new Date() } }],
+          dateDeadline: { $exists: true }
         },
         function(err, docs) {
           if (err) return new Error(err.message);
-          docs = docs
-            .filter(item => item.dateDeadline)
-            .sort((a: any, b: any) => new Date(a.dateDeadline).getTime() - new Date(b.dateDeadline).getTime());
+          docs = docs.sort((a: any, b: any) => new Date(a.dateDeadline).getTime() - new Date(b.dateDeadline).getTime());
           return res.json(docs);
         }
       );
@@ -116,7 +121,7 @@ router.get("/:order", auth.required, function(req, res, next) {
 router.put("/", auth.required, function(req, res, next) {
   User.findById(req.user.id).then(function(user) {
     if (!user) throw new Error("Нет такого пользователя");
-    Order.findById(req.body.order._id, function(err, docs) {
+    Order.findById(req.body.order._id, function(err, docs) { //updateOne
       if (err) return new Error(err.message);
       if (isNull(docs)) return new Error("Не нашелся заказ для обновления");
       if (req.body.order.title) docs.title = req.body.order.title;

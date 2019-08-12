@@ -5,7 +5,7 @@ export const PUT_ORDER_REQUEST = "PUT_ORDER_REQUEST";
 export const PUT_ORDER_SUCCESS = "PUT_ORDER_SUCCESS";
 export const PUT_ORDER_FAIL = "PUT_ORDER_FAIL";
 export const SET_ORDER_EDIT_MODE = "SET_ORDER_EDIT_MODE";
-export const SET_ORDER_READ_MODE = "SET_ORDER_READONLY_MODE";
+export const SET_ORDER_READ_MODE = "SET_ORDER_READ_MODE";
 
 export interface OrderState {
   currentOrder: iOrder;
