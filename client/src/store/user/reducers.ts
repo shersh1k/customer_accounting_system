@@ -15,11 +15,11 @@ const userString = localStorage.getItem("user");
 if (userString) {
   user = JSON.parse(userString);
   user.error = false;
-  user.isFetching = false;
+  user.isPending = false;
 } else {
   user = {
     error: false,
-    isFetching: false
+    isPending: false
   };
 }
 

@@ -8,13 +8,10 @@ import * as path from "path";
 import config from "./_config/db";
 import User from "./models/User";
 import Order from "./models/Order";
-import Comment from "./models/Comment";
+import Comment from "./models/Notes";
 import passport from "./passport/passport";
 import routes from "./routes";
-User;
-Order;
-Comment;
-passport;
+User; Order; Comment; passport; //из-за использования импортов приходится делать так TODO найти решение покрасивше
 
 const app = express();
 

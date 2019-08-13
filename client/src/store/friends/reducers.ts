@@ -6,23 +6,23 @@ import {
 
 const initialState = {
   friends: [],
-  isFetching: false,
+  isPending: false,
   error: ""
 };
 
 export function friendsReducer(state = initialState, action: any) {
   switch (action.type) {
     case GET_FRIENDS_REQUEST:
-      return { ...state, year: action.payload, isFetching: true, error: "" };
+      return { ...state, year: action.payload, isPending: true, error: "" };
     case GET_FRIENDS_SUCCESS:
       return {
         ...state,
         friends: action.payload,
-        isFetching: false,
+        isPending: false,
         error: ""
       };
     case GET_FRIENDS_FAIL:
-      return { ...state, error: action.payload.message, isFetching: false };
+      return { ...state, error: action.payload.message, isPending: false };
     default:
       return state;
   }

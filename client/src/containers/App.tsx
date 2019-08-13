@@ -7,13 +7,13 @@ import { History } from "history";
 import { State } from "../store";
 
 import NavBar from "../components/NavBar";
-import Orders from "./Orders";
+import OrderLists from "./OrderLists";
 import NoMatch from "../components/NoMatch";
 import Login from './Login/Login';
-import Order from './Orders/Order';
+import Order from './Order';
 
 import app from "../style/App.module.scss";
-import NewOrder from './Orders/NewOrder';
+import NewOrder from './Order/NewOrder';
 import Archive from './Archive/Archive';
 
 interface iProps {
@@ -50,7 +50,7 @@ class App extends React.Component<iProps> {
           <div className={app.content}>
             <Switch>
               {!user.token && <Route path="/" render={this.redirectToLogin} />}
-              <Route exact path="/" component={Orders} />
+              <Route exact path="/" component={OrderLists} />
               <Route path="/login" render={this.redirectToMain} />
               <Route path="/archive" component={Archive} />
               <Route path="/orders/neworder" component={NewOrder} />

@@ -1,11 +1,11 @@
 import { Dispatch } from "redux";
 import {
-  API_GetOrdersByDateStartWork,
-  API_GetOrdersByDateFinishWork,
-  API_GetNotPayedOrders,
-  API_GetLastTenOrders,
-  API_GetAllOrders,
-  API_GetOrder
+  GetOrdersStartWork,
+  GetOrdersDeadline,
+  GetNotPayedOrders,
+  GetLastTenOrders,
+  GetAllOrders,
+  GetOrder
 } from "../../helpers/API/Methods";
 import { cancel } from "../../helpers/API"; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
 import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, LoginActionTypes } from "./types";
@@ -15,21 +15,21 @@ export function getOrder(slug: string) {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDERS_REQUEST,
-      isFetching: true,
+      isPending: true,
       currentOrder: {}
     });
-    return API_GetOrder(slug)
+    return GetOrder(slug)
       .then(response => {
         dispatch({
           type: GET_ORDERS_SUCCESS,
-          isFetching: false,
+          isPending: false,
           currentOrder: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
-          isFetching: false,
+          isPending: false,
           currentOrder: {},
           error: true,
           errorMessage: response.message
@@ -43,20 +43,20 @@ export function getOrdersByDateDeadline() {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDERS_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    return API_GetOrdersByDateFinishWork()
+    return GetOrdersDeadline()
       .then(response => {
         dispatch({
           type: GET_ORDERS_SUCCESS,
-          isFetching: false,
+          isPending: false,
           deadlineList: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.message
         });
@@ -69,20 +69,20 @@ export function getOrdersByDateStartWork() {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDERS_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    return API_GetOrdersByDateStartWork()
+    return GetOrdersStartWork()
       .then(response => {
         dispatch({
           type: GET_ORDERS_SUCCESS,
-          isFetching: false,
+          isPending: false,
           startWorkList: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.message
         });
@@ -94,20 +94,20 @@ export function getNotPayedOrders() {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDERS_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    return API_GetNotPayedOrders()
+    return GetNotPayedOrders()
       .then(response => {
         dispatch({
           type: GET_ORDERS_SUCCESS,
-          isFetching: false,
+          isPending: false,
           notPayedList: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.message
         });
@@ -120,20 +120,20 @@ export function getLastTenOrders() {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDERS_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    return API_GetLastTenOrders()
+    return GetLastTenOrders()
       .then(response => {
         dispatch({
           type: GET_ORDERS_SUCCESS,
-          isFetching: false,
+          isPending: false,
           lastTenList: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.message
         });
@@ -146,20 +146,20 @@ export function getAllOrders() {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDERS_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    return API_GetAllOrders()
+    return GetAllOrders()
       .then(response => {
         dispatch({
           type: GET_ORDERS_SUCCESS,
-          isFetching: false,
+          isPending: false,
           allOrdersList: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.message
         });

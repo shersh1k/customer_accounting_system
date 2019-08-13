@@ -3,21 +3,23 @@ import React from "react";
 interface iProps {
   friends: any[];
   getFriends: Function;
-  isFetching: boolean;
+  isPending: boolean;
   error?: string;
 }
 
 export class Friends extends React.Component<iProps> {
+
   onBtnClick = (e: any) => {
     console.log(this.props);
     this.props.getFriends();
   };
+  
   renderTemplate = () => {
-    const { friends, isFetching, error } = this.props;
+    const { friends, isPending, error } = this.props;
 
     if (error)
       return <p className="error">Во время загрузки друзей произошла ошибка</p>;
-    if (isFetching) return <p>Загрузка...</p>;
+    if (isPending) return <p>Загрузка...</p>;
     else
       return friends.map((friend, index) => (
         <div key={index} className="friend">

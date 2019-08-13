@@ -6,7 +6,7 @@ const initialState: OrdersState = {
   lastTenList: [],
   allOrdersList: [],
   notPayedList: [],
-  isFetching: false,
+  isPending: false,
   error: false,
   errorMessage: "cancelled",
   currentOrder: {}
@@ -19,7 +19,7 @@ export function ordersReducer(state = initialState, action: LoginActionTypes) {
     case GET_ORDERS_SUCCESS:
       return { ...state, ...action };
     case GET_ORDERS_FAIL:
-      if (action.errorMessage === "cancelled") action.isFetching = true;
+      if (action.errorMessage === "cancelled") action.isPending = true;
       return { ...state, ...action };
 
     default:

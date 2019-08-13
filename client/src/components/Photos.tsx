@@ -5,7 +5,7 @@ interface iProps {
   year: number;
   photos: iVKPhoto[];
   getPhotos: Function;
-  isFetching: boolean;
+  isPending: boolean;
   error?: string;
 }
 
@@ -16,11 +16,11 @@ export class Photos extends React.Component<iProps> {
     this.props.getPhotos(year); // setYear -> getPhotos
   };
   renderTemplate = () => {
-    const { photos, isFetching, error } = this.props;
+    const { photos, isPending, error } = this.props;
 
     if (error)
       return <p className="error">Во время загрузки фото произошла ошибка</p>;
-    if (isFetching) return <p>Загрузка...</p>;
+    if (isPending) return <p>Загрузка...</p>;
     else
       return photos.map((
         photo,

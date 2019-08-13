@@ -8,7 +8,7 @@ import { submitLoginVK, submitRegister } from '../../store/user/actions';
 interface iProps {
     error: boolean;
     errorMessage?: string;
-    isFetching?: boolean;
+    isPending?: boolean;
     onSubmitRegister: (email: string, password: string, name: string) => void
     onSubmitLoginVK: () => void;
 }
@@ -33,7 +33,7 @@ class Register extends React.Component<iProps, iState> {
     };
 
     render() {
-        const { error, errorMessage, isFetching } = this.props
+        const { error, errorMessage, isPending } = this.props
         return (
             <Paper className={loginClasses.paper}>
                 <form onSubmit={this.onSubmitRegister} className={loginClasses.form}>
@@ -62,8 +62,8 @@ class Register extends React.Component<iProps, iState> {
                         onChange={this.handleInput}
                     />
                     <div className={loginClasses.fetcingWrapper}>
-                        <Button type="submit" variant="contained" color="primary" disabled={isFetching}>Зарегистрироваться</Button>
-                        {isFetching && <CircularProgress size={24} className={loginClasses.fetching} />}
+                        <Button type="submit" variant="contained" color="primary" disabled={isPending}>Зарегистрироваться</Button>
+                        {isPending && <CircularProgress size={24} className={loginClasses.fetching} />}
                     </div>
                 </form>
                 <Snackbar style={{ color: "red" }} open={error} message={<span style={{ color: "orangered" }}>{errorMessage}</span>} />
@@ -76,7 +76,7 @@ class Register extends React.Component<iProps, iState> {
 const mapStateToProps = (store: State) => ({
     error: store.user.error || false,
     errorMessage: store.user.errorMessage,
-    isFetching: store.user.isFetching
+    isPending: store.user.isPending
 });
 
 const mapDispatchToProps = {

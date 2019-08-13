@@ -17,11 +17,5 @@ export const auth = {
     secret: secret,
     userProperty: "user",
     getToken: getTokenFromHeader
-  }) /* ,
-  optional: jwt({
-    secret: secret,
-    userProperty: "user",
-    credentialsRequired: false,
-    getToken: getTokenFromHeader
-  }) */
+  })
 };

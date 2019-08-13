@@ -3,7 +3,7 @@ export const GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS";
 export const GET_ORDERS_FAIL = "GET_ORDERS_FAIL";
 
 export interface OrdersState {
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   deadlineList: iOrder[];
   notPayedList: iOrder[];
@@ -16,20 +16,20 @@ export interface OrdersState {
 
 interface GetOrderRequest {
   type: typeof GET_ORDERS_REQUEST;
-  isFetching: boolean;
+  isPending: boolean;
   ordersList?: iOrder[];
 }
 
 interface GetOrderSuccess {
   type: typeof GET_ORDERS_SUCCESS;
-  isFetching: boolean;
+  isPending: boolean;
   ordersList?: iOrder[];
   currentOrder?: iOrder;
 }
 
 interface GetOrderFail {
   type: typeof GET_ORDERS_FAIL;
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   errorMessage: string;
   currentOrder?: iOrder;

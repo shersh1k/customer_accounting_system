@@ -8,7 +8,7 @@ import OrderCard from "./OrderCard";
 
 interface iProps {
     allOrdersList: iOrder[];
-    isFetching: boolean;
+    isPending: boolean;
     getAllOrders: Function;
 }
 
@@ -31,7 +31,7 @@ class Archive extends React.Component<iProps, iState> {
     render() {
         return (
             <div style={{ overflow: "auto", maxHeight: "calc(100vh - 50px)" }}>
-                {this.props.isFetching && <CircularProgress style={{ margin: 10 }} size={30} />}
+                {this.props.isPending && <CircularProgress style={{ margin: 10 }} size={30} />}
                 {this.props.allOrdersList.map((order, index) => (
                     <OrderCard key={index} order={order} showedTab={"LastTen"} />
                 ))}
@@ -42,7 +42,7 @@ class Archive extends React.Component<iProps, iState> {
 
 const mapStateToProps = (store: State) => ({
     allOrdersList: store.orders.allOrdersList,
-    isFetching: store.orders.isFetching
+    isPending: store.orders.isPending
 });
 
 const mapDispatchToProps = {

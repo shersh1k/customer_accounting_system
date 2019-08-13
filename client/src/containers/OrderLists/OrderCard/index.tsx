@@ -6,16 +6,16 @@ import AttachMoney from "@material-ui/icons/AttachMoney";
 import Edit from "@material-ui/icons/Edit";
 import Check from "@material-ui/icons/Check";
 import { Link } from "react-router-dom";
-import { iShowedTabs } from "..";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import ruLocale from 'date-fns/locale/ru';
 import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers';
+import { Tabs } from "../../../store/orderLists/types";
 
 interface iProps {
     order: iOrder;
-    showedTab: iShowedTabs;
+    showedTab: Tabs;
     updateOrder: Function;
 }
 
@@ -32,7 +32,7 @@ export default class OrderCard extends React.Component<iProps, iState> {
 
     Title() {
         const { order, showedTab } = this.props;
-        const { dateStartWork, dateOrder } = this.props.order
+        const { dateStartWork, dateOrder, dateDeadline } = this.props.order
         return (
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Link to={`/orders/${this.props.order.slug}`}>{order.title}</Link>
@@ -48,6 +48,7 @@ export default class OrderCard extends React.Component<iProps, iState> {
                                     format="d MMMM yyyy"
                                     value={dateStartWork}
                                     minDate={dateOrder}
+                                    maxDate={dateDeadline}
                                     onChange={(date) => this.handleDateChange(date, "dateStartWork")}
                                     margin="dense"
                                 />

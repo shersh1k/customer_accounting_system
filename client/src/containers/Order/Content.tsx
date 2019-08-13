@@ -1,7 +1,7 @@
 import React from "react";
 import { CardContent, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, List, ListItem } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { iOrder } from "../../../store/archive/types";
+import { iOrder } from "../../store/archive/types";
 
 interface iProps {
     currentOrder: iOrder;

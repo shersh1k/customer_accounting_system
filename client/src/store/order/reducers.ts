@@ -5,18 +5,33 @@ import {
   PUT_ORDER_REQUEST,
   PUT_ORDER_SUCCESS,
   PUT_ORDER_FAIL,
-  SET_ORDER_EDIT_MODE,
+  POST_ORDER_REQUEST,
+  POST_ORDER_SUCCESS,
+  POST_ORDER_FAIL,
   SET_ORDER_READ_MODE,
+  SET_ORDER_EDIT_MODE,
+  HANDLE_CHANGE_NEW,
   OrderState,
   LoginActionTypes
 } from "./types";
-
+function increaseDate(date: Date, number: number) {
+  return new Date(date.setDate(date.getDate() + number));
+}
 const initialState: OrderState = {
-  currentOrder: {},
+  order: {},
+  editedOrder: {},
+  newOrder: {
+    title: "",
+    description: "",
+    dateOrder: new Date(),
+    dateDeadline: increaseDate(new Date(), 5),
+    priceOrder: 0,
+    priceMaterials: 0
+  },
   isEdit: false,
-  isFetching: false,
+  isPending: false,
   error: false,
-  errorMessage: "cancelled",
+  errorMessage: "cancelled"
 };
 
 export function orderReducer(state = initialState, action: LoginActionTypes) {
@@ -26,7 +41,7 @@ export function orderReducer(state = initialState, action: LoginActionTypes) {
     case GET_ORDER_SUCCESS:
       return { ...state, ...action };
     case GET_ORDER_FAIL:
-      if (action.errorMessage === "cancelled") action.isFetching = true;
+      if (action.errorMessage === "cancelled") action.isPending = true;
       return { ...state, ...action };
 
     case PUT_ORDER_REQUEST:
@@ -34,7 +49,7 @@ export function orderReducer(state = initialState, action: LoginActionTypes) {
     case PUT_ORDER_SUCCESS:
       return { ...state, ...action };
     case PUT_ORDER_FAIL:
-      if (action.errorMessage === "cancelled") action.isFetching = true;
+      if (action.errorMessage === "cancelled") action.isPending = true;
       return { ...state, ...action };
 
     case SET_ORDER_EDIT_MODE:
@@ -42,6 +57,8 @@ export function orderReducer(state = initialState, action: LoginActionTypes) {
     case SET_ORDER_READ_MODE:
       return { ...state, ...action };
 
+    case HANDLE_CHANGE_NEW:
+      return { ...state, newOrder: Object.assign({}, state.newOrder, action.newOrder) };
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Stepper, Step, StepLabel } from '@material-ui/core';
-import { iOrder } from '../../../store/order/types';
+import { iOrder } from '../../store/order/types';
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 
 interface iProps {

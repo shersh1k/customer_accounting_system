@@ -2,7 +2,7 @@
 import React from "react";
 import { Button, TextField } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import { iOrder } from '../../../store/order/types';
+import { iOrder } from '../../store/order/types';
 import { Steps } from "./Steps";
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 

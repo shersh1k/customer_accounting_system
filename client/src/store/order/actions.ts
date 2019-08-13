@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { API_UpdateOrder, API_GetOrder } from "../../helpers/API/Methods";
+import { UpdateOrder, GetOrder, PostOrder } from "../../helpers/API/Methods";
 import { cancel } from "../../helpers/API"; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
 import {
   GET_ORDER_REQUEST,
@@ -8,8 +8,12 @@ import {
   PUT_ORDER_REQUEST,
   PUT_ORDER_SUCCESS,
   PUT_ORDER_FAIL,
+  POST_ORDER_REQUEST,
+  POST_ORDER_SUCCESS,
+  POST_ORDER_FAIL,
   SET_ORDER_READ_MODE,
   SET_ORDER_EDIT_MODE,
+  HANDLE_CHANGE_NEW,
   LoginActionTypes,
   iOrder
 } from "./types";
@@ -19,21 +23,59 @@ export function getOrder(slug: string) {
     if (cancel) cancel("cancelled");
     dispatch({
       type: GET_ORDER_REQUEST,
-      isFetching: true,
+      isPending: true,
       currentOrder: {}
     });
-    return API_GetOrder(slug)
+    return GetOrder(slug)
       .then(response => {
         dispatch({
           type: GET_ORDER_SUCCESS,
-          isFetching: false,
+          isPending: false,
           currentOrder: response.data
         });
       })
       .catch(response => {
         dispatch({
           type: GET_ORDER_FAIL,
-          isFetching: false,
+          isPending: false,
+          currentOrder: {},
+          error: true,
+          errorMessage: response.message
+        });
+      });
+  };
+}
+
+export function handleChange(field: keyof iOrder, value: any) {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
+    dispatch({
+      type: HANDLE_CHANGE_NEW,
+      newOrder: {
+        [field]: value
+      }
+    });
+  };
+}
+
+export function postOrder(order: iOrder) {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
+    dispatch({
+      type: POST_ORDER_REQUEST,
+      isPending: true,
+      currentOrder: {}
+    });
+    return PostOrder(order)
+      .then(response => {
+        dispatch({
+          type: POST_ORDER_SUCCESS,
+          isPending: false,
+          currentOrder: response.data
+        });
+      })
+      .catch(response => {
+        dispatch({
+          type: POST_ORDER_FAIL,
+          isPending: false,
           currentOrder: {},
           error: true,
           errorMessage: response.message
@@ -62,13 +104,13 @@ export function updateOrder(order: iOrder) {
     if (cancel) cancel("cancelled");
     dispatch({
       type: PUT_ORDER_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    return API_UpdateOrder(order)
+    return UpdateOrder(order)
       .then(response => {
         dispatch({
           type: PUT_ORDER_SUCCESS,
-          isFetching: false,
+          isPending: false,
           currentOrder: response.data
         });
         dispatch({
@@ -79,7 +121,7 @@ export function updateOrder(order: iOrder) {
       .catch(response => {
         dispatch({
           type: PUT_ORDER_FAIL,
-          isFetching: false,
+          isPending: false,
           currentOrder: {},
           error: true,
           errorMessage: response.message

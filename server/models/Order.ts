@@ -2,7 +2,7 @@ import { Schema, Document, model, Types } from "mongoose";
 import * as uniqueValidator from "mongoose-unique-validator";
 import * as slug from "slug";
 import { iUserModel } from "./User";
-import { iCommentModel } from "./Comment";
+import { iCommentModel } from "./Notes";
 
 var OrderSchema = new Schema<iOrder>(
   {

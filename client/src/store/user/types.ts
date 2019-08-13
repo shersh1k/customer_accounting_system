@@ -10,42 +10,42 @@ export interface UserState {
   password?: string;
   email?: string;
   username?: string;
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   errorMessage?: string;
   token?: string;
 }
 interface SubmitRegisterRequest {
   type: typeof REGISTER_REQUEST;
-  isFetching: boolean;
+  isPending: boolean;
 }
 interface SubmitRegisterSuccess {
   type: typeof REGISTER_SUCCESS;
   user: UserState;
-  isFetching: boolean;
+  isPending: boolean;
   password: undefined;
 }
 
 interface SubmitRegisterFail {
   type: typeof REGISTER_FAIL;
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   errorMessage: string;
 }
 
 interface LoginRequest {
   type: typeof LOGIN_REQUEST;
-  isFetching: boolean;
+  isPending: boolean;
 }
 interface LoginSuccess {
   type: typeof LOGIN_SUCCESS;
   user: UserState;
-  isFetching: boolean;
+  isPending: boolean;
   password: undefined;
 }
 interface LoginFail {
   type: typeof LOGIN_FAIL;
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   errorMessage: string;
 }
@@ -55,7 +55,7 @@ interface Logout {
   password: undefined;
   email: undefined;
   username: undefined;
-  isFetching: false;
+  isPending: false;
   error: false;
   token: undefined;
 }

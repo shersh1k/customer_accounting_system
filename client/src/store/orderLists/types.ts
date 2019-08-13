@@ -6,33 +6,39 @@ export const GET_ORDERS_FAIL = "GET_ORDERS_FAIL";
 export const PUT_ORDER_REQUEST = "PUT_ORDER_REQUEST";
 export const PUT_ORDER_SUCCESS = "PUT_ORDER_SUCCESS";
 export const PUT_ORDER_FAIL = "PUT_ORDER_FAIL";
+export const CHANGE_LIST = "CHANGE_LIST";
 
 export interface OrderListsState {
-  deadlineList: iOrder[];
-  startWorkList: iOrder[];
-  notPayedList: iOrder[];
-  lastTenList: iOrder[];
-  isFetching: boolean;
+  listName: Tabs;
+  list: iOrder[];
+  isPending: boolean;
   error: boolean;
   errorMessage?: string;
 }
 
+export type Tabs = "DateDeadline" | "DateStartWork" | "LastTen" | "NotPayed";
+
+interface ChangeList {
+  type: typeof CHANGE_LIST;
+  listName?: Tabs;
+}
+
 interface PutOrderRequest {
   type: typeof PUT_ORDER_REQUEST;
-  isFetching: boolean;
+  isPending: boolean;
   ordersList?: iOrder[];
 }
 
 interface PutOrderSuccess {
   type: typeof PUT_ORDER_SUCCESS;
-  isFetching: boolean;
+  isPending: boolean;
   ordersList?: iOrder[];
   currentOrder?: iOrder;
 }
 
 interface PutOrderFail {
   type: typeof PUT_ORDER_FAIL;
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   errorMessage: string;
   currentOrder?: iOrder;
@@ -40,20 +46,20 @@ interface PutOrderFail {
 
 interface GetOrderRequest {
   type: typeof GET_ORDERS_REQUEST;
-  isFetching: boolean;
+  isPending: boolean;
   ordersList?: iOrder[];
 }
 
 interface GetOrderSuccess {
   type: typeof GET_ORDERS_SUCCESS;
-  isFetching: boolean;
+  isPending: boolean;
   ordersList?: iOrder[];
   currentOrder?: iOrder;
 }
 
 interface GetOrderFail {
   type: typeof GET_ORDERS_FAIL;
-  isFetching: boolean;
+  isPending: boolean;
   error: boolean;
   errorMessage: string;
   currentOrder?: iOrder;
@@ -65,4 +71,5 @@ export type LoginActionTypes =
   | GetOrderFail
   | PutOrderRequest
   | PutOrderSuccess
-  | PutOrderFail;
+  | PutOrderFail
+  | ChangeList;

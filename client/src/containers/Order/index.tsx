@@ -1,15 +1,15 @@
 import React from 'react';
 import { Card, CardHeader, CardActions } from '@material-ui/core';
 import { MaterialUiPickersDate } from "@material-ui/pickers";
-import { iOrder } from '../../../store/order/types';
+import { iOrder } from '../../store/order/types';
 import { connect } from 'react-redux';
-import { State } from '../../../store';
-import { getOrder, updateOrder, toggleEditState } from '../../../store/order/actions';
+import { State } from '../../store';
+import { getOrder, updateOrder, toggleEditState } from '../../store/order/actions';
 import { Title } from './Title';
 import { Content } from './Content';
 
 interface iProps {
-    isFetching: boolean;
+    isPending: boolean;
     error: boolean;
     errorMessage?: string;
     isEdit: boolean;
@@ -21,26 +21,26 @@ interface iProps {
 }
 
 interface iState {
+    // TODO почитать https://ru.reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
     order: iOrder;
 }
 
 class Order extends React.Component<iProps, iState> {
     constructor(props: iProps) {
-        super(props)
-        this.state = {
-            order: {}
-        }
+        super(props);
+        this.state = { order: {} };
     }
 
-    async componentDidMount() {
-        await this.props.getOrder(this.props.slug)
-        const order = Object.assign({}, this.props.currentOrder)
-        this.setState({ order: order })
+    componentDidMount() {
+        this.props.getOrder(this.props.slug).then(() => {
+            const order = Object.assign({}, this.props.currentOrder)
+            this.setState({ order: order })
+        })
     }
 
     submitButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        this.props.updateOrder({ ...this.state.order });
+        this.props.updateOrder({ ...this.state.order, _id: this.props.currentOrder._id });
     }
 
     handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,9 +82,9 @@ class Order extends React.Component<iProps, iState> {
 
 const mapStateToProps = (store: State) => ({
     slug: store.router.location.pathname.split('/')[2],
-    currentOrder: store.order.currentOrder,
-    isFetching: store.order.isFetching,
+    currentOrder: store.order.order,
     isEdit: store.order.isEdit,
+    isPending: store.order.isPending,
     error: store.order.error,
     errorMessage: store.order.errorMessage,
 });

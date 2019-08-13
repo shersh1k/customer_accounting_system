@@ -5,16 +5,15 @@ import {
   PUT_ORDER_REQUEST,
   PUT_ORDER_SUCCESS,
   PUT_ORDER_FAIL,
+  CHANGE_LIST,
   OrderListsState,
   LoginActionTypes
 } from "./types";
 
 const initialState: OrderListsState = {
-  deadlineList: [],
-  startWorkList: [],
-  lastTenList: [],
-  notPayedList: [],
-  isFetching: false,
+  list: [],
+  listName: "DateDeadline",
+  isPending: false,
   error: false,
   errorMessage: ""
 };
@@ -26,7 +25,7 @@ export function orderListsReducer(state = initialState, action: LoginActionTypes
     case GET_ORDERS_SUCCESS:
       return { ...state, ...action };
     case GET_ORDERS_FAIL:
-      if (action.errorMessage === "cancelled") action.isFetching = true;
+      if (action.errorMessage === "cancelled") action.isPending = true;
       return { ...state, ...action };
 
     case PUT_ORDER_REQUEST:
@@ -34,6 +33,9 @@ export function orderListsReducer(state = initialState, action: LoginActionTypes
     case PUT_ORDER_SUCCESS:
       return { ...state, ...action };
     case PUT_ORDER_FAIL:
+      return { ...state, ...action };
+
+    case CHANGE_LIST:
       return { ...state, ...action };
 
     default:

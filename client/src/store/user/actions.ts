@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { VKLogin } from "../../helpers/VK.API/index";
-import { API_Register, API_Login } from "../../helpers/API/Methods";
+import { Register, Login } from "../../helpers/API/Methods";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -16,14 +16,14 @@ export function submitRegister(email: string, password: string, username: string
   return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: REGISTER_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    API_Register({ email, password, username }).then(
+    Register({ email, password, username }).then(
       response => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         dispatch({
           type: REGISTER_SUCCESS,
-          isFetching: false,
+          isPending: false,
           password: undefined,
           ...response.data.user
         });
@@ -31,7 +31,7 @@ export function submitRegister(email: string, password: string, username: string
       response => {
         dispatch({
           type: REGISTER_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.response.data.message
         });
@@ -44,14 +44,14 @@ export function submitLogin(email: string, password: string) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: LOGIN_REQUEST,
-      isFetching: true
+      isPending: true
     });
-    API_Login({ email, password }).then(
+    Login({ email, password }).then(
       response => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         dispatch({
           type: LOGIN_SUCCESS,
-          isFetching: false,
+          isPending: false,
           password: undefined,
           ...response.data.user
         });
@@ -59,7 +59,7 @@ export function submitLogin(email: string, password: string) {
       response => {
         dispatch({
           type: LOGIN_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: response.response.data.message
         });
@@ -72,20 +72,20 @@ export function submitLoginVK() {
   return function(dispatch: Dispatch<LoginActionTypes>) {
     dispatch({
       type: LOGIN_REQUEST,
-      isFetching: true
+      isPending: true
     });
     VKLogin((r: any) => {
       if (r.session) {
         dispatch({
           type: LOGIN_SUCCESS,
-          isFetching: false,
+          isPending: false,
           password: undefined,
           ...r.session.data.user
         });
       } else {
         dispatch({
           type: LOGIN_FAIL,
-          isFetching: false,
+          isPending: false,
           error: true,
           errorMessage: r.session.response.data.message
         });
@@ -101,7 +101,7 @@ export function logout() {
     password: undefined,
     email: undefined,
     username: undefined,
-    isFetching: undefined,
+    isPending: undefined,
     error: undefined,
     token: undefined
   };
