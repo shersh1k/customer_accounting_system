@@ -14,9 +14,11 @@ import {
   OrderState,
   LoginActionTypes
 } from "./types";
+
 function increaseDate(date: Date, number: number) {
   return new Date(date.setDate(date.getDate() + number));
 }
+
 const initialState: OrderState = {
   order: {},
   editedOrder: {},
@@ -41,7 +43,6 @@ export function orderReducer(state = initialState, action: LoginActionTypes) {
     case GET_ORDER_SUCCESS:
       return { ...state, ...action };
     case GET_ORDER_FAIL:
-      if (action.errorMessage === "cancelled") action.isPending = true;
       return { ...state, ...action };
 
     case PUT_ORDER_REQUEST:
@@ -49,7 +50,13 @@ export function orderReducer(state = initialState, action: LoginActionTypes) {
     case PUT_ORDER_SUCCESS:
       return { ...state, ...action };
     case PUT_ORDER_FAIL:
-      if (action.errorMessage === "cancelled") action.isPending = true;
+      return { ...state, ...action };
+
+    case POST_ORDER_REQUEST:
+      return { ...state, ...action };
+    case POST_ORDER_SUCCESS:
+      return { ...state, ...action };
+    case POST_ORDER_FAIL:
       return { ...state, ...action };
 
     case SET_ORDER_EDIT_MODE:

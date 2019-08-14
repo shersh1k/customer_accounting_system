@@ -6,7 +6,7 @@ import { setList } from "../../store/orderLists/actions";
 import { Tabs, Tab, CircularProgress } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import OrderCard from "./OrderCard";
-import { updateOrder } from '../../store/orderLists/actions';
+import { updateOrder } from "../../store/orderLists/actions";
 import { Tabs as ShowedTab } from "../../store/orderLists/types";
 
 interface iProps {
@@ -18,14 +18,18 @@ interface iProps {
 }
 
 class OrderLists extends React.Component<iProps> {
-
   componentDidMount() {
-    this.props.setList(this.props.listName)
-    this.setState({ showedTab: this.props.listName });
+    if (this.props.listName !== "LastTen") {
+      this.props.setList(this.props.listName);
+      this.setState({ showedTab: this.props.listName });
+    } else {
+      this.props.setList("DateDeadline");
+      this.setState({ showedTab: "DateDeadline" });
+    }
   }
 
   handleChange = (event: React.ChangeEvent<{}>, tab: ShowedTab) => {
-    this.props.setList(tab)
+    this.props.setList(tab);
     this.setState({ showedTab: tab });
   };
 
@@ -42,27 +46,35 @@ class OrderLists extends React.Component<iProps> {
           <Tab label="Дедлайн" value="DateDeadline" />
           <Tab label="В очереди" value="DateStartWork" />
           <Tab label="Неоплаченные" value="NotPayed" />
-          <Tab label="Недавние" value="LastTen" />
         </Tabs>
-        <div style={{ overflow: "auto", maxHeight: "calc(100vh - 50px)" }}>
-          {this.props.isPending && <CircularProgress style={{ margin: 10 }} size={30} />}
-          <List list={this.props.list} showedTab={this.props.listName} updateOrder={this.props.updateOrder} />
-        </div>
-        <div />
+        <List
+          list={this.props.list}
+          showedTab={this.props.listName}
+          updateOrder={this.props.updateOrder}
+          isPending={this.props.isPending}
+        />
       </Container>
     );
   }
 }
 
-export function List(props: { list: iOrder[], showedTab: ShowedTab, updateOrder: Function }) {
+interface iProps2 {
+  isPending: boolean;
+  list: iOrder[];
+  showedTab: ShowedTab;
+  updateOrder?: Function;
+}
+
+export function List(props: iProps2) {
   const { list, showedTab, updateOrder } = props;
   return (
-    <>
+    <div style={{ overflow: "auto"}}>
+      {props.isPending && <CircularProgress style={{ margin: 10 }} size={30} />}
       {list.map((order, index) => (
         <OrderCard key={index} order={order} showedTab={showedTab} updateOrder={updateOrder} />
       ))}
-    </>
-  )
+    </div>
+  );
 }
 
 const mapStateToProps = (store: State) => ({
@@ -70,7 +82,7 @@ const mapStateToProps = (store: State) => ({
   list: store.orderLists.list,
   isPending: store.orderLists.isPending,
   error: store.orderLists.error,
-  errorMessage: store.orderLists.errorMessage,
+  errorMessage: store.orderLists.errorMessage
 });
 
 const mapDispatchToProps = {
@@ -78,4 +90,7 @@ const mapDispatchToProps = {
   setList: setList
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderLists);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OrderLists);
