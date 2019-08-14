@@ -7,11 +7,11 @@ import ruLocale from "date-fns/locale/ru";
 import { iOrder } from "../../store/order/types";
 import newOrderClasses from "../../style/Order.module.scss";
 import UIClasses from "../../style/UI.module.scss";
-import OrderLists, { List } from "../OrderLists";
 import { connect } from "react-redux";
 import { State } from "../../store";
 import { postOrder, handleChange } from "../../store/order/actions";
 import { setList } from "../../store/orderLists/actions";
+import { List } from './../OrderLists/List';
 
 interface iProps {
   postOrder: Function;

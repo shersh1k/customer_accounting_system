@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import { State } from "../../store";
 import { iOrder } from "../../store/order/types";
 import { setList } from "../../store/orderLists/actions";
-import { Tabs, Tab, CircularProgress } from "@material-ui/core";
+import { Tabs, Tab } from "@material-ui/core";
 import { Container } from "@material-ui/core";
-import OrderCard from "./OrderCard";
 import { updateOrder } from "../../store/orderLists/actions";
 import { Tabs as ShowedTab } from "../../store/orderLists/types";
+import { List } from './List';
 
 interface iProps {
   listName: ShowedTab;
@@ -58,24 +58,6 @@ class OrderLists extends React.Component<iProps> {
   }
 }
 
-interface iProps2 {
-  isPending: boolean;
-  list: iOrder[];
-  showedTab: ShowedTab;
-  updateOrder?: Function;
-}
-
-export function List(props: iProps2) {
-  const { list, showedTab, updateOrder } = props;
-  return (
-    <div style={{ overflow: "auto"}}>
-      {props.isPending && <CircularProgress style={{ margin: 10 }} size={30} />}
-      {list.map((order, index) => (
-        <OrderCard key={index} order={order} showedTab={showedTab} updateOrder={updateOrder} />
-      ))}
-    </div>
-  );
-}
 
 const mapStateToProps = (store: State) => ({
   listName: store.orderLists.listName,
