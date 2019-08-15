@@ -46,7 +46,7 @@ class App extends React.Component<iProps> {
     return (
       <ConnectedRouter history={history}>
         <div className={app.appRoot}>
-          {user.token && <NavBar className={app.navbar} />}
+          {user.token && <NavBar className={app.navbar} generate={user.username === "test"} />}
           <div className={app.content}>
             <Switch>
               {!user.token && <Route path="/" render={this.redirectToLogin} />}

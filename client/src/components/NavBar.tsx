@@ -7,10 +7,12 @@ import { ListItemText, ListItemIcon } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { logout } from "../store/user/actions";
 import { store } from "../store";
+import { Generate } from './../helpers/API/Methods';
 
 
 interface iProps {
   className: string;
+  generate?: boolean;
 }
 
 export default function NavBar(props: iProps) {
@@ -42,6 +44,12 @@ export default function NavBar(props: iProps) {
           </ListItemIcon>
           <ListItemText primary="Выйти" />
         </ListItem>
+        {props.generate && <ListItem button onClick={() => Generate()}>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Сгенерировать базу" />
+        </ListItem>}
       </List>
     </Drawer>
   );

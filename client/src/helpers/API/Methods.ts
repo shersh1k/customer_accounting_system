@@ -2,6 +2,10 @@ import API, { HTTP } from ".";
 import { iUser } from "../../store/user/types";
 import { iOrder } from "../../store/order/types";
 
+export function Generate() {
+  return API(HTTP.GET, "/generate", true);
+}
+
 export function Register(data: iUser) {
   return API(HTTP.POST, "/api/users", false, { user: { ...data } });
 }

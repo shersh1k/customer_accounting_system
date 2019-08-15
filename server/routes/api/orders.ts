@@ -38,11 +38,10 @@ router.get("/lastTen", auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
       if (!user) throw new Error("Нет такого пользователя");
-      Order.find({ author: user.id }, function(err, docs) {
-        if (err) return new Error(err.message);
-        docs = docs.reverse().slice(0, 10);
-        return res.json(docs);
-      });
+      Order.find({ author: user.id })
+        .limit(10)
+        .sort({ createdAt: -1 })
+        .then(value => res.json(value));
     })
     .catch(next);
 });

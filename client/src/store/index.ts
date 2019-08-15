@@ -10,10 +10,12 @@ import logger from "redux-logger";
 import { userReducer } from "./user/reducers";
 import { orderListsReducer } from "./orderLists/reducers";
 import { orderReducer } from "./order/reducers";
+import { newOrderReducer } from "./newOrder/reducers";
 
 import { UserState } from "./user/types";
 import { OrderListsState } from "./orderLists/types";
 import { OrderState } from "./order/types";
+import { NewOrderState } from "./newOrder/types";
 
 export const history = createBrowserHistory();
 
@@ -22,6 +24,7 @@ const rootReducer = (history: History) =>
     router: connectRouter(history),
     user: userReducer,
     order: orderReducer,
+    newOrder: newOrderReducer,
     orderLists: orderListsReducer
     // photos: photosReducer,
     // friends: friendsReducer
@@ -38,6 +41,7 @@ export interface State {
   user: UserState;
   orderLists: OrderListsState;
   order: OrderState;
+  newOrder: NewOrderState;
   // photos: any;
   // friends: any;
 }

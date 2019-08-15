@@ -1,13 +1,8 @@
 import { Dispatch } from "redux";
 import { cancel } from "../../helpers/API"; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
 import { iOrder } from "../order/types";
-import {
-  GetOrdersDeadline,
-  GetOrdersStartWork,
-  GetLastTenOrders,
-  GetNotPayedOrders,
-  UpdateOrder
-} from "../../helpers/API/Methods";
+import { AxiosResponse } from "axios";
+import { GetOrdersDeadline, GetOrdersStartWork, GetNotPayedOrders, UpdateOrder } from "../../helpers/API/Methods";
 import {
   GET_ORDERS_REQUEST,
   GET_ORDERS_SUCCESS,
@@ -19,7 +14,6 @@ import {
   LoginActionTypes,
   Tabs
 } from "./types";
-import { AxiosResponse } from "axios";
 
 export function setList(listName: Tabs) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
@@ -29,7 +23,6 @@ export function setList(listName: Tabs) {
     });
     if (listName === "DateDeadline") return getList(dispatch, GetOrdersDeadline);
     if (listName === "DateStartWork") return getList(dispatch, GetOrdersStartWork);
-    if (listName === "LastTen") return getList(dispatch, GetLastTenOrders);
     if (listName === "NotPayed") return getList(dispatch, GetNotPayedOrders);
   };
 }

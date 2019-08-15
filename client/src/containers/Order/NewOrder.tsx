@@ -1,32 +1,31 @@
 import React from "react";
-import { Card, CardContent, CardHeader, TextField, Grid, CircularProgress } from "@material-ui/core";
-import { Button } from "@material-ui/core";
+import { connect } from "react-redux";
+import { Card, CardContent, CardHeader, TextField, Grid, CircularProgress, Button } from "@material-ui/core";
 import { MuiPickersUtilsProvider, DatePicker, MaterialUiPickersDate } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ruLocale from "date-fns/locale/ru";
+
 import { iOrder } from "../../store/order/types";
 import newOrderClasses from "../../style/Order.module.scss";
 import UIClasses from "../../style/UI.module.scss";
-import { connect } from "react-redux";
 import { State } from "../../store";
-import { postOrder, handleChange } from "../../store/order/actions";
-import { setList } from "../../store/orderLists/actions";
+import { postOrder, handleChange, getLastTen } from "../../store/newOrder/actions";
 import { List } from './../OrderLists/List';
 
 interface iProps {
-  postOrder: Function;
-  handleChange: Function;
   newOrder: iOrder;
+  list: iOrder[];
+  getLastTen: () => void;
+  postOrder: (order: iOrder) => void;
+  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate) => void;
   isPending: boolean;
   error: boolean;
   errorMessage?: string;
-  list: iOrder[];
-  setList: Function;
 }
 
 class NewOrder extends React.Component<iProps> {
   componentDidMount() {
-    this.props.setList("LastTen");
+    this.props.getLastTen()
   }
 
   onSubmitRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,14 +33,9 @@ class NewOrder extends React.Component<iProps> {
     this.props.postOrder({ ...this.props.newOrder });
   };
 
-  handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    this.props.handleChange(name, value);
-  };
-
-  handleDateChange = (date: MaterialUiPickersDate, name: string) => {
-    this.props.handleChange(name, date);
-  };
+  handleChange(field: keyof iOrder, value: string | MaterialUiPickersDate) {
+    this.props.handleChange(field, value)
+  }
 
   submitButton() {
     return (
@@ -71,9 +65,8 @@ class NewOrder extends React.Component<iProps> {
                 <Grid item xs={6}>
                   <TextField
                     {...commonProps}
-                    onChange={this.handleInput}
+                    onChange={event => this.handleChange("title", event.currentTarget.value)}
                     value={title}
-                    name="title"
                     label="Название заказа"
                     type="text"
                   />
@@ -81,9 +74,8 @@ class NewOrder extends React.Component<iProps> {
                 <Grid item xs={2}>
                   <TextField
                     {...commonProps}
-                    onChange={this.handleInput}
+                    onChange={event => this.handleChange("priceOrder", event.currentTarget.value)}
                     value={priceOrder}
-                    name="priceOrder"
                     label="Цена"
                     type="number"
                   />
@@ -91,9 +83,8 @@ class NewOrder extends React.Component<iProps> {
                 <Grid item xs={10}>
                   <TextField
                     {...commonProps}
-                    onChange={this.handleInput}
+                    onChange={event => this.handleChange("description", event.currentTarget.value)}
                     value={description}
-                    name="description"
                     label="Описание"
                     type="text"
                     multiline
@@ -103,9 +94,8 @@ class NewOrder extends React.Component<iProps> {
                   <Grid item xs={5}>
                     <DatePicker
                       {...commonProps}
-                      onChange={date => this.handleDateChange(date, "dateOrder")}
+                      onChange={date => this.handleChange("dateOrder", date)}
                       value={dateOrder}
-                      name="dateOrder"
                       label="Принят"
                       format="d MMMM yyyy"
                       maxDate={new Date()}
@@ -115,9 +105,8 @@ class NewOrder extends React.Component<iProps> {
                   <Grid item xs={5}>
                     <DatePicker
                       {...commonProps}
-                      onChange={date => this.handleDateChange(date, "dateDeadline")}
+                      onChange={date => this.handleChange("dateDeadline", date)}
                       value={dateDeadline}
-                      name="dateDeadline"
                       label="Дедлайн"
                       format="d MMMM yyyy"
                       minDate={dateOrder || new Date()}
@@ -140,18 +129,17 @@ class NewOrder extends React.Component<iProps> {
 }
 
 const mapStateToProps = (store: State) => ({
-  newOrder: store.order.newOrder,
-  isPending: store.order.isPending,
-  error: store.order.error,
-  errorMessage: store.order.errorMessage,
-
-  list: store.orderLists.list
+  newOrder: store.newOrder.newOrder,
+  isPending: store.newOrder.isPending,
+  error: store.newOrder.error,
+  errorMessage: store.newOrder.errorMessage,
+  list: store.newOrder.list
 });
 
 const mapDispatchToProps = {
   postOrder: postOrder,
   handleChange: handleChange,
-  setList: setList
+  getLastTen: getLastTen
 };
 
 export default connect(
