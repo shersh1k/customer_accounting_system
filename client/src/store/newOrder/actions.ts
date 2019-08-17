@@ -1,5 +1,5 @@
-import { Dispatch } from "redux";
-import { PostOrder, GetLastTenOrders } from "../../helpers/API/Methods";
+import { Dispatch } from 'redux';
+import { PostOrder, GetLastTenOrders } from '../../helpers/API/Methods';
 import {
   POST_ORDER_REQUEST,
   POST_ORDER_SUCCESS,
@@ -8,11 +8,11 @@ import {
   GET_ORDERS_SUCCESS,
   GET_ORDERS_FAIL,
   HANDLE_CHANGE_NEW,
-  LoginActionTypes
-} from "./types";
-import { iOrder } from "../order/types";
+  LoginActionTypes,
+  iNewOrder
+} from './types';
 
-export function handleChange(field: keyof iOrder, value: any) {
+export function handleChange(field: keyof iNewOrder, value: any) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: HANDLE_CHANGE_NEW,
@@ -23,7 +23,7 @@ export function handleChange(field: keyof iOrder, value: any) {
   };
 }
 
-export function postOrder(order: iOrder) {
+export function postOrder(order: iNewOrder) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: POST_ORDER_REQUEST,

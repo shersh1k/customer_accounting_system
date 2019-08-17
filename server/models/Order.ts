@@ -1,77 +1,61 @@
-import { Schema, Document, model, Types } from "mongoose";
-import * as uniqueValidator from "mongoose-unique-validator";
-import * as slug from "slug";
-import { iUserModel } from "./User";
-import { iCommentModel } from "./Notes";
+import { Schema, Document, model, Types } from 'mongoose';
+import * as uniqueValidator from 'mongoose-unique-validator';
+import * as slug from 'slug';
+import { iUserModel } from './User';
+import { iNoteModel } from './Note';
+import { iExpenseModel } from './Expense';
+import { iCustomerModel } from './Customer';
 
-var OrderSchema = new Schema<iOrder>(
+var OrderSchema = new Schema<iOrderModel>(
   {
     slug: { type: String, lowercase: true, unique: true },
     title: String,
+    priceOrder: Number,
+    description: String,
     dateOrder: Date,
     dateStartWork: Date,
     dateDeadline: Date,
     dateFinishWork: Date,
     datePay: Date,
-    recipient: [String], // Заказчик
-    priceOrder: Number, //стоимость заказа
-    priceMaterials: Number, //стоимость материалов
-    description: String,
-    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    author: { type: Schema.Types.ObjectId, ref: "User" }
+    expenses: [{ type: Schema.Types.ObjectId, ref: 'Expense' }],
+    notes: [{ type: Schema.Types.ObjectId, ref: 'Note' }],
+    customer: { type: Schema.Types.ObjectId, ref: 'Customer' },
+    author: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
 );
 
-OrderSchema.plugin(uniqueValidator, { message: "is already taken" });
+OrderSchema.plugin(uniqueValidator, { message: 'is already taken' });
 
-OrderSchema.pre<iOrder>("validate", function(next) {
-  if (!this.slug) {
-    this.slugify();
-  }
+OrderSchema.pre<iOrderModel>('validate', function(next) {
+  if (!this.slug) this.slugify();
   next();
 });
 
 OrderSchema.methods.slugify = function() {
-  this.slug = slug(this.title) + "-" + ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
-};
-
-OrderSchema.methods.toJSONFor = function(user: iUserModel) {
-  return {
-    slug: this.slug,
-    title: this.title,
-    dateOrder: this.dateOrder,
-    dateDeadline: this.dateDeadline,
-    recipient: this.recipient,
-    priceOrder: this.priceOrder,
-    priceMaterials: this.priceMaterials,
-    description: this.description,
-    createdAt: this.createdAt,
-    updatedAt: this.updatedAt,
-    author: this.author.toProfileJSONFor(user)
-  };
+  this.slug = slug(this.title) + '-' + ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
 };
 
 interface iOrderJSON {
-  slug: string; //для url-строки
+  slug: string;
   title: string;
+  priceOrder: number;
+  description: string;
   dateOrder: Date;
+  dateStartWork: Date;
+  dateFinishWork: Date;
   dateDeadline: Date;
-  recipient: any[]; // Заказчик
-  priceOrder: number; //стоимость заказа
-  priceMaterials: number; //стоимость материалов
-  author: any; //iUserModel;
-  createdAt: Date;
-  updatedAt: Date;
+  datePay: Date;
+  priceMaterials: number;
+  expenses: iExpenseModel[];
+  notes: iNoteModel[];
+  customer: iCustomerModel;
+  author: iUserModel;
 }
 
-export interface iOrder extends Document, iOrderJSON {
-  dateStartWork?: Date;
-  dateFinishWork?: Date;
-  datePay?: Date;
-  description?: string;
-  notes: Types.Array<iCommentModel>; //коменты типа (по ходу работы заметки?)
+export interface iOrderModel extends Document, iOrderJSON {
+  createdAt: Date;
+  updatedAt: Date;
   slugify: () => void;
-  toJSONFor: (user: iUserModel) => iOrderJSON;
 }
-export default model<iOrder>("Order", OrderSchema);
+export default model<iOrderModel>('Order', OrderSchema);

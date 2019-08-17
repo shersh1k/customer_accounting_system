@@ -26,7 +26,7 @@ export function getOrder(slug: string) {
           currentOrder: response.data
         });
       })
-      .catch(response => {
+      /* .catch(response => {
         dispatch({
           type: GET_ORDERS_FAIL,
           isPending: false,
@@ -34,7 +34,7 @@ export function getOrder(slug: string) {
           error: true,
           errorMessage: response.message
         });
-      });
+      }); */
   };
 }
 

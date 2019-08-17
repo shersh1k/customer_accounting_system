@@ -1,5 +1,5 @@
 import React from "react";
-import { iOrder } from "../../store/archive/types";
+import { iOrder } from "../../store/order/types";
 import { Tabs } from "../../store/orderLists/types";
 import { CircularProgress } from '@material-ui/core';
 import OrderCard from './OrderCard/index';

@@ -1,42 +1,46 @@
-
-import React from "react";
+import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
+import Cancel from '@material-ui/icons/Cancel';
+import Done from '@material-ui/icons/Done';
 import { iOrder } from '../../store/order/types';
-import { Steps } from "./Steps";
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 
 interface iProps {
-    order: iOrder;
-    edit: boolean;
-    toggleEditMode: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    submitButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleDateChange: (date: MaterialUiPickersDate, name: string) => void;
+  editedOrder: iOrder | null;
+  isEdit: boolean;
+  setEditState: () => void;
+  cancelEditState: () => void;
+  submitButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate) => void;
 }
 
 export function Title(props: iProps) {
-    const { title, priceOrder } = props.order;
-    const { edit, toggleEditMode, submitButton, handleInput, handleDateChange } = props;
+  if (!props.editedOrder) return null;
+  const { title, priceOrder } = props.editedOrder;
+  const { isEdit, setEditState, submitButton, handleChange, cancelEditState } = props;
 
+  if (isEdit)
     return (
-        <div style={{ display: "flex", flexFlow: "column" }}>
-            {!edit && <div style={{ padding: "10px 0 30px", display: "flex", justifyContent: "space-around" }} >
-                <div style={{ flex: 1 }}>{title}</div>
-                <div style={{ color: "green", flex: 1 }}>${priceOrder}</div>
-                <Button onClick={toggleEditMode} color="primary"><Edit /></Button>
-            </div>}
-            {edit && <div style={{ padding: "10px 0 30px", display: "flex", justifyContent: "space-around" }} >
-                <TextField value={title} name="title" onChange={handleInput} fullWidth />
-                <TextField value={priceOrder} name="priceOrder" onChange={handleInput} fullWidth type="number" />
-                <Button onClick={toggleEditMode} color="primary">Отменить</Button>
-                <Button onClick={submitButton} color="primary">Сохранить</Button>
-            </div>}
-            <Steps
-                currentOrder={props.order}
-                edit={props.edit}
-                handleDateChange={handleDateChange}
-            />
-        </div>
-    )
+      <div>
+        <TextField value={title} onChange={e => handleChange('title', e.currentTarget.value)} type='text' />
+        <TextField value={priceOrder} onChange={e => handleChange('priceOrder', e.currentTarget.value)} type='number' />
+        <Button onClick={cancelEditState} color='secondary'>
+          <Cancel />
+        </Button>
+        <Button onClick={submitButton} color='primary'>
+          <Done />
+        </Button>
+      </div>
+    );
+  else
+    return (
+      <div>
+        <span style={{ flex: 1 }}>{title}</span>
+        <span style={{ color: 'green', flex: 1 }}>${priceOrder}</span>
+        <Button onClick={setEditState} color='primary'>
+          <Edit />
+        </Button>
+      </div>
+    );
 }

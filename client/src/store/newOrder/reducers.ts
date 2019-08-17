@@ -7,16 +7,17 @@ import {
   GET_ORDERS_FAIL,
   HANDLE_CHANGE_NEW,
   NewOrderState,
-  LoginActionTypes
-} from "./types";
+  LoginActionTypes,
+  iNewOrder
+} from './types';
 
 function increaseDate(date: Date, number: number) {
   return new Date(date.setDate(date.getDate() + number));
 }
 
-const cleanOrder = {
-  title: "",
-  description: "",
+const cleanOrder: iNewOrder = {
+  title: '',
+  description: '',
   dateOrder: new Date(),
   dateDeadline: increaseDate(new Date(), 5),
   priceOrder: 0,
@@ -28,7 +29,7 @@ const initialState: NewOrderState = {
   list: [],
   isPending: false,
   error: false,
-  errorMessage: ""
+  errorMessage: ''
 };
 
 export function newOrderReducer(state = initialState, action: LoginActionTypes) {

@@ -1,63 +1,27 @@
-export const GET_ORDER_REQUEST = "GET_ORDER_REQUEST";
-export const GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS";
-export const GET_ORDER_FAIL = "GET_ORDER_FAIL";
-export const PUT_ORDER_REQUEST = "PUT_ORDER_REQUEST";
-export const PUT_ORDER_SUCCESS = "PUT_ORDER_SUCCESS";
-export const PUT_ORDER_FAIL = "PUT_ORDER_FAIL";
-export const POST_ORDER_REQUEST = "POST_ORDER_REQUEST";
-export const POST_ORDER_SUCCESS = "POST_ORDER_SUCCESS";
-export const POST_ORDER_FAIL = "POST_ORDER_FAIL";
-export const SET_ORDER_EDIT_MODE = "SET_ORDER_EDIT_MODE";
-export const SET_ORDER_READ_MODE = "SET_ORDER_READ_MODE";
-export const HANDLE_CHANGE_NEW = "HANDLE_CHANGE_NEW";
-export const HANDLE_CHANGE_EDIT = "HANDLE_CHANGE_EDIT";
+export const GET_ORDER_REQUEST = 'GET_ORDER_REQUEST';
+export const GET_ORDER_SUCCESS = 'GET_ORDER_SUCCESS';
+export const GET_ORDER_FAIL = 'GET_ORDER_FAIL';
+export const PUT_ORDER_REQUEST = 'PUT_ORDER_REQUEST';
+export const PUT_ORDER_SUCCESS = 'PUT_ORDER_SUCCESS';
+export const PUT_ORDER_FAIL = 'PUT_ORDER_FAIL';
+export const SET_ORDER_EDIT_MODE = 'SET_ORDER_EDIT_MODE';
+export const SET_ORDER_READ_MODE = 'SET_ORDER_READ_MODE';
+export const HANDLE_CHANGE = 'HANDLE_CHANGE';
 
 export interface OrderState {
-  order: iOrder;
-  editedOrder: iOrder;
-  newOrder: iOrder;
+  order: iOrder | null;
+  editedOrder: iOrder | null;
   isEdit: boolean;
   isPending: boolean;
   error: boolean;
   errorMessage?: string;
 }
 
-interface HandleChangeNew {
-  type: typeof HANDLE_CHANGE_NEW;
-  newOrder: {
-    [field in keyof iOrder]: any;
-  };
+interface HandleChange {
+  type: typeof HANDLE_CHANGE;
+  editedOrder: { [field in keyof iOrder]?: any };
 }
 
-/* type HandleChangeNew = { [field in keyof iOrder]: any } & {
-  type: typeof HANDLE_CHANGE_NEW;
-};
- */
-interface HandleChangeEdit {
-  type: typeof HANDLE_CHANGE_EDIT;
-  // (field: keyof iOrder): any;
-}
-
-interface PostOrderRequest {
-  type: typeof POST_ORDER_REQUEST;
-  isPending: boolean;
-  ordersList?: iOrder[];
-}
-
-interface PostOrderSuccess {
-  type: typeof POST_ORDER_SUCCESS;
-  isPending: boolean;
-  ordersList?: iOrder[];
-  currentOrder?: iOrder;
-}
-
-interface PostOrderFail {
-  type: typeof POST_ORDER_FAIL;
-  isPending: boolean;
-  error: boolean;
-  errorMessage: string;
-  currentOrder?: iOrder;
-}
 interface SetOrderEditMode {
   type: typeof SET_ORDER_EDIT_MODE;
   isEdit: boolean;
@@ -114,33 +78,44 @@ export type LoginActionTypes =
   | GetOrderRequest
   | GetOrderSuccess
   | GetOrderFail
-  | HandleChangeEdit
   | PutOrderRequest
   | PutOrderSuccess
   | PutOrderFail
   | SetOrderReadonlyMode
   | SetOrderEditMode
-  | HandleChangeNew
-  | PostOrderRequest
-  | PostOrderSuccess
-  | PostOrderFail;
+  | HandleChange;
 
 export interface iOrder {
   _id?: string;
-  title?: string;
   slug?: string;
-  description?: string;
-  dateOrder?: Date;
+  title: string;
+  priceOrder: number;
+  description: string;
+  dateOrder: Date;
   dateStartWork?: Date;
-  dateDeadline?: Date;
+  dateDeadline: Date;
   dateFinishWork?: Date;
   datePay?: Date;
-  priceMaterials?: number;
-  priceOrder?: number;
-  comments?: string[]; // | iComment
-  recipient?: string; // | iRecipient;
-  createdAt?: Date;
-  updatedAt?: Date;
-  author?: string; // | iUserJSON
-  __v?: 0;
+  expenses: iExpense[];
+  notes: iNote[];
+  customer?: iCustomer;
+  createdAt: Date;
+  updatedAt: Date;
+  author: string;
 }
+
+export interface iExpense {
+  _id?: string;
+  description: string;
+  cost: number;
+  spendDate?: Date;
+}
+
+export interface iNote {
+  _id?: string;
+  title: string;
+  body: string;
+  createdAt?: Date;
+}
+
+export interface iCustomer {}

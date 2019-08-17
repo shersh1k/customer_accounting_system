@@ -1,3 +1,5 @@
+import { iOrder } from "../order/types";
+
 export const GET_ORDERS_REQUEST = "GET_ORDERS_REQUEST";
 export const GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS";
 export const GET_ORDERS_FAIL = "GET_ORDERS_FAIL";
@@ -11,7 +13,7 @@ export interface OrdersState {
   lastTenList: iOrder[];
   allOrdersList: iOrder[];
   errorMessage?: string;
-  currentOrder: iOrder;
+  currentOrder?: iOrder;
 }
 
 interface GetOrderRequest {
@@ -37,22 +39,3 @@ interface GetOrderFail {
 
 export type LoginActionTypes = GetOrderRequest | GetOrderSuccess | GetOrderFail;
 
-export interface iOrder {
-  _id?: string;
-  title?: string;
-  slug?: string;
-  description?: string;
-  dateOrder?: Date;
-  dateStartWork?: Date;
-  dateDeadline?: Date;
-  dateFinishWork?: Date;
-  datePay?: Date;
-  priceMaterials?: number;
-  priceOrder?: number;
-  comments?: string[]; // | iComment
-  recipient?: string; // | iRecipient;
-  createdAt?: Date;
-  updatedAt?: Date;
-  author?: string; // | iUserJSON
-  __v?: 0;
-}

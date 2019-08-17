@@ -1,4 +1,4 @@
-import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, OrdersState, LoginActionTypes } from "./types";
+import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, OrdersState, LoginActionTypes } from './types';
 
 const initialState: OrdersState = {
   deadlineList: [],
@@ -8,8 +8,8 @@ const initialState: OrdersState = {
   notPayedList: [],
   isPending: false,
   error: false,
-  errorMessage: "cancelled",
-  currentOrder: {}
+  errorMessage: 'cancelled'
+  // currentOrder: {}
 };
 
 export function ordersReducer(state = initialState, action: LoginActionTypes) {
@@ -19,7 +19,7 @@ export function ordersReducer(state = initialState, action: LoginActionTypes) {
     case GET_ORDERS_SUCCESS:
       return { ...state, ...action };
     case GET_ORDERS_FAIL:
-      if (action.errorMessage === "cancelled") action.isPending = true;
+      if (action.errorMessage === 'cancelled') action.isPending = true;
       return { ...state, ...action };
 
     default:

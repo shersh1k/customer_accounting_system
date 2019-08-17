@@ -1,23 +1,21 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Card, CardContent, CardHeader, TextField, Grid, CircularProgress, Button } from "@material-ui/core";
-import { MuiPickersUtilsProvider, DatePicker, MaterialUiPickersDate } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import ruLocale from "date-fns/locale/ru";
-
-import { iOrder } from "../../store/order/types";
-import newOrderClasses from "../../style/Order.module.scss";
-import UIClasses from "../../style/UI.module.scss";
-import { State } from "../../store";
-import { postOrder, handleChange, getLastTen } from "../../store/newOrder/actions";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Card, CardContent, CardHeader, TextField, Grid, CircularProgress, Button } from '@material-ui/core';
+import { MaterialUiPickersDate, KeyboardDatePicker } from '@material-ui/pickers';
+import { iOrder } from '../../store/order/types';
+import newOrderClasses from '../../style/Order.module.scss';
+import UIClasses from '../../style/UI.module.scss';
+import { State } from '../../store';
+import { postOrder, handleChange, getLastTen } from '../../store/newOrder/actions';
 import { List } from './../OrderLists/List';
+import { iNewOrder } from '../../store/newOrder/types';
 
 interface iProps {
-  newOrder: iOrder;
+  newOrder: iNewOrder;
   list: iOrder[];
   getLastTen: () => void;
-  postOrder: (order: iOrder) => void;
-  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate) => void;
+  postOrder: (order: iNewOrder) => void;
+  handleChange: (field: keyof iNewOrder, value: string | MaterialUiPickersDate) => void;
   isPending: boolean;
   error: boolean;
   errorMessage?: string;
@@ -25,7 +23,7 @@ interface iProps {
 
 class NewOrder extends React.Component<iProps> {
   componentDidMount() {
-    this.props.getLastTen()
+    this.props.getLastTen();
   }
 
   onSubmitRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,14 +31,14 @@ class NewOrder extends React.Component<iProps> {
     this.props.postOrder({ ...this.props.newOrder });
   };
 
-  handleChange(field: keyof iOrder, value: string | MaterialUiPickersDate) {
-    this.props.handleChange(field, value)
+  handleChange(field: keyof iNewOrder, value: string | MaterialUiPickersDate) {
+    this.props.handleChange(field, value);
   }
 
   submitButton() {
     return (
       <div className={UIClasses.fetcingWrapper}>
-        <Button type="submit" variant="contained" color="primary" disabled={this.props.isPending}>
+        <Button type='submit' variant='contained' color='primary' disabled={this.props.isPending}>
           Зарегистрировать
         </Button>
         {this.props.isPending && <CircularProgress size={24} className={UIClasses.fetching} />}
@@ -53,75 +51,79 @@ class NewOrder extends React.Component<iProps> {
     const commonProps = { disabled: this.props.isPending, required: true, fullWidth: true };
     return (
       <div>
-        <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete="off">
+        <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete='off'>
           <Card className={newOrderClasses.main}>
             <CardHeader
               className={newOrderClasses.header}
-              title={title || "Новый заказ"}
+              title={title || 'Новый заказ'}
               action={this.submitButton()}
             />
             <CardContent className={newOrderClasses.content}>
-              <Grid container spacing={3} justify="space-around" alignContent="space-between">
+              <Grid container spacing={3} justify='space-around' alignContent='space-between'>
                 <Grid item xs={6}>
                   <TextField
                     {...commonProps}
-                    onChange={event => this.handleChange("title", event.currentTarget.value)}
+                    onChange={event => this.handleChange('title', event.currentTarget.value)}
                     value={title}
-                    label="Название заказа"
-                    type="text"
+                    label='Название заказа'
+                    type='text'
                   />
                 </Grid>
                 <Grid item xs={2}>
                   <TextField
                     {...commonProps}
-                    onChange={event => this.handleChange("priceOrder", event.currentTarget.value)}
+                    onChange={event => this.handleChange('priceOrder', event.currentTarget.value)}
                     value={priceOrder}
-                    label="Цена"
-                    type="number"
+                    label='Цена'
+                    type='number'
                   />
                 </Grid>
                 <Grid item xs={10}>
                   <TextField
                     {...commonProps}
-                    onChange={event => this.handleChange("description", event.currentTarget.value)}
+                    onChange={event => this.handleChange('description', event.currentTarget.value)}
                     value={description}
-                    label="Описание"
-                    type="text"
+                    label='Описание'
+                    type='text'
                     multiline
                   />
                 </Grid>
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-                  <Grid item xs={5}>
-                    <DatePicker
-                      {...commonProps}
-                      onChange={date => this.handleChange("dateOrder", date)}
-                      value={dateOrder}
-                      label="Принят"
-                      format="d MMMM yyyy"
-                      maxDate={new Date()}
-                      maxDateMessage="Вы из будущего? :)"
-                    />
-                  </Grid>
-                  <Grid item xs={5}>
-                    <DatePicker
-                      {...commonProps}
-                      onChange={date => this.handleChange("dateDeadline", date)}
-                      value={dateDeadline}
-                      label="Дедлайн"
-                      format="d MMMM yyyy"
-                      minDate={dateOrder || new Date()}
-                      minDateMessage="Дедлайн не может быть раньше даты принятия заказа"
-                    />
-                  </Grid>
-                </MuiPickersUtilsProvider>
+                <Grid item xs={5}>
+                  <KeyboardDatePicker
+                    {...commonProps}
+                    autoOk
+                    variant='inline'
+                    label='Принят'
+                    format='dd.MM.yyyy'
+                    value={dateOrder}
+                    InputAdornmentProps={{ position: 'start' }}
+                    onChange={date => this.handleChange('dateOrder', date)}
+                    maxDate={new Date()}
+                    maxDateMessage='Вы из будущего? :)'
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <KeyboardDatePicker
+                    {...commonProps}
+                    autoOk
+                    variant='inline'
+                    label='Дедлайн'
+                    format='dd.MM.yyyy'
+                    value={dateDeadline}
+                    InputAdornmentProps={{ position: 'start' }}
+                    onChange={date => this.handleChange('dateDeadline', date)}
+                    minDate={dateOrder || new Date()}
+                    minDateMessage='Дедлайн не может быть раньше даты принятия заказа'
+                  />
+                </Grid>
                 <div>***TODO: КТО заказал (новая сущность recipient)***</div>
               </Grid>
             </CardContent>
           </Card>
         </form>
-        <div className="listLasts">
+        <div className='listLasts'>
           Оставить только недавние
-          <List list={this.props.list} showedTab="LastTen" isPending={this.props.isPending} />
+          <List list={this.props.list} showedTab='LastTen' isPending={this.props.isPending} />
         </div>
       </div>
     );
@@ -130,10 +132,10 @@ class NewOrder extends React.Component<iProps> {
 
 const mapStateToProps = (store: State) => ({
   newOrder: store.newOrder.newOrder,
+  list: store.newOrder.list,
   isPending: store.newOrder.isPending,
   error: store.newOrder.error,
-  errorMessage: store.newOrder.errorMessage,
-  list: store.newOrder.list
+  errorMessage: store.newOrder.errorMessage
 });
 
 const mapDispatchToProps = {
