@@ -7,7 +7,7 @@ interface iProps extends iExpense {
 }
 
 export function Expense(props: iProps) {
-  const { description, cost, spendDate, isEdit } = props;
+  const { description, cost, spendDate /* , isEdit */ } = props;
   return (
     <ListItem>
       <span>{description} </span>

@@ -12,6 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Expense } from './Expense';
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 import Add from '@material-ui/icons/Add';
+import { AddExpense } from './AddExpense';
 
 interface iProps {
   expenses: iExpense[];
@@ -21,8 +22,8 @@ interface iProps {
 
 export function Expenses(props: iProps) {
   const { isEdit, expenses, handleChange } = props;
+  const sum = expenses.reduce((prev, cur) => prev + cur.cost, 0);
   const addExpense = (e: React.MouseEvent) => {
-    e.stopPropagation();
     const newExpenses: iExpense[] = expenses.slice();
     newExpenses.push({ description: 'string', cost: 5, spendDate: new Date() });
     handleChange('expenses', newExpenses);
@@ -30,7 +31,7 @@ export function Expenses(props: iProps) {
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <span>Расходы. Всего:{expenses.reduce((prev, cur) => prev + cur.cost, 0)}</span>
+        <span>Расходы. Всего:{sum}</span>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <List>
@@ -39,13 +40,12 @@ export function Expenses(props: iProps) {
           ))}
         </List>
       </ExpansionPanelDetails>
-      {isEdit && (
-        <ExpansionPanelActions>
-          <Button onClick={e => addExpense(e)} size='small' color='secondary'>
-            <Add fontSize='small' />
-          </Button>
-        </ExpansionPanelActions>
-      )}
+      <ExpansionPanelActions>
+        <AddExpense />
+        <Button onClick={addExpense} size='small' color='secondary'>
+          <Add fontSize='small' />
+        </Button>
+      </ExpansionPanelActions>
     </ExpansionPanel>
   );
 }

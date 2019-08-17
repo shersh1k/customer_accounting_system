@@ -4,7 +4,7 @@ import Order, { iOrderModel } from '../../models/Order';
 import Note, { iNoteModel } from '../../models/Note';
 import User from '../../models/User';
 import { isNull } from 'util';
-import Expense from '../../models/Expense';
+import Expense, { iExpenseModel } from '../../models/Expense';
 
 const router = express.Router();
 
@@ -28,7 +28,8 @@ router.get('/byDateDeadline', auth.required, function(req, res, next) {
         {
           author: user.id,
           $or: [{ dateStartWork: { $exists: false } }, { dateStartWork: { $lte: new Date() } }],
-          dateDeadline: { $exists: true }
+          dateDeadline: { $exists: true },
+          dateFinishWork: { $exists: false }
         },
         function(err, docs) {
           if (err) return new Error(err.message);
@@ -107,8 +108,10 @@ router.get('/:order', auth.required, function(req, res, next) {
     .then(function(user) {
       if (!user) throw new Error('Нет такого пользователя');
       Order.findOne({ author: user.id, slug: req.params.order }, function(err, docs) {
-        if (err) return new Error(err.message);
-        return res.json(docs);
+        if (err || !docs) return new Error(err.message);
+        return docs.toJSONWithChild().then(function(order) {
+          return res.json(order);
+        });
       });
     })
     .catch(next);
@@ -118,31 +121,42 @@ router.get('/:order', auth.required, function(req, res, next) {
 router.put('/', auth.required, function(req, res, next) {
   User.findById(req.user.id).then(function(user) {
     if (!user) throw new Error('Нет такого пользователя');
-    Expense.insertMany([])
-    Order.findOneAndUpdate({ _id: req.body.order._id }, req.body.order, { new: true }, function(err, doc) {
-      if (doc) return res.json(doc);
-      else return res.sendStatus(401);
+    const expenses = req.body.order.expenses
+      .filter((item: iExpenseModel) => !item._id)
+      .map((item: iExpenseModel) => ({
+        ...item,
+        order: req.body.order.id,
+        author: req.user.id
+      }));
+    const expens = Expense.insertMany(expenses);
+
+    const notes = req.body.order.notes
+      .filter((item: iNoteModel) => !item._id)
+      .map((item: iNoteModel) => ({
+        ...item,
+        order: req.body.order.id,
+        author: req.user.id
+      }));
+    const nts = Note.insertMany(notes);
+
+    Promise.all([expens, nts]).then(function([expens, nts]) {
+      req.body.order.expenses = expens;
+      req.body.order.notes = nts;
+      Order.findOneAndUpdate({ _id: req.body.order.id || req.body.order._id }, req.body.order, { new: true }, function(
+        err,
+        doc
+      ) {
+        if (!doc) return res.sendStatus(401);
+        return doc.toJSONWithChild().then(doc => {
+          return res.json(doc);
+        });
+      });
     });
   });
 });
 
 // delete order
 /* 
-router.put('/', auth.required, function(req, res, next) {
-  User.findById(req.user.id).then(function(user) {
-    if (!user) throw new Error('Нет такого пользователя');
-    Order.findById(req.body.order._id, function(err, docs) {
-      //updateOne
-      if (err) return new Error(err.message);
-      if (isNull(docs)) return new Error('Не нашелся заказ для обновления');
-      if (req.body.order.title) docs.title = req.body.order.title;
-      if (req.body.order.dateStartWork) docs.dateStartWork = req.body.order.dateStartWork;
-      if (req.body.order.priceOrder) docs.priceOrder = req.body.order.priceOrder;
-      docs.save();
-      return res.json(docs);
-    });
-  });
-});
 router.delete('/:order', auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {
@@ -159,6 +173,7 @@ router.delete('/:order', auth.required, function(req, res, next) {
       }
     })
     .catch(next);
-}); */
+}); 
+*/
 
 export default router;

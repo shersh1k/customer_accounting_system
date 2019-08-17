@@ -1,12 +1,12 @@
-import { iOrder } from "../order/types";
+import { iOrder } from '../order/types';
 
-export const GET_ORDERS_REQUEST = "GET_ORDERS_REQUEST";
-export const GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS";
-export const GET_ORDERS_FAIL = "GET_ORDERS_FAIL";
-export const PUT_ORDER_REQUEST = "PUT_ORDER_REQUEST";
-export const PUT_ORDER_SUCCESS = "PUT_ORDER_SUCCESS";
-export const PUT_ORDER_FAIL = "PUT_ORDER_FAIL";
-export const CHANGE_LIST = "CHANGE_LIST";
+export const GET_ORDERS_REQUEST = 'GET_ORDERS_REQUEST';
+export const GET_ORDERS_SUCCESS = 'GET_ORDERS_SUCCESS';
+export const GET_ORDERS_FAIL = 'GET_ORDERS_FAIL';
+export const PUT_ORDER_REQUEST = 'PUT_ORDER_REQUEST';
+export const PUT_ORDER_SUCCESS = 'PUT_ORDER_SUCCESS';
+export const PUT_ORDER_FAIL = 'PUT_ORDER_FAIL';
+export const CHANGE_LIST = 'CHANGE_LIST';
 
 export interface OrderListsState {
   listName: Tabs;
@@ -16,7 +16,7 @@ export interface OrderListsState {
   errorMessage?: string;
 }
 
-export type Tabs = "DateDeadline" | "DateStartWork" | "LastTen" | "NotPayed";
+export type Tabs = 'DateDeadline' | 'DateStartWork' | 'NotPayed';
 
 interface ChangeList {
   type: typeof CHANGE_LIST;
@@ -32,8 +32,7 @@ interface PutOrderRequest {
 interface PutOrderSuccess {
   type: typeof PUT_ORDER_SUCCESS;
   isPending: boolean;
-  ordersList?: iOrder[];
-  currentOrder?: iOrder;
+  currentOrder: iOrder;
 }
 
 interface PutOrderFail {

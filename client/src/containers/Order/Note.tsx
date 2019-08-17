@@ -7,10 +7,10 @@ interface iProps extends iNote {
 }
 
 export function Note(props: iProps) {
-  const { _id, title, body, createdAt, isEdit } = props;
+  const { title, body, createdAt /* , isEdit */ } = props;
   return (
     <ListItem>
-      <span>{createdAt && createdAt.toLocaleDateString()} </span>
+      <span>{createdAt && new Date(createdAt).toLocaleDateString()} </span>
       <hr />
       <span>{title} </span>
       <hr />

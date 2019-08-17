@@ -86,6 +86,7 @@ export type LoginActionTypes =
   | HandleChange;
 
 export interface iOrder {
+  id?: string;
   _id?: string;
   slug?: string;
   title: string;

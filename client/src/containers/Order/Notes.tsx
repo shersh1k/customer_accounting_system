@@ -12,6 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Note } from './Note';
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 import Add from '@material-ui/icons/Add';
+import { AddNote } from './AddNote';
 
 interface iProps {
   notes: iNote[];
@@ -22,7 +23,6 @@ interface iProps {
 export function Notes(props: iProps) {
   const { isEdit, notes, handleChange } = props;
   const addExpense = (e: React.MouseEvent) => {
-    e.stopPropagation();
     const newNotes: iNote[] = notes.slice();
     newNotes.push({ title: 'string', body: 'asd' });
     handleChange('notes', newNotes);
@@ -37,13 +37,12 @@ export function Notes(props: iProps) {
           ))}
         </List>
       </ExpansionPanelDetails>
-      {isEdit && (
-        <ExpansionPanelActions>
-          <Button onClick={e => addExpense(e)} size='small' color='secondary'>
-            <Add fontSize='small' />
-          </Button>
-        </ExpansionPanelActions>
-      )}
+      <ExpansionPanelActions>
+        <AddNote />
+        <Button onClick={addExpense} size='small' color='secondary'>
+          <Add fontSize='small' />
+        </Button>
+      </ExpansionPanelActions>
     </ExpansionPanel>
   );
 }

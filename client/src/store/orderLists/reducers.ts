@@ -8,14 +8,14 @@ import {
   CHANGE_LIST,
   OrderListsState,
   LoginActionTypes
-} from "./types";
+} from './types';
 
 const initialState: OrderListsState = {
   list: [],
-  listName: "DateDeadline",
+  listName: 'DateDeadline',
   isPending: false,
   error: false,
-  errorMessage: ""
+  errorMessage: ''
 };
 
 export function orderListsReducer(state = initialState, action: LoginActionTypes) {
@@ -25,13 +25,14 @@ export function orderListsReducer(state = initialState, action: LoginActionTypes
     case GET_ORDERS_SUCCESS:
       return { ...state, ...action };
     case GET_ORDERS_FAIL:
-      if (action.errorMessage === "cancelled") action.isPending = true;
+      if (action.errorMessage === 'cancelled') action.isPending = true;
       return { ...state, ...action };
 
     case PUT_ORDER_REQUEST:
       return { ...state, ...action };
     case PUT_ORDER_SUCCESS:
-      return { ...state, ...action };
+      const list = state.list.filter(order => order._id !== action.currentOrder.id);
+      return { ...state, ...action, list };
     case PUT_ORDER_FAIL:
       return { ...state, ...action };
 
