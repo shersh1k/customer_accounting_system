@@ -18,15 +18,12 @@ interface iProps {
   notes: iNote[];
   isEdit: boolean;
   handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate | iExpense[] | iNote[]) => void;
+  addNote: (note: iNote) => {};
+  orderId: string;
 }
 
 export function Notes(props: iProps) {
-  const { isEdit, notes, handleChange } = props;
-  const addExpense = (e: React.MouseEvent) => {
-    const newNotes: iNote[] = notes.slice();
-    newNotes.push({ title: 'string', body: 'asd' });
-    handleChange('notes', newNotes);
-  };
+  const { isEdit, notes, handleChange, addNote, orderId } = props;
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Заметки</ExpansionPanelSummary>
@@ -38,10 +35,7 @@ export function Notes(props: iProps) {
         </List>
       </ExpansionPanelDetails>
       <ExpansionPanelActions>
-        <AddNote />
-        <Button onClick={addExpense} size='small' color='secondary'>
-          <Add fontSize='small' />
-        </Button>
+        <AddNote addNote={addNote} orderId={orderId} />
       </ExpansionPanelActions>
     </ExpansionPanel>
   );

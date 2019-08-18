@@ -12,6 +12,7 @@ var ExpenseSchema = new Schema<iExpenseModel>(
       type: Number,
       required: [true, "can't be blank"]
     },
+    spendDate: Date,
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     order: { type: Schema.Types.ObjectId, ref: 'Order' }
   },

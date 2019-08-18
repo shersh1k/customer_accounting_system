@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { UpdateOrder, GetOrder } from '../../helpers/API/Methods';
+import { UpdateOrder, GetOrder, PostNote, PostExpense } from '../../helpers/API/Methods';
 import {
   GET_ORDER_REQUEST,
   GET_ORDER_SUCCESS,
@@ -7,11 +7,19 @@ import {
   PUT_ORDER_REQUEST,
   PUT_ORDER_SUCCESS,
   PUT_ORDER_FAIL,
+  PUT_NOTE_REQUEST,
+  PUT_NOTE_SUCCESS,
+  PUT_NOTE_FAIL,
+  PUT_EXPENSE_REQUEST,
+  PUT_EXPENSE_SUCCESS,
+  PUT_EXPENSE_FAIL,
   SET_ORDER_READ_MODE,
   SET_ORDER_EDIT_MODE,
   HANDLE_CHANGE,
   LoginActionTypes,
-  iOrder
+  iOrder,
+  iNote,
+  iExpense
 } from './types';
 
 export function setEditState() {
@@ -91,6 +99,56 @@ export function updateOrder(order: iOrder) {
       .catch(response => {
         dispatch({
           type: PUT_ORDER_FAIL,
+          isPending: false,
+          error: true,
+          errorMessage: response.message
+        });
+      });
+  };
+}
+
+export function addExpense(expense: iExpense) {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
+    dispatch({
+      type: PUT_EXPENSE_REQUEST,
+      isPending: true
+    });
+    return PostExpense(expense)
+      .then(response => {
+        dispatch({
+          type: PUT_EXPENSE_SUCCESS,
+          isPending: false,
+          expense: response.data.expense
+        });
+      })
+      .catch(response => {
+        dispatch({
+          type: PUT_EXPENSE_FAIL,
+          isPending: false,
+          error: true,
+          errorMessage: response.message
+        });
+      });
+  };
+}
+
+export function addNote(note: iNote) {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
+    dispatch({
+      type: PUT_NOTE_REQUEST,
+      isPending: true
+    });
+    return PostNote(note)
+      .then(response => {
+        dispatch({
+          type: PUT_NOTE_SUCCESS,
+          isPending: false,
+          note: response.data.note
+        });
+      })
+      .catch(response => {
+        dispatch({
+          type: PUT_NOTE_FAIL,
           isPending: false,
           error: true,
           errorMessage: response.message

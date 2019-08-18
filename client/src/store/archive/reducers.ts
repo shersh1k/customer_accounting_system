@@ -1,24 +1,24 @@
-import { GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, GET_ORDERS_FAIL, OrdersState, LoginActionTypes } from './types';
+import {
+  GET_ALL_ORDERS_REQUEST,
+  GET_ALL_ORDERS_SUCCESS,
+  GET_ALL_ORDERS_FAIL,
+  ArchiveState,
+  LoginActionTypes
+} from './types';
 
-const initialState: OrdersState = {
-  deadlineList: [],
-  startWorkList: [],
-  lastTenList: [],
-  allOrdersList: [],
-  notPayedList: [],
+export const initStateArchiveReducer: ArchiveState = {
+  data: [],
   isPending: false,
-  error: false,
-  errorMessage: 'cancelled'
-  // currentOrder: {}
+  error: false
 };
 
-export function ordersReducer(state = initialState, action: LoginActionTypes) {
+export function archiveReducer(state = initStateArchiveReducer, action: LoginActionTypes) {
   switch (action.type) {
-    case GET_ORDERS_REQUEST:
+    case GET_ALL_ORDERS_REQUEST:
       return { ...state, ...action };
-    case GET_ORDERS_SUCCESS:
+    case GET_ALL_ORDERS_SUCCESS:
       return { ...state, ...action };
-    case GET_ORDERS_FAIL:
+    case GET_ALL_ORDERS_FAIL:
       if (action.errorMessage === 'cancelled') action.isPending = true;
       return { ...state, ...action };
 

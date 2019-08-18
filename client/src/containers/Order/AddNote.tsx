@@ -7,17 +7,27 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddComment from '@material-ui/icons/AddComment';
+import { iNote } from '../../store/order/types';
 
-export function AddNote() {
+interface iProps {
+  addNote: (note: iNote) => {};
+  orderId: string;
+}
+
+export function AddNote(props: iProps) {
   const [open, setOpen] = React.useState(false);
-
-  function handleClickOpen() {
-    setOpen(true);
-  }
-
-  function handleClose() {
+  const [title, setTitle] = React.useState('');
+  const [body, setBody] = React.useState('');
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleChange = (field: string, value: string) => {
+    if (field == 'title') setTitle(value);
+    if (field == 'body') setBody(value);
+  };
+  const handleSubmit = () => {
     setOpen(false);
-  }
+    props.addNote({ order: props.orderId, body: body, title: title });
+  };
 
   return (
     <div>
@@ -25,19 +35,17 @@ export function AddNote() {
         <AddComment />
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Новый заметка:</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates occasionally.
-          </DialogContentText>
-          <TextField autoFocus margin='dense' label='Email Address' type='email' fullWidth />
+          <TextField label='Название' type='text' value={title} onChange={e => handleChange('title', e.target.value)} />
+          <TextField label='Описание' type='text' value={body} onChange={e => handleChange('body', e.target.value)} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='secondary'>
-            Cancel
+            Отмена
           </Button>
-          <Button onClick={handleClose} color='primary'>
-            Subscribe
+          <Button onClick={handleSubmit} color='primary'>
+            Сохранить
           </Button>
         </DialogActions>
       </Dialog>

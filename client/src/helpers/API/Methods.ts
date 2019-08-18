@@ -1,6 +1,6 @@
 import API, { HTTP } from '.';
 import { iUser } from '../../store/user/types';
-import { iOrder } from '../../store/order/types';
+import { iOrder, iNote, iExpense } from '../../store/order/types';
 import { iNewOrder } from '../../store/newOrder/types';
 
 export function Generate() {
@@ -45,4 +45,12 @@ export function PostOrder(data: iNewOrder) {
 
 export function UpdateOrder(data: iOrder) {
   return API(HTTP.PUT, '/api/orders', true, { order: { ...data } });
+}
+
+export function PostNote(data: iNote) {
+  return API(HTTP.POST, '/api/notes', true, { note: { ...data } });
+}
+
+export function PostExpense(data: iExpense) {
+  return API(HTTP.POST, '/api/expenses', true, { expense: { ...data } });
 }

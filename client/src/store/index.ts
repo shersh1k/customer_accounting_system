@@ -1,21 +1,23 @@
-import { routerMiddleware, RouterState, connectRouter } from "connected-react-router";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { createBrowserHistory, History } from "history";
-import thunkMiddleware from "redux-thunk";
-import logger from "redux-logger";
+import { routerMiddleware, RouterState, connectRouter } from 'connected-react-router';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { createBrowserHistory, History } from 'history';
+import thunkMiddleware from 'redux-thunk';
+import logger from 'redux-logger';
 
 // import { photosReducer } from "./photos/reducers";
 // import { friendsReducer } from "./friends/reducers";
-import { userReducer } from "./user/reducers";
-import { orderListsReducer } from "./orderLists/reducers";
-import { orderReducer } from "./order/reducers";
-import { newOrderReducer } from "./newOrder/reducers";
+import { userReducer } from './user/reducers';
+import { orderListsReducer } from './orderLists/reducers';
+import { orderReducer } from './order/reducers';
+import { newOrderReducer } from './newOrder/reducers';
+import { archiveReducer } from './archive/reducers';
 
-import { UserState } from "./user/types";
-import { OrderListsState } from "./orderLists/types";
-import { OrderState } from "./order/types";
-import { NewOrderState } from "./newOrder/types";
+import { UserState } from './user/types';
+import { OrderListsState } from './orderLists/types';
+import { OrderState } from './order/types';
+import { NewOrderState } from './newOrder/types';
+import { ArchiveState } from './archive/types';
 
 export const history = createBrowserHistory();
 
@@ -25,7 +27,8 @@ const rootReducer = (history: History) =>
     user: userReducer,
     order: orderReducer,
     newOrder: newOrderReducer,
-    orderLists: orderListsReducer
+    orderLists: orderListsReducer,
+    archive: archiveReducer
     // photos: photosReducer,
     // friends: friendsReducer
   });
@@ -42,6 +45,7 @@ export interface State {
   orderLists: OrderListsState;
   order: OrderState;
   newOrder: NewOrderState;
+  archive: ArchiveState;
   // photos: any;
   // friends: any;
 }

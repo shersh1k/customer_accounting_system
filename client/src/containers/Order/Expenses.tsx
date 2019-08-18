@@ -17,17 +17,15 @@ import { AddExpense } from './AddExpense';
 interface iProps {
   expenses: iExpense[];
   isEdit: boolean;
+  orderId: string;
   handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate | iExpense[] | iNote[]) => void;
+  addExpense: (expense: iExpense) => {};
 }
 
 export function Expenses(props: iProps) {
-  const { isEdit, expenses, handleChange } = props;
+  const { isEdit, expenses, handleChange, addExpense, orderId } = props;
   const sum = expenses.reduce((prev, cur) => prev + cur.cost, 0);
-  const addExpense = (e: React.MouseEvent) => {
-    const newExpenses: iExpense[] = expenses.slice();
-    newExpenses.push({ description: 'string', cost: 5, spendDate: new Date() });
-    handleChange('expenses', newExpenses);
-  };
+
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -41,10 +39,7 @@ export function Expenses(props: iProps) {
         </List>
       </ExpansionPanelDetails>
       <ExpansionPanelActions>
-        <AddExpense />
-        <Button onClick={addExpense} size='small' color='secondary'>
-          <Add fontSize='small' />
-        </Button>
+        <AddExpense addExpense={addExpense} orderId={orderId} />
       </ExpansionPanelActions>
     </ExpansionPanel>
   );

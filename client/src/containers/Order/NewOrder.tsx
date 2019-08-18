@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardContent, CardHeader, TextField, Grid, CircularProgress, Button } from '@material-ui/core';
-import { MaterialUiPickersDate, KeyboardDatePicker } from '@material-ui/pickers';
+import { MaterialUiPickersDate, DatePicker } from '@material-ui/pickers';
 import { iOrder } from '../../store/order/types';
 import newOrderClasses from '../../style/Order.module.scss';
 import UIClasses from '../../style/UI.module.scss';
@@ -89,42 +89,39 @@ class NewOrder extends React.Component<iProps> {
                   />
                 </Grid>
                 <Grid item xs={5}>
-                  <KeyboardDatePicker
+                  <DatePicker
                     {...commonProps}
                     autoOk
                     variant='inline'
                     label='Принят'
-                    format='dd.MM.yyyy'
+                    format='d MMMM yyyy'
                     value={dateOrder}
-                    InputAdornmentProps={{ position: 'start' }}
                     onChange={date => this.handleChange('dateOrder', date)}
                     maxDate={new Date()}
                     maxDateMessage='Вы из будущего? :)'
                   />
                 </Grid>
                 <Grid item xs={5}>
-                  <KeyboardDatePicker
+                  <DatePicker
                     {...commonProps}
                     autoOk
                     variant='inline'
                     label='Дедлайн'
-                    format='dd.MM.yyyy'
+                    format='d MMMM yyyy'
                     value={dateDeadline}
-                    InputAdornmentProps={{ position: 'start' }}
                     onChange={date => this.handleChange('dateDeadline', date)}
                     minDate={dateOrder || new Date()}
                     minDateMessage='Дедлайн не может быть раньше даты принятия заказа'
                   />
                 </Grid>
-                <div>***TODO: КТО заказал (новая сущность recipient)***</div>
               </Grid>
             </CardContent>
           </Card>
         </form>
-        <div className='listLasts'>
+        {/* <div className='listLasts'>
           Оставить только недавние
           <List list={this.props.list} showedTab='LastTen' isPending={this.props.isPending} />
-        </div>
+        </div> */}
       </div>
     );
   }

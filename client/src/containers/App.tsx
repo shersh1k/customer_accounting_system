@@ -17,7 +17,8 @@ import Order from './Order';
 
 import app from '../style/App.module.scss';
 import NewOrder from './Order/NewOrder';
-import Archive from './Archive/Archive';
+import Archive from './Archive';
+import ReadMe from '../components/Readme';
 
 interface iProps {
   history: History;
@@ -48,7 +49,7 @@ class App extends React.Component<iProps> {
     return (
       <ConnectedRouter history={history}>
         <div className={app.appRoot}>
-          {user.token && <NavBar className={app.navbar} generate={user.username === 'test'} />}
+          {user.token && <NavBar className={app.navbar} />}
           <div className={app.content}>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
               <Switch>
@@ -56,6 +57,9 @@ class App extends React.Component<iProps> {
                 <Route exact path='/' component={OrderLists} />
                 <Route path='/login' render={this.redirectToMain} />
                 <Route path='/archive' component={Archive} />
+                <Route path='/calendar' render={() => <span>В процессе реализации :)</span>} />
+                <Route path='/stats' render={() => <span>В процессе реализации :)</span>} />
+                <Route path='/readme' component={ReadMe} />
                 <Route path='/orders/neworder' component={NewOrder} />
                 <Route path='/orders/:order' component={Order} />
                 <Route component={NoMatch} />

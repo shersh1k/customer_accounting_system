@@ -34,7 +34,7 @@ router.get('/byDateDeadline', auth.required, function(req, res, next) {
         function(err, docs) {
           if (err) return new Error(err.message);
           docs = docs.sort((a: any, b: any) => new Date(a.dateDeadline).getTime() - new Date(b.dateDeadline).getTime());
-          return res.json(docs);
+          return res.json(docs.map(doc => doc.toJSONForList()));
         }
       );
     })
@@ -55,7 +55,7 @@ router.get('/byDateStartWork', auth.required, function(req, res, next) {
           docs = docs.sort(
             (a: any, b: any) => new Date(a.dateStartWork).getTime() - new Date(b.dateStartWork).getTime()
           );
-          return res.json(docs);
+          return res.json(docs.map(doc => doc.toJSONForList()));
         }
       );
     })
@@ -72,7 +72,7 @@ router.get('/notPayed', auth.required, function(req, res, next) {
       ) {
         if (err) return new Error(err.message);
         docs = docs.slice(0, 10);
-        return res.json(docs);
+        return res.json(docs.map(doc => doc.toJSONForList()));
       });
     })
     .catch(next);
@@ -85,7 +85,7 @@ router.get('/lastTen', auth.required, function(req, res, next) {
       Order.find({ author: user.id })
         .limit(10)
         .sort({ createdAt: -1 })
-        .then(value => res.json(value));
+        .then(docs => res.json(docs.map(doc => doc.toJSONForList())));
     })
     .catch(next);
 });
@@ -117,39 +117,13 @@ router.get('/:order', auth.required, function(req, res, next) {
     .catch(next);
 });
 
-// update order
 router.put('/', auth.required, function(req, res, next) {
   User.findById(req.user.id).then(function(user) {
     if (!user) throw new Error('Нет такого пользователя');
-    const expenses = req.body.order.expenses
-      .filter((item: iExpenseModel) => !item._id)
-      .map((item: iExpenseModel) => ({
-        ...item,
-        order: req.body.order.id,
-        author: req.user.id
-      }));
-    const expens = Expense.insertMany(expenses);
-
-    const notes = req.body.order.notes
-      .filter((item: iNoteModel) => !item._id)
-      .map((item: iNoteModel) => ({
-        ...item,
-        order: req.body.order.id,
-        author: req.user.id
-      }));
-    const nts = Note.insertMany(notes);
-
-    Promise.all([expens, nts]).then(function([expens, nts]) {
-      req.body.order.expenses = expens;
-      req.body.order.notes = nts;
-      Order.findOneAndUpdate({ _id: req.body.order.id || req.body.order._id }, req.body.order, { new: true }, function(
-        err,
-        doc
-      ) {
-        if (!doc) return res.sendStatus(401);
-        return doc.toJSONWithChild().then(doc => {
-          return res.json(doc);
-        });
+    Order.findOneAndUpdate({ _id: req.body.order.id }, req.body.order, { new: true }, function(err, doc) {
+      if (!doc) return res.sendStatus(401);
+      return doc.toJSONWithChild().then(doc => {
+        return res.json(doc);
       });
     });
   });

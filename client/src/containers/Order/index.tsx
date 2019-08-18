@@ -4,7 +4,15 @@ import { MaterialUiPickersDate } from '@material-ui/pickers';
 import { iOrder, iExpense, iNote } from '../../store/order/types';
 import { connect } from 'react-redux';
 import { State } from '../../store';
-import { getOrder, updateOrder, setEditState, handleChange, cancelEditState } from '../../store/order/actions';
+import {
+  getOrder,
+  updateOrder,
+  setEditState,
+  handleChange,
+  cancelEditState,
+  addNote,
+  addExpense
+} from '../../store/order/actions';
 import { Title } from './Title';
 import { Content } from './Content';
 
@@ -18,6 +26,8 @@ interface iProps {
   setEditState: () => void;
   cancelEditState: () => void;
   handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate | iExpense[] | iNote[]) => void;
+  addNote: (note: iNote) => {};
+  addExpense: (expense: iExpense) => {};
   isPending: boolean;
   error: boolean;
   errorMessage?: string;
@@ -42,7 +52,7 @@ class Order extends React.Component<iProps> {
   };
 
   render() {
-    const { editedOrder, isEdit, setEditState, cancelEditState } = this.props;
+    const { editedOrder, isEdit, setEditState, cancelEditState, addNote, addExpense } = this.props;
     return (
       <Card style={{ width: '90%' }}>
         <CardHeader
@@ -57,7 +67,7 @@ class Order extends React.Component<iProps> {
             />
           }
         />
-        <Content editedOrder={editedOrder} isEdit={isEdit} handleChange={this.handleChange} />
+        <Content {...{ editedOrder, isEdit, handleChange, addNote, addExpense }} />
         <CardActions />
       </Card>
     );
@@ -79,7 +89,9 @@ const mapDispatchToProps = {
   updateOrder: updateOrder,
   setEditState: setEditState,
   cancelEditState: cancelEditState,
-  handleChange: handleChange
+  handleChange: handleChange,
+  addNote: addNote,
+  addExpense: addExpense
 };
 
 export default connect(

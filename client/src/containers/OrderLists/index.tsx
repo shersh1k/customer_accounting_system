@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { State } from '../../store';
-import { iOrder } from '../../store/order/types';
-import { setList } from '../../store/orderLists/actions';
+import { iOrder, iExpense, iNote } from '../../store/order/types';
+import { setList, addExpense, addNote } from '../../store/orderLists/actions';
 import { Tabs, Tab } from '@material-ui/core';
 import { Container } from '@material-ui/core';
-import { updateOrder } from '../../store/orderLists/actions';
+import { updateDate } from '../../store/orderLists/actions';
 import { Tabs as ShowedTab } from '../../store/orderLists/types';
 import { List } from './List';
 
@@ -15,6 +15,8 @@ interface iProps {
   isPending: boolean;
   updateOrder: Function;
   setList: Function;
+  addExpense: (expense: iExpense) => {};
+  addNote: (expense: iNote) => {};
 }
 
 class OrderLists extends React.Component<iProps> {
@@ -44,6 +46,8 @@ class OrderLists extends React.Component<iProps> {
           showedTab={this.props.listName}
           updateOrder={this.props.updateOrder}
           isPending={this.props.isPending}
+          addExpense={this.props.addExpense}
+          addNote={this.props.addNote}
         />
       </Container>
     );
@@ -59,8 +63,10 @@ const mapStateToProps = (store: State) => ({
 });
 
 const mapDispatchToProps = {
-  updateOrder: updateOrder,
-  setList: setList
+  updateOrder: updateDate,
+  setList: setList,
+  addExpense: addExpense,
+  addNote: addNote
 };
 
 export default connect(

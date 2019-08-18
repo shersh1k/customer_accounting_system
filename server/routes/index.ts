@@ -19,6 +19,7 @@ router.get('/generate', auth.required, function(req, res, next) {
 });
 
 export default router;
+
 function generateArray(
   title1: string[] /* 96 */,
   title2: string[] /* 186 */,

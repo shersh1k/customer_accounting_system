@@ -58,6 +58,19 @@ OrderSchema.methods.toJSONWithChild = function() {
   });
 };
 
+OrderSchema.methods.toJSONForList = function() {
+  return {
+    id: this._id,
+    slug: this.slug,
+    title: this.title,
+    priceOrder: this.priceOrder,
+    dateOrder: this.dateOrder,
+    dateStartWork: this.dateStartWork,
+    dateFinishWork: this.dateFinishWork,
+    dateDeadline: this.dateDeadline,
+    datePay: this.datePay
+  };
+};
 interface iOrderJSON {
   slug: string;
   title: string;
@@ -79,5 +92,6 @@ export interface iOrderModel extends Document, iOrderJSON {
   updatedAt: Date;
   slugify: () => void;
   toJSONWithChild: () => Promise<any>;
+  toJSONForList: () => any;
 }
 export default model<iOrderModel>('Order', OrderSchema);

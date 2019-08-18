@@ -4,6 +4,12 @@ export const GET_ORDER_FAIL = 'GET_ORDER_FAIL';
 export const PUT_ORDER_REQUEST = 'PUT_ORDER_REQUEST';
 export const PUT_ORDER_SUCCESS = 'PUT_ORDER_SUCCESS';
 export const PUT_ORDER_FAIL = 'PUT_ORDER_FAIL';
+export const PUT_NOTE_REQUEST = 'PUT_NOTE_REQUEST';
+export const PUT_NOTE_SUCCESS = 'PUT_NOTE_SUCCESS';
+export const PUT_NOTE_FAIL = 'PUT_NOTE_FAIL';
+export const PUT_EXPENSE_REQUEST = 'PUT_EXPENSE_REQUEST';
+export const PUT_EXPENSE_SUCCESS = 'PUT_EXPENSE_SUCCESS';
+export const PUT_EXPENSE_FAIL = 'PUT_EXPENSE_FAIL';
 export const SET_ORDER_EDIT_MODE = 'SET_ORDER_EDIT_MODE';
 export const SET_ORDER_READ_MODE = 'SET_ORDER_READ_MODE';
 export const HANDLE_CHANGE = 'HANDLE_CHANGE';
@@ -52,6 +58,41 @@ interface PutOrderFail {
   errorMessage: string;
   currentOrder?: iOrder;
 }
+interface PutNoteRequest {
+  type: typeof PUT_NOTE_REQUEST;
+  isPending: boolean;
+}
+
+interface PutNoteSuccess {
+  type: typeof PUT_NOTE_SUCCESS;
+  isPending: boolean;
+  note: iNote;
+}
+
+interface PutNoteFail {
+  type: typeof PUT_NOTE_FAIL;
+  isPending: boolean;
+  error: boolean;
+  errorMessage: string;
+}
+
+interface PutExpenseRequest {
+  type: typeof PUT_EXPENSE_REQUEST;
+  isPending: boolean;
+}
+
+interface PutExpenseSuccess {
+  type: typeof PUT_EXPENSE_SUCCESS;
+  isPending: boolean;
+  expense: iExpense;
+}
+
+interface PutExpenseFail {
+  type: typeof PUT_EXPENSE_FAIL;
+  isPending: boolean;
+  error: boolean;
+  errorMessage: string;
+}
 
 interface GetOrderRequest {
   type: typeof GET_ORDER_REQUEST;
@@ -80,15 +121,21 @@ export type LoginActionTypes =
   | GetOrderFail
   | PutOrderRequest
   | PutOrderSuccess
+  | PutNoteRequest
+  | PutNoteSuccess
+  | PutNoteFail
+  | PutExpenseRequest
+  | PutExpenseSuccess
+  | PutExpenseFail
   | PutOrderFail
   | SetOrderReadonlyMode
   | SetOrderEditMode
   | HandleChange;
 
 export interface iOrder {
-  id?: string;
-  _id?: string;
-  slug?: string;
+  id: string;
+  _id: string;
+  slug: string;
   title: string;
   priceOrder: number;
   description: string;
@@ -110,12 +157,14 @@ export interface iExpense {
   description: string;
   cost: number;
   spendDate?: Date;
+  order: string;
 }
 
 export interface iNote {
   _id?: string;
   title: string;
   body: string;
+  order: string;
   createdAt?: Date;
 }
 

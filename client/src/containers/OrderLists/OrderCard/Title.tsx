@@ -12,7 +12,7 @@ interface iProps {
 
 export function Title(props: iProps) {
   const { order, showedTab, handleDateChange } = props;
-  const { dateOrder, dateDeadline, dateStartWork, slug, title } = order;
+  const { dateDeadline, dateStartWork, dateFinishWork, slug, title } = order;
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Link to={`/orders/${slug}`}>{title}</Link>
@@ -26,7 +26,7 @@ export function Title(props: iProps) {
         <div style={{ color: 'green', fontSize: 20 }}>В плане через {calcRange(new Date(), dateStartWork)} дней</div>
       )}
       {showedTab === 'NotPayed' && (
-        <div style={{ color: 'blue', fontSize: 20 }}>Ожидание {calcRange(dateDeadline, new Date())} дней</div>
+        <div style={{ color: 'blue', fontSize: 20 }}>Ожидание {calcRange(dateFinishWork, new Date())} дней</div>
       )}
     </div>
   );
