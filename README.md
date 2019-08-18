@@ -5,3 +5,7 @@ React, redux, router, node(J/T/*xD*/)S, express, авторизация
 
 ссылка на heroku
 https://customer-accounting-system.herokuapp.com
+
+имеющийся пользователь:
+login: test@test.test
+password: test
