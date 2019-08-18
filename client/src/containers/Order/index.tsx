@@ -67,7 +67,7 @@ class Order extends React.Component<iProps> {
             />
           }
         />
-        <Content {...{ editedOrder, isEdit, handleChange, addNote, addExpense }} />
+        <Content {...{ editedOrder, isEdit, handleChange: this.handleChange, addNote, addExpense }} />
         <CardActions />
       </Card>
     );
