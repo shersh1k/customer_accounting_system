@@ -189,71 +189,67 @@ export default function Archive() {
 
   return (
     <div>
-      <Paper>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <div>
-          <Table aria-labelledby='tableTitle' size='medium'>
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.title);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => handleClick(event, row.title)}
-                      role='checkbox'
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.title}
-                      selected={isItemSelected}>
-                      <TableCell padding='checkbox'>
-                        <Checkbox checked={isItemSelected} inputProps={{ 'aria-labelledby': labelId }} />
-                      </TableCell>
-                      <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {row.title}
-                      </TableCell>
-                      <TableCell align='right'>{row.dateOrder}</TableCell>
-                      <TableCell align='right'>{row.dateDeadline}</TableCell>
-                      <TableCell align='right'>{row.datePay}</TableCell>
-                      <TableCell align='right'>{row.priceOrder}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 20]}
-          component='div'
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'previous page'
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'next page'
-          }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+      {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+      <Table aria-labelledby='tableTitle' size='medium'>
+        <EnhancedTableHead
+          numSelected={selected.length}
+          order={order}
+          orderBy={orderBy}
+          onSelectAllClick={handleSelectAllClick}
+          onRequestSort={handleRequestSort}
+          rowCount={rows.length}
         />
-      </Paper>
+        <TableBody>
+          {stableSort(rows, getSorting(order, orderBy))
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row, index) => {
+              const isItemSelected = isSelected(row.title);
+              const labelId = `enhanced-table-checkbox-${index}`;
+
+              return (
+                <TableRow
+                  hover
+                  onClick={event => handleClick(event, row.title)}
+                  role='checkbox'
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={row.title}
+                  selected={isItemSelected}>
+                  <TableCell padding='checkbox'>
+                    <Checkbox checked={isItemSelected} inputProps={{ 'aria-labelledby': labelId }} />
+                  </TableCell>
+                  <TableCell component='th' id={labelId} scope='row' padding='none'>
+                    {row.title}
+                  </TableCell>
+                  <TableCell align='right'>{row.dateOrder}</TableCell>
+                  <TableCell align='right'>{row.dateDeadline}</TableCell>
+                  <TableCell align='right'>{row.datePay}</TableCell>
+                  <TableCell align='right'>{row.priceOrder}</TableCell>
+                </TableRow>
+              );
+            })}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 49 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 20]}
+        component='div'
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          'aria-label': 'previous page'
+        }}
+        nextIconButtonProps={{
+          'aria-label': 'next page'
+        }}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
     </div>
   );
 }

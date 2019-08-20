@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Card, CardContent, CardHeader, TextField, Grid, CircularProgress, Button } from '@material-ui/core';
 import { MaterialUiPickersDate, DatePicker } from '@material-ui/pickers';
 import { iOrder } from '../../store/order/types';
-import newOrderClasses from '../../style/Order.module.scss';
-import UIClasses from '../../style/UI.module.scss';
 import { State } from '../../store';
 import { postOrder, handleChange, getLastTen } from '../../store/newOrder/actions';
 import { List } from './../OrderLists/List';
@@ -37,11 +35,11 @@ class NewOrder extends React.Component<iProps> {
 
   submitButton() {
     return (
-      <div className={UIClasses.fetcingWrapper}>
+      <div>
         <Button type='submit' variant='contained' color='primary' disabled={this.props.isPending}>
           Зарегистрировать
         </Button>
-        {this.props.isPending && <CircularProgress size={24} className={UIClasses.fetching} />}
+        {this.props.isPending && <CircularProgress size={24} />}
       </div>
     );
   }
@@ -51,14 +49,10 @@ class NewOrder extends React.Component<iProps> {
     const commonProps = { disabled: this.props.isPending, required: true, fullWidth: true };
     return (
       <div>
-        <form onSubmit={this.onSubmitRegister} className={newOrderClasses.main} autoComplete='off'>
-          <Card className={newOrderClasses.main}>
-            <CardHeader
-              className={newOrderClasses.header}
-              title={title || 'Новый заказ'}
-              action={this.submitButton()}
-            />
-            <CardContent className={newOrderClasses.content}>
+        <form onSubmit={this.onSubmitRegister} autoComplete='off'>
+          <Card>
+            <CardHeader title={title || 'Новый заказ'} action={this.submitButton()} />
+            <CardContent>
               <Grid container spacing={3} justify='space-around' alignContent='space-between'>
                 <Grid item xs={6}>
                   <TextField
@@ -118,8 +112,7 @@ class NewOrder extends React.Component<iProps> {
             </CardContent>
           </Card>
         </form>
-        {/* <div className='listLasts'>
-          Оставить только недавние
+        {/* <div>           Оставить только недавние
           <List list={this.props.list} showedTab='LastTen' isPending={this.props.isPending} />
         </div> */}
       </div>
