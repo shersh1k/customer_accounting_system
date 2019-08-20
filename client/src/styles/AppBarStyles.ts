@@ -92,7 +92,8 @@ const PermanentDrawerStyles = makeStyles((theme: Theme) =>
     content: {
       flexGrow: 1,
       [theme.breakpoints.down('lg')]: {
-        width: '100%'
+        width: '100%',
+        overflowX: 'auto'
       },
       [theme.breakpoints.up('lg')]: {
         width: 'calc(100% - 250px)',
