@@ -23,19 +23,26 @@ import { PermanentDrawerStyles } from '../styles/AppBarStyles';
 interface iProps {
   history: History;
 }
+const redirectToMain = (token?: string) => () => (token ? <Redirect to='/' /> : <Login />);
+const redirectToLogin = () => (
+  <>
+    <Redirect to='/login' />
+    <Login />
+  </>
+);
 
 export default function App(props: iProps) {
-  const user = useSelector((state: State) => state.user);
+  const token = useSelector((state: State) => state.user.token);
   const classes = PermanentDrawerStyles();
   return (
     <ConnectedRouter history={props.history}>
-      {user.token && <Navigation />}
+      {token && <Navigation />}
       <main className={classes.content}>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
           <Switch>
-            {!user.token && <Route path='/' render={redirectToLogin} />}
+            {!token && <Route path='/' render={redirectToLogin} />}
             <Route exact path='/' component={OrderLists} />
-            <Route path='/login' render={redirectToMain(user.token)} />
+            <Route path='/login' render={redirectToMain(token)} />
             <Route path='/archive' component={Archive} />
             <Route path='/calendar' render={() => <span>В процессе реализации</span>} />
             <Route path='/stats' render={() => <span>В процессе реализации</span>} />
@@ -49,15 +56,3 @@ export default function App(props: iProps) {
     </ConnectedRouter>
   );
 }
-
-const redirectToLogin = () => (
-  <>
-    <Redirect to='/login' />
-    <Login />
-  </>
-);
-
-const redirectToMain = (token?: string) => () => {
-  if (!token) return <Login />;
-  else return <Redirect to='/' />;
-};
