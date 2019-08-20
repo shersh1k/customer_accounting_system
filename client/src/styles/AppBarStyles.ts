@@ -86,8 +86,7 @@ const PermanentDrawerStyles = makeStyles((theme: Theme) =>
       flexShrink: 0
     },
     drawerPaper: {
-      width: 250,
-      marginTop: 64
+      width: 250
     },
     toolbar: theme.mixins.toolbar,
     content: {
