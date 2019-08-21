@@ -13,12 +13,11 @@ export default function Order() {
     dispatch(getOrder(slug));
   }, []);
 
-
   return (
-    <Card style={{ width: '90%' }}>
+    <div style={{ flex: 1 }}>
       <CardHeader title={<Title />} />
       <Content />
       <CardActions />
-    </Card>
+    </div>
   );
 }

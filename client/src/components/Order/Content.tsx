@@ -7,12 +7,11 @@ import Notes from './Notes';
 import { useSelector } from 'react-redux';
 import { State } from '../../store';
 
-
 export default function Content() {
-  const { editedOrder, isEdit } = useSelector((state: State) => state.order)
+  const { editedOrder, isEdit } = useSelector((state: State) => state.order);
   return (
     <CardContent>
-      <DateSteps order={editedOrder} isEdit={isEdit} />
+      {editedOrder && <DateSteps order={editedOrder} isEdit={isEdit} />}
       <Description />
       <Expenses />
       <Notes />

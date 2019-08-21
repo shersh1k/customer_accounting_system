@@ -4,7 +4,7 @@ import {
   ExpansionPanelDetails,
   List,
   ExpansionPanel,
-  ExpansionPanelActions,
+  ExpansionPanelActions
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Note } from './Note';
@@ -14,7 +14,8 @@ import { useSelector } from 'react-redux';
 
 export default function Notes() {
   const { editedOrder, isEdit } = useSelector((state: State) => state.order);
-  const { notes, id } = editedOrder
+  if (!editedOrder) return null;
+  const { notes, id } = editedOrder;
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Заметки</ExpansionPanelSummary>

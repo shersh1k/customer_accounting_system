@@ -1,13 +1,12 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Badge, MenuItem, Menu, Hidden } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, Hidden } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { AppBarStyles } from '../../styles/AppBarStyles';
 import { State } from '../../store';
 import { useSelector } from 'react-redux';
+import ProfileMenu from './ProfileMenu';
 
 interface iProps {
   toggleDrawer: (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => void;
@@ -39,56 +38,6 @@ export default function PrimarySearchAppBar(props: iProps) {
     setMobileMoreAnchorEl(event.currentTarget);
   }
 
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}>
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}>
-      <MenuItem>
-        <IconButton aria-label='show 4 new mails' color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label='show 11 new notifications' color='inherit'>
-          <Badge badgeContent={11} color='secondary'>
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label='account of current user'
-          aria-controls='primary-search-account-menu'
-          aria-haspopup='true'
-          color='inherit'>
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
   return (
     <div className={classes.grow}>
       <AppBar position='static'>
@@ -107,30 +56,12 @@ export default function PrimarySearchAppBar(props: iProps) {
             {pathname}
           </Typography>
           <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton aria-label='show 4 new mails' color='inherit'>
-              <Badge badgeContent={4} color='secondary'>
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label='show 17 new notifications' color='inherit'>
-              <Badge badgeContent={17} color='secondary'>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton edge='end' aria-label='account of current user' onClick={handleProfileMenuOpen} color='inherit'>
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton aria-label='show more' onClick={handleMobileMenuOpen} color='inherit'>
-              <MoreIcon />
-            </IconButton>
-          </div>
+          <IconButton edge='end' onClick={handleProfileMenuOpen} color='inherit'>
+            <AccountCircle />
+          </IconButton>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      <ProfileMenu {...{ anchorEl, isMenuOpen, handleMenuClose }} />
     </div>
   );
 }

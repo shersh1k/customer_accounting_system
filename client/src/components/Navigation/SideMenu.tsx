@@ -20,10 +20,9 @@ interface iProps {
 }
 
 export default function SideMenu(props: iProps) {
-  const toggleDrawer = props.toggleDrawer;
   return (
-    <List component='nav' onClick={toggleDrawer}>
-      <ListItem component={Link} to='/orders/neworder' button>
+    <List component='nav' onClick={props.toggleDrawer}>
+      <ListItem component={Link} to='/neworder' button>
         <ListItemIcon>
           <LibraryAdd />
         </ListItemIcon>

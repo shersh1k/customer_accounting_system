@@ -30,7 +30,7 @@ class OrderLists extends React.Component<iProps> {
 
   render() {
     return (
-      <Container maxWidth='md'>
+      <div style={{ flex: 1 }}>
         <Tabs
           value={this.props.listName}
           onChange={this.changeTab}
@@ -41,15 +41,8 @@ class OrderLists extends React.Component<iProps> {
           <Tab label='В очереди' value='DateStartWork' />
           <Tab label='Неоплаченные' value='NotPayed' />
         </Tabs>
-        <List
-          list={this.props.list}
-          showedTab={this.props.listName}
-          updateOrder={this.props.updateOrder}
-          isPending={this.props.isPending}
-          addExpense={this.props.addExpense}
-          addNote={this.props.addNote}
-        />
-      </Container>
+        <List list={this.props.list} showedTab={this.props.listName} isPending={this.props.isPending} />
+      </div>
     );
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { CardActions, Button as MUIButton } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { iOrder, iExpense, iNote } from '../../../store/order/types';
+import { iOrder } from '../../../store/order/types';
 import { Tabs } from '../../../store/orderLists/types';
 import { AddExpense } from '../../Order/AddExpense';
 import { AddNote } from '../../Order/AddNote';
@@ -11,12 +11,10 @@ interface iProps {
   handleDateChange: (date: MaterialUiPickersDate, name: keyof iOrder) => void;
   showedTab: Tabs | 'LastTen';
   orderId: string;
-  addExpense: (expense: iExpense) => {};
-  addNote: (expense: iNote) => {};
 }
 
 export function FooterActions(props: iProps) {
-  const { showedTab, handleDateChange: handler, orderId, addExpense, addNote } = props;
+  const { showedTab, handleDateChange: handler, orderId } = props;
   return (
     <CardActions>
       <AddExpense orderId={orderId} />

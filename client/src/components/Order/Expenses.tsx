@@ -14,7 +14,8 @@ import { State } from '../../store';
 
 export default function Expenses() {
   const { editedOrder, isEdit } = useSelector((state: State) => state.order);
-  const { expenses, id } = editedOrder
+  if (!editedOrder) return null;
+  const { expenses, id } = editedOrder;
   const sum = expenses.reduce((prev, cur) => prev + cur.cost, 0);
 
   return (

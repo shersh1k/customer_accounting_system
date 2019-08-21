@@ -7,7 +7,7 @@ import { State } from '../../store';
 export default function Description() {
   const dispatch = useDispatch();
   const { editedOrder, isEdit, isPending, error, errorMessage } = useSelector((state: State) => state.order);
-
+  if (!editedOrder) return null;
   if (isEdit)
     return (
       <Paper style={{ padding: '10px', margin: '10px 0' }}>
