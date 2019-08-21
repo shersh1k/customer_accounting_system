@@ -5,25 +5,16 @@ import {
   List,
   ExpansionPanel,
   ExpansionPanelActions,
-  Button
 } from '@material-ui/core';
-import { iNote, iOrder, iExpense } from '../../store/order/types';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Note } from './Note';
-import { MaterialUiPickersDate } from '@material-ui/pickers';
-import Add from '@material-ui/icons/Add';
 import { AddNote } from './AddNote';
+import { State } from '../../store';
+import { useSelector } from 'react-redux';
 
-interface iProps {
-  notes: iNote[];
-  isEdit: boolean;
-  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate | iExpense[] | iNote[]) => void;
-  addNote: (note: iNote) => {};
-  orderId: string;
-}
-
-export function Notes(props: iProps) {
-  const { isEdit, notes, handleChange, addNote, orderId } = props;
+export default function Notes() {
+  const { editedOrder, isEdit } = useSelector((state: State) => state.order);
+  const { notes, id } = editedOrder
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Заметки</ExpansionPanelSummary>
@@ -35,7 +26,7 @@ export function Notes(props: iProps) {
         </List>
       </ExpansionPanelDetails>
       <ExpansionPanelActions>
-        <AddNote addNote={addNote} orderId={orderId} />
+        <AddNote orderId={id} />
       </ExpansionPanelActions>
     </ExpansionPanel>
   );

@@ -19,8 +19,8 @@ export function FooterActions(props: iProps) {
   const { showedTab, handleDateChange: handler, orderId, addExpense, addNote } = props;
   return (
     <CardActions>
-      <AddExpense addExpense={addExpense} orderId={orderId} />
-      <AddNote addNote={addNote} orderId={orderId} />
+      <AddExpense orderId={orderId} />
+      <AddNote orderId={orderId} />
       {showedTab === 'DateDeadline' && <Button date='dateFinishWork' text='Выполнено' handler={handler} />}
       {showedTab === 'DateStartWork' && <Button date='dateStartWork' text='Начать' handler={handler} />}
       {showedTab === 'NotPayed' && <Button date='datePay' text='Оплачено' handler={handler} />}

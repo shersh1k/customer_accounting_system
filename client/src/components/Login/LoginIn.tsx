@@ -1,73 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Paper, TextField, Button, CircularProgress, Snackbar } from '@material-ui/core';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../store';
 import { submitLogin, submitLoginVK } from '../../store/user/actions';
 
-interface iProps {
-  error: boolean;
-  errorMessage?: string;
-  isPending?: boolean;
-  onSubmitLogin: (email: string, password: string) => void;
-  onSubmitLoginVK: () => void;
-}
-
-interface iState {
-  email?: string;
-  password?: string;
-}
-
-class LoginIn extends React.Component<iProps, iState> {
-  onSubmitLogin = (e: React.FormEvent<HTMLFormElement>) => {
+export default function LoginIn() {
+  const dispatch = useDispatch();
+  const { error, errorMessage, isPending } = useSelector((state: State) => state.user);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const onSubmitLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { email, password } = this.state;
-    if (email && password) this.props.onSubmitLogin(email, password);
+    if (email && password) dispatch(submitLogin(email, password));
   };
-
-  handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  render() {
-    const { error, errorMessage, isPending } = this.props;
-    return (
-      <Paper>
-        <form onSubmit={this.onSubmitLogin}>
-          <TextField required name='email' type='email' label='E-mail' margin='dense' onChange={this.handleInput} />
-          <TextField
-            required
-            name='password'
-            type='password'
-            label='Password'
-            margin='dense'
-            onChange={this.handleInput}
-          />
-          <div>
-            <Button type='submit' variant='contained' color='primary' disabled={isPending}>
-              Войти
+  return (
+    <Paper>
+      <form onSubmit={onSubmitLogin}>
+        <TextField required type='email' label='E-mail' onChange={(e) => setEmail(e.target.value)} />
+        <TextField required type='password' label='Password' onChange={(e) => setPassword(e.target.value)} />
+        <div>
+          <Button type='submit' variant='contained' color='primary' disabled={isPending}>
+            Войти
             </Button>
-            {isPending && <CircularProgress size={24} />}
-          </div>
-        </form>
-        <Snackbar open={error} message={<span style={{ color: 'orangered' }}>{errorMessage}</span>} />
-      </Paper>
-    );
-  }
+          {isPending && <CircularProgress size={24} />}
+        </div>
+      </form>
+      <Snackbar open={error} message={<span style={{ color: 'orangered' }}>{errorMessage}</span>} />
+    </Paper>
+  );
 }
-
-const mapStateToProps = (store: State) => ({
-  error: store.user.error || false,
-  errorMessage: store.user.errorMessage,
-  isPending: store.user.isPending
-});
-
-const mapDispatchToProps = {
-  onSubmitLogin: submitLogin,
-  onSubmitLoginVK: submitLoginVK
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginIn);

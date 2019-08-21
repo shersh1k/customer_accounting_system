@@ -1,17 +1,12 @@
 import React from 'react';
 import { TextField, Paper } from '@material-ui/core';
-import { iOrder } from '../../store/order/types';
-import { MaterialUiPickersDate } from '@material-ui/pickers';
+import { handleChange } from '../../store/order/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../../store';
 
-interface iProps {
-  editedOrder: iOrder;
-  isEdit: boolean;
-  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate) => void;
-}
-
-export function Description(props: iProps) {
-  const { description } = props.editedOrder;
-  const { isEdit, handleChange } = props;
+export default function Description() {
+  const dispatch = useDispatch();
+  const { editedOrder, isEdit, isPending, error, errorMessage } = useSelector((state: State) => state.order);
 
   if (isEdit)
     return (
@@ -19,13 +14,13 @@ export function Description(props: iProps) {
         <TextField
           required={true}
           fullWidth={true}
-          onChange={event => handleChange('description', event.currentTarget.value)}
-          value={description}
+          onChange={event => dispatch(handleChange('description', event.currentTarget.value))}
+          value={editedOrder.description}
           label='Описание'
           type='text'
           multiline
         />
       </Paper>
     );
-  else return <Paper style={{ padding: '10px', margin: '10px 0' }}>{description}</Paper>;
+  else return <Paper style={{ padding: '10px', margin: '10px 0' }}>{editedOrder.description}</Paper>;
 }

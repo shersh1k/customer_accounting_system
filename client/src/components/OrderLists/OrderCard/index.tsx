@@ -3,7 +3,7 @@ import { iOrder, iExpense, iNote } from '../../../store/order/types';
 import { Card, CardHeader } from '@material-ui/core';
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 import { Tabs } from '../../../store/orderLists/types';
-import { DateSteps } from '../../Order/DateSteps';
+import DateSteps from '../../Order/DateSteps';
 import { Title } from './Title';
 import { FooterActions } from './FooterActions';
 
@@ -27,7 +27,7 @@ export function OrderCard(props: iProps) {
   return (
     <Card style={{ margin: '10px 5px' }}>
       <CardHeader title={<Title order={order} showedTab={showedTab} handleDateChange={handleDateChange} />} />
-      <DateSteps editedOrder={order} />
+      <DateSteps order={order} />
       <FooterActions handleDateChange={handleDateChange} showedTab={showedTab} orderId={order.id} addExpense={addExpense} addNote={addNote} />
     </Card>
   );

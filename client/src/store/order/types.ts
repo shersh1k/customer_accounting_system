@@ -168,4 +168,4 @@ export interface iNote {
   createdAt?: Date;
 }
 
-export interface iCustomer {}
+export interface iCustomer { }

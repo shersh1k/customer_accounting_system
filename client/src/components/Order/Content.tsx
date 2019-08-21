@@ -1,41 +1,21 @@
 import React from 'react';
 import { CardContent } from '@material-ui/core';
-import { iOrder, iExpense, iNote } from '../../store/order/types';
-import { DateSteps } from './DateSteps';
-import { MaterialUiPickersDate } from '@material-ui/pickers';
-import { Description } from './Description';
-import { Expenses } from './Expenses';
-import { Notes } from './Notes';
+import DateSteps from './DateSteps';
+import Description from './Description';
+import Expenses from './Expenses';
+import Notes from './Notes';
+import { useSelector } from 'react-redux';
+import { State } from '../../store';
 
-interface iProps {
-  editedOrder: iOrder | null;
-  isEdit: boolean;
-  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate | iExpense[] | iNote[]) => void;
-  addNote: (note: iNote) => {};
-  addExpense: (expense: iExpense) => {};
-}
 
-export function Content(props: iProps) {
-  if (!props.editedOrder) return null;
-  const { editedOrder, isEdit, handleChange, addNote, addExpense } = props;
+export default function Content() {
+  const { editedOrder, isEdit } = useSelector((state: State) => state.order)
   return (
     <CardContent>
-      <DateSteps editedOrder={editedOrder} isEdit={isEdit} handleChange={handleChange} />
-      <Description editedOrder={editedOrder} isEdit={isEdit} handleChange={handleChange} />
-      <Expenses
-        isEdit={isEdit}
-        expenses={editedOrder.expenses}
-        handleChange={handleChange}
-        addExpense={addExpense}
-        orderId={editedOrder.id}
-      />
-      <Notes
-        isEdit={isEdit}
-        notes={editedOrder.notes}
-        handleChange={handleChange}
-        addNote={addNote}
-        orderId={editedOrder.id}
-      />
+      <DateSteps order={editedOrder} isEdit={isEdit} />
+      <Description />
+      <Expenses />
+      <Notes />
     </CardContent>
   );
 }

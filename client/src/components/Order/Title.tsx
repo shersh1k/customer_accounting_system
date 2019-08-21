@@ -3,29 +3,26 @@ import { Button, TextField } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import Cancel from '@material-ui/icons/Cancel';
 import Done from '@material-ui/icons/Done';
-import { iOrder } from '../../store/order/types';
-import { MaterialUiPickersDate } from '@material-ui/pickers';
+import { useSelector, useDispatch } from 'react-redux';
+import { State } from '../../store';
+import { handleChange, cancelEditState, updateOrder, setEditState } from '../../store/order/actions';
 
-interface iProps {
-  editedOrder: iOrder | null;
-  isEdit: boolean;
-  setEditState: () => void;
-  cancelEditState: () => void;
-  submitButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleChange: (field: keyof iOrder, value: string | MaterialUiPickersDate) => void;
-}
-
-export function Title(props: iProps) {
-  if (!props.editedOrder) return null;
-  const { title, priceOrder } = props.editedOrder;
-  const { isEdit, setEditState, submitButton, handleChange, cancelEditState } = props;
+export default function Title() {
+  const dispatch = useDispatch()
+  const { editedOrder, isEdit, isPending, error, errorMessage } = useSelector((state: State) => state.order);
+  if (!editedOrder) return null
+  const { title, priceOrder } = editedOrder;
+  const submitButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (editedOrder) dispatch(updateOrder({ ...editedOrder }))
+  };
 
   if (isEdit)
     return (
       <div>
-        <TextField value={title} onChange={e => handleChange('title', e.currentTarget.value)} type='text' />
-        <TextField value={priceOrder} onChange={e => handleChange('priceOrder', e.currentTarget.value)} type='number' />
-        <Button onClick={cancelEditState} color='secondary'>
+        <TextField value={title} onChange={e => dispatch(handleChange('title', e.currentTarget.value))} type='text' />
+        <TextField value={priceOrder} onChange={e => dispatch(handleChange('priceOrder', e.currentTarget.value))} type='number' />
+        <Button onClick={() => dispatch(cancelEditState())} color='secondary'>
           <Cancel />
         </Button>
         <Button onClick={submitButton} color='primary'>
@@ -38,7 +35,7 @@ export function Title(props: iProps) {
       <div>
         <span style={{ flex: 1 }}>{title}</span>
         <span style={{ color: 'green', flex: 1 }}>${priceOrder}</span>
-        <Button onClick={setEditState} color='primary'>
+        <Button onClick={() => dispatch(setEditState())} color='primary'>
           <Edit />
         </Button>
       </div>
