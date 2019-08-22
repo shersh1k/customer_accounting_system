@@ -14,13 +14,13 @@ export function Title(props: iProps) {
   const { order, showedTab, handleDateChange } = props;
   const { dateDeadline, dateStartWork, dateFinishWork, slug, title } = order;
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexFlow: 'column' }}>
       <Link to={`/orders/${slug}`}>{title}</Link>
-      {showedTab === 'DateDeadline' && !dateStartWork && (
-        <Queuing maxDate={dateDeadline} handleDateChange={handleDateChange} />
-      )}
       {showedTab === 'DateDeadline' && (
         <div style={{ color: 'red', fontSize: 20 }}>Осталось {calcRange(new Date(), dateDeadline)} дней</div>
+      )}
+      {showedTab === 'DateDeadline' && !dateStartWork && (
+        <Queuing maxDate={dateDeadline} handleDateChange={handleDateChange} />
       )}
       {showedTab === 'DateStartWork' && (
         <div style={{ color: 'green', fontSize: 20 }}>В плане через {calcRange(new Date(), dateStartWork)} дней</div>

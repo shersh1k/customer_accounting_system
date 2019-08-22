@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Hidden } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, Hidden, Container } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -41,25 +41,27 @@ export default function PrimarySearchAppBar(props: iProps) {
   return (
     <div className={classes.grow}>
       <AppBar position='static'>
-        <Toolbar>
-          <Hidden lgUp>
-            <IconButton
-              onClick={toggleDrawer(true)}
-              edge='start'
-              className={classes.menuButton}
-              color='inherit'
-              aria-label='open drawer'>
-              <MenuIcon />
+        <Container maxWidth="lg">
+          <Toolbar>
+            <Hidden lgUp>
+              <IconButton
+                onClick={toggleDrawer(true)}
+                edge='start'
+                className={classes.menuButton}
+                color='inherit'
+                aria-label='open drawer'>
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
+            <Typography className={classes.title} variant='h6'>
+              {pathname}
+            </Typography>
+            <div className={classes.grow} />
+            <IconButton edge='end' onClick={handleProfileMenuOpen} color='inherit'>
+              <AccountCircle />
             </IconButton>
-          </Hidden>
-          <Typography className={classes.title} variant='h6'>
-            {pathname}
-          </Typography>
-          <div className={classes.grow} />
-          <IconButton edge='end' onClick={handleProfileMenuOpen} color='inherit'>
-            <AccountCircle />
-          </IconButton>
-        </Toolbar>
+          </Toolbar>
+        </Container>
       </AppBar>
       <ProfileMenu {...{ anchorEl, isMenuOpen, handleMenuClose }} />
     </div>

@@ -15,7 +15,7 @@ export function Queuing(props: iProps) {
   };
   return (
     <DatePicker
-      autoOk
+      style={{ maxWidth: 150 }}
       variant='inline'
       label='В очередь с'
       format='d MMMM yyyy'
@@ -23,7 +23,6 @@ export function Queuing(props: iProps) {
       minDate={tomorrow}
       maxDate={maxDate}
       onChange={date => handleChange(date)}
-      margin='dense'
     />
   );
 }

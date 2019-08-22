@@ -37,7 +37,7 @@ class OrderLists extends React.Component<iProps> {
           indicatorColor='primary'
           textColor='primary'
           variant='fullWidth'>
-          <Tab label='Дедлайн' value='DateDeadline' />
+          <Tab label='Текущие' value='DateDeadline' />
           <Tab label='В очереди' value='DateStartWork' />
           <Tab label='Неоплаченные' value='NotPayed' />
         </Tabs>

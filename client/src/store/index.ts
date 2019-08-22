@@ -5,19 +5,20 @@ import { createBrowserHistory, History } from 'history';
 import thunkMiddleware from 'redux-thunk';
 import logger from 'redux-logger';
 
-// import { photosReducer } from "./photos/reducers";
-// import { friendsReducer } from "./friends/reducers";
 import { userReducer } from './user/reducers';
-import { orderListsReducer } from './orderLists/reducers';
-import { orderReducer } from './order/reducers';
-import { newOrderReducer } from './newOrder/reducers';
-import { archiveReducer } from './archive/reducers';
-
 import { UserState } from './user/types';
+import { orderListsReducer } from './orderLists/reducers';
 import { OrderListsState } from './orderLists/types';
+import { orderReducer } from './order/reducers';
 import { OrderState } from './order/types';
+import { newOrderReducer } from './newOrder/reducers';
 import { NewOrderState } from './newOrder/types';
+import { archiveReducer } from './archive/reducers';
 import { ArchiveState } from './archive/types';
+import { calendarReducer } from './calendar/reducers';
+import { CalendarState } from './calendar/types';
+import { statsReducer } from './stats/reducers';
+import { StatsState } from './stats/types';
 
 export const history = createBrowserHistory();
 
@@ -25,12 +26,12 @@ const rootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
     user: userReducer,
-    order: orderReducer,
     newOrder: newOrderReducer,
     orderLists: orderListsReducer,
-    archive: archiveReducer
-    // photos: photosReducer,
-    // friends: friendsReducer
+    archive: archiveReducer,
+    calendar: calendarReducer,
+    stats: statsReducer,
+    order: orderReducer
   });
 
 function configureStore() {
@@ -39,6 +40,9 @@ function configureStore() {
   const store = createStore(rootReducer(history), composeWithDevTools(middleWareEnhancer));
   return store;
 }
+
+export const store = configureStore();
+
 export interface State {
   router: RouterState;
   user: UserState;
@@ -46,8 +50,6 @@ export interface State {
   order: OrderState;
   newOrder: NewOrderState;
   archive: ArchiveState;
-  // photos: any;
-  // friends: any;
+  calendar: CalendarState;
+  stats: StatsState;
 }
-
-export const store = configureStore();

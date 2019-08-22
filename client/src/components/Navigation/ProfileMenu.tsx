@@ -1,5 +1,8 @@
 import React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, Typography, ListItemIcon } from '@material-ui/core';
+import { store } from '../../store';
+import { logout } from '../../store/user/actions';
+import { ExitToApp, Settings, Person } from '@material-ui/icons';
 
 interface iProps {
   anchorEl: HTMLElement | null;
@@ -17,8 +20,24 @@ export default function ProfileMenu(props: iProps) {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}>
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <Person />
+        </ListItemIcon>
+        Профиль
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <Settings />
+        </ListItemIcon>
+        Настройки
+      </MenuItem>
+      <MenuItem onClick={() => store.dispatch(logout())}>
+        <ListItemIcon>
+          <ExitToApp />
+        </ListItemIcon>
+        Выйти
+      </MenuItem>
     </Menu>
   );
 }

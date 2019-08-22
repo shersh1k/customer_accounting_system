@@ -15,6 +15,8 @@ import OrderLists from './OrderLists';
 import NoMatch from './NoMatch';
 import Login from './Login';
 import Order from './Order';
+import Calendar from './Calendar';
+import Stats from './Stats';
 
 import NewOrder from './Order/NewOrder';
 import Archive from './Archive';
@@ -54,8 +56,8 @@ export default function App(props: iProps) {
                 <Route exact path='/' component={OrderLists} />
                 <Route path='/login' render={redirectToMain(token)} />
                 <Route path='/archive' component={Archive} />
-                <Route path='/calendar' render={() => <span>В процессе реализации</span>} />
-                <Route path='/stats' render={() => <span>В процессе реализации</span>} />
+                <Route path='/calendar' component={Calendar} />
+                <Route path='/stats' component={Stats} />
                 <Route path='/readme' component={ReadMe} />
                 <Route path='/neworder' component={NewOrder} />
                 <Route path='/orders/:order' component={Order} />

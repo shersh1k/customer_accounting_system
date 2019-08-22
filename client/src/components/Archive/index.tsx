@@ -138,7 +138,7 @@ export default function Archive() {
   const [orderBy, setOrderBy] = useState<keyof iOrder>('title');
   const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
   const rows = useSelector((state: State) => state.archive.data);
   console.log(rows);
 
@@ -236,7 +236,7 @@ export default function Archive() {
         </TableBody>
       </Table>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
+        rowsPerPageOptions={[5, 10, 15]}
         component='div'
         count={rows.length}
         rowsPerPage={rowsPerPage}

@@ -26,7 +26,8 @@ const AppStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       [theme.breakpoints.down('lg')]: {
         width: '100%',
-        overflowX: 'auto'
+        overflowX: 'auto',
+        minHeight: 'calc(100vh - 64px)'
       }
     },
     mainWrapper: {

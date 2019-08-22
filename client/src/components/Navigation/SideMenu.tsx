@@ -54,13 +54,6 @@ export default function SideMenu(props: iProps) {
         <ListItemText primary='Архив' />
       </ListItem>
       <ListItem divider />
-      <ListItem button onClick={() => store.dispatch(logout())}>
-        <ListItemIcon>
-          <ExitToApp />
-        </ListItemIcon>
-        <ListItemText primary='Выйти' />
-      </ListItem>
-      <ListItem divider />
       <ListItem button onClick={() => Generate()}>
         <ListItemIcon>
           <Autorenew />
