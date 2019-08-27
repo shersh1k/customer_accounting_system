@@ -35,6 +35,11 @@ const AppStyles = makeStyles((theme: Theme) =>
         maxHeight: 'calc(100vh - 64px)',
         overflowY: 'scroll'
       }
+    },
+    menuDesktop: {
+      [theme.breakpoints.up('lg')]: {
+        minWidth: '200px'
+      }
     }
   })
 );

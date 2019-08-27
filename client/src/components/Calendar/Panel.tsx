@@ -9,11 +9,11 @@ export default function Panel() {
     <>
       <span>Сегодня</span>
       <div /* className={panel.direction} */>
-        <Button onClick={() => {} /* this.props.setDateRange('prev') */} />
+        <Button onClick={() => {} /* this.props.setDateRange('prev') */}>prev</Button>
         <div /* className={panel.dateRange} */ onClick={() => {} /*  this.props.setSelection() */}>
           {/* {DateFormatter(this.props.viewType, this.props.dateRange)} */}
         </div>
-        <Button onClick={() => {} /* this.props.setDateRange('next') */} />
+        <Button onClick={() => {} /* this.props.setDateRange('next') */}>next</Button>
       </div>
 
       <Button onClick={() => dispatch(setViewType('Week'))}>Week</Button>

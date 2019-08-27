@@ -45,11 +45,13 @@ export default function App(props: iProps) {
       <div className={classes.mainWrapper}>
         <Container maxWidth='lg'>
           <main className={classes.main}>
-            {token && (
-              <Hidden mdDown>
-                <SideMenu />
-              </Hidden>
-            )}
+            <div className={classes.menuDesktop}>
+              {token && (
+                <Hidden mdDown>
+                  <SideMenu />
+                </Hidden>
+              )}
+            </div>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
               <Switch>
                 {!token && <Route path='/' render={redirectToLogin} />}
