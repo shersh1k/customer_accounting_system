@@ -1,5 +1,5 @@
 import React from 'react';
-import { iOrder, iExpense, iNote } from '../../../store/order/types';
+import { iOrder } from '../../../store/order/types';
 import { Card, CardHeader } from '@material-ui/core';
 import { MaterialUiPickersDate } from '@material-ui/pickers';
 import { Tabs } from '../../../store/orderLists/types';

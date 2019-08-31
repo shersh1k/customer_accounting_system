@@ -1,15 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  TextField,
-  Grid,
-  CircularProgress,
-  Button,
-  Typography
-} from '@material-ui/core';
+import { CardHeader, TextField, Grid, CircularProgress, Button, Typography } from '@material-ui/core';
 import { MaterialUiPickersDate, DatePicker } from '@material-ui/pickers';
 import { State } from '../../store';
 import { postOrder, handleChange, getLastTen } from '../../store/newOrder/actions';
@@ -21,7 +12,7 @@ export default function NewOrder() {
   const { newOrder, isPending, list } = useSelector((state: State) => state.newOrder);
   useEffect(() => {
     dispatch(getLastTen());
-  }, []);
+  }, [dispatch]);
 
   const onSubmitRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

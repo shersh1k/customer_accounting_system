@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import {
   FormatListBulleted,
-  ExitToApp,
+  // ExitToApp,
   Autorenew,
   Info,
   LibraryAdd,
@@ -12,8 +12,8 @@ import {
   ShowChart
 } from '@material-ui/icons';
 import { Generate } from '../../helpers/API/Methods';
-import { store } from '../../store';
-import { logout } from '../../store/user/actions';
+// import { store } from '../../store';
+// import { logout } from '../../store/user/actions';
 
 interface iProps {
   toggleDrawer?: (event: React.KeyboardEvent | React.MouseEvent) => void;

@@ -90,6 +90,40 @@ router.get('/lastTen', auth.required, function(req, res, next) {
     .catch(next);
 });
 
+router.get('/byRange', auth.required, function(req, res, next) {
+  User.findById(req.user.id)
+    .then(function(user) {
+      if (!user) throw new Error('Нет такого пользователя');
+      const from = new Date(req.query.from);
+      const to = new Date(req.query.to);
+      Order.find(
+        {
+          author: user.id,
+          $or: [
+            { dateOrder: { $gte: from } },
+            { dateOrder: { $lte: to } },
+            { dateStartWork: { $gte: from } },
+            { dateStartWork: { $lte: to } },
+            { dateDeadline: { $gte: from } },
+            { dateDeadline: { $lte: to } },
+            { dateFinishWork: { $gte: from } },
+            { dateFinishWork: { $lte: to } },
+            { datePay: { $gte: from } },
+            { datePay: { $lte: to } }
+          ]
+        },
+        function(err, docs) {
+          if (err) return new Error(err.message);
+          docs = docs.sort(
+            (a: any, b: any) => new Date(a.dateStartWork).getTime() - new Date(b.dateStartWork).getTime()
+          );
+          return res.json(docs.map(doc => doc.toJSONForList()));
+        }
+      );
+    })
+    .catch(next);
+});
+
 router.post('/', auth.required, function(req, res, next) {
   User.findById(req.user.id)
     .then(function(user) {

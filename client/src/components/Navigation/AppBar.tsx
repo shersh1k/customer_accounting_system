@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Hidden, Container } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MoreIcon from '@material-ui/icons/MoreVert';
+// import MoreIcon from '@material-ui/icons/MoreVert';
 import { AppBarStyles } from '../../styles/AppBarStyles';
 import { State } from '../../store';
 import { useSelector } from 'react-redux';
@@ -16,27 +16,27 @@ export default function PrimarySearchAppBar(props: iProps) {
   const { toggleDrawer } = props;
   const classes = AppBarStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
   const pathname = useSelector((state: State) => state.router.location.pathname);
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   function handleProfileMenuOpen(event: React.MouseEvent<HTMLElement>) {
     setAnchorEl(event.currentTarget);
   }
 
-  function handleMobileMenuClose() {
-    setMobileMoreAnchorEl(null);
-  }
+  // function handleMobileMenuClose() {
+  //   setMobileMoreAnchorEl(null);
+  // }
 
   function handleMenuClose() {
     setAnchorEl(null);
-    handleMobileMenuClose();
+    // handleMobileMenuClose();
   }
 
-  function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
-    setMobileMoreAnchorEl(event.currentTarget);
-  }
+  // function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
+  //   setMobileMoreAnchorEl(event.currentTarget);
+  // }
 
   return (
     <div className={classes.grow}>

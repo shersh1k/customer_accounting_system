@@ -55,7 +55,9 @@ export function getOrder(slug: string) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: GET_ORDER_REQUEST,
-      isPending: true
+      isPending: true,
+      order: null,
+      editedOrder: null
     });
     return GetOrder(slug)
       .then(response => {

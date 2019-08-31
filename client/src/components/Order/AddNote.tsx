@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddComment from '@material-ui/icons/AddComment';
-import { iNote } from '../../store/order/types';
+// import { iNote } from '../../store/order/types';
 import { addNote } from '../../store/orderLists/actions';
 import { useDispatch } from 'react-redux';
 

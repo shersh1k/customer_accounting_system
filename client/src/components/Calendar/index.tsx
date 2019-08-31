@@ -1,31 +1,33 @@
 import React, { useEffect } from 'react';
 
 import Panel from './Panel';
-import Year from './Year';
-import Month from './Month';
+import Day from './Day';
 import Week from './Week';
+import Month from './Month';
+import Year from './Year';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllOrdersForCalendar } from '../../store/calendar/actions';
+import { getOrdersForCalendar } from '../../store/calendar/actions';
 import { State } from '../../store';
-import { getDays, getWeeks } from './CalendarHelper';
+import { RootStyles } from '../../styles/CalendarStyles';
 
 export default function Calendar() {
+  const classes = RootStyles();
   const dispatch = useDispatch();
-  const { data, viewType, isPending, error, errorMessage } = useSelector((state: State) => state.calendar);
-  useEffect(() => {
-    dispatch(getAllOrdersForCalendar());
-  }, []);
-  const dates = getDays({ dateFrom: new Date(2019, 7, 1), dateTo: new Date(2019, 7, 31), dateRangeHelper: new Date() }, data);
-  const weeks = getWeeks(dates);
-  console.log(weeks);
+  const { viewType, showingRange /*  isPending, error, errorMessage  */ } = useSelector(
+    (state: State) => state.calendar
+  );
 
+  useEffect(() => {
+    dispatch(getOrdersForCalendar(showingRange));
+  }, [dispatch, showingRange, viewType]);
 
   return (
-    <div>
+    <div className={classes.root}>
       <Panel />
-      {viewType === 'Month' && <Month weeks={weeks} />}
-      {/* {viewType === 'Week' && <Week weeks={data} />} */}
-      {/* {viewType === 'Year' && <Year weeks={data} />} */}
+      {viewType === 'Day' && <Day />}
+      {viewType === 'Week' && <Week />}
+      {viewType === 'Month' && <Month />}
+      {viewType === 'Year' && <Year />}
     </div>
   );
 }

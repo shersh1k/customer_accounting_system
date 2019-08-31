@@ -9,7 +9,7 @@ import { handleChange, cancelEditState, updateOrder, setEditState } from '../../
 
 export default function Title() {
   const dispatch = useDispatch()
-  const { editedOrder, isEdit, isPending, error, errorMessage } = useSelector((state: State) => state.order);
+  const { editedOrder, isEdit/* , isPending, error, errorMessage */ } = useSelector((state: State) => state.order);
   if (!editedOrder) return null
   const { title, priceOrder } = editedOrder;
   const submitButton = async (e: React.MouseEvent<HTMLButtonElement>) => {

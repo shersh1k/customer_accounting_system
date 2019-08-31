@@ -1,22 +1,17 @@
 import React from 'react';
 
 import ShortDay from './ShortDay';
-import { iWeek, iDay } from './CalendarHelper';
+import { useSelector } from 'react-redux';
+import { State } from '../../store';
+import { MonthStyles } from '../../styles/CalendarStyles';
 
-interface iProps {
-  weeks: iWeek[];
-}
-
-export default function Month(props: iProps) {
-  const weeks = props.weeks;
+export default function Month() {
+  const { days } = useSelector((state: State) => state.calendar);
+  const classes = MonthStyles();
   return (
-    <div>
-      {weeks.map((week, index) => (
-        <div key={index}>
-          {week.days.map((day, index) => (
-            <ShortDay key={index} day={day} />
-          ))}
-        </div>
+    <div className={classes.month}>
+      {days.map((day, index) => (
+        <ShortDay key={index} day={day} />
       ))}
     </div>
   );

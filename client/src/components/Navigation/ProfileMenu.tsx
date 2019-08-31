@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, MenuItem, Typography, ListItemIcon } from '@material-ui/core';
+import { Menu, MenuItem, ListItemIcon } from '@material-ui/core';
 import { store } from '../../store';
 import { logout } from '../../store/user/actions';
 import { ExitToApp, Settings, Person } from '@material-ui/icons';

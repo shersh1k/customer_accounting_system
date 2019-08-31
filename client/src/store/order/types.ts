@@ -98,6 +98,8 @@ interface GetOrderRequest {
   type: typeof GET_ORDER_REQUEST;
   isPending: boolean;
   ordersList?: iOrder[];
+  order: iOrder | null;
+  editedOrder: iOrder | null;
 }
 
 interface GetOrderSuccess {
@@ -168,4 +170,4 @@ export interface iNote {
   createdAt?: Date;
 }
 
-export interface iCustomer { }
+export interface iCustomer {}

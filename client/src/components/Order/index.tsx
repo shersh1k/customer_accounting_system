@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, CardHeader, CardActions } from '@material-ui/core';
+import { CardHeader, CardActions } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../store';
 import { getOrder } from '../../store/order/actions';
@@ -11,7 +11,7 @@ export default function Order() {
   const slug = useSelector((state: State) => state.router.location.pathname.split('/')[2]);
   useEffect(() => {
     dispatch(getOrder(slug));
-  }, []);
+  }, [dispatch, slug]);
 
   return (
     <div style={{ flex: 1 }}>

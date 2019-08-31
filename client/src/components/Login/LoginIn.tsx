@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Paper, TextField, Button, CircularProgress, Snackbar } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../store';
-import { submitLogin, submitLoginVK } from '../../store/user/actions';
+import { submitLogin /* submitLoginVK */ } from '../../store/user/actions';
 
 export default function LoginIn() {
   const dispatch = useDispatch();
@@ -16,12 +16,12 @@ export default function LoginIn() {
   return (
     <Paper>
       <form onSubmit={onSubmitLogin}>
-        <TextField required type='email' label='E-mail' onChange={(e) => setEmail(e.target.value)} />
-        <TextField required type='password' label='Password' onChange={(e) => setPassword(e.target.value)} />
+        <TextField required type='email' label='E-mail' onChange={e => setEmail(e.target.value)} />
+        <TextField required type='password' label='Password' onChange={e => setPassword(e.target.value)} />
         <div>
           <Button type='submit' variant='contained' color='primary' disabled={isPending}>
             Войти
-            </Button>
+          </Button>
           {isPending && <CircularProgress size={24} />}
         </div>
       </form>

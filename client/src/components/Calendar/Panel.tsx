@@ -1,27 +1,64 @@
-import React, { Component, MouseEvent } from 'react';
-import { Button } from '@material-ui/core';
-import { setViewType } from '../../store/calendar/actions';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { Button, Typography, Hidden, ButtonGroup } from '@material-ui/core';
+import { setViewType, setNextRange, setPrevRange, resetRange } from '../../store/calendar/actions';
+import { useDispatch, useSelector } from 'react-redux';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
+import { State } from '../../store';
+import { ViewType, Interval } from '../../store/calendar/types';
+import { format, addDays } from 'date-fns';
+import ruLocale from 'date-fns/locale/ru';
+import { PanelStyles } from '../../styles/CalendarStyles';
 
 export default function Panel() {
+  const classes = PanelStyles();
   const dispatch = useDispatch();
+  const { viewType, showingRange } = useSelector((state: State) => state.calendar);
+  const formatDate = (viewType: ViewType, showingRange?: Interval) => {
+    if (viewType === 'Day' && showingRange)
+      return format(showingRange.start, 'EEEE, do MMMM yyyy', { locale: ruLocale });
+    if (viewType === 'Day') return 'Сегодня ' + format(new Date(), 'EEEE, do MMMM yyyy', { locale: ruLocale });
+    if (!showingRange) return '';
+    if (viewType === 'Week')
+      return (
+        `${format(showingRange.start, 'do MMMM', { locale: ruLocale })}` +
+        ` по ${format(showingRange.end, 'do MMMM', { locale: ruLocale })}`
+      );
+    if (viewType === 'Month') {
+      return format(addDays(showingRange.start, 15), 'LLLL', { locale: ruLocale });
+    }
+    if (viewType === 'Year') {
+      return format(addDays(showingRange.start, 15), 'yyyy', { locale: ruLocale });
+    }
+  };
   return (
-    <>
-      <div /* className={panel.direction} */>
-        <Button onClick={() => {} /* this.props.setDateRange('prev') */}>
+    <div className={classes.panel}>
+      <Button className={classes.today} color='primary' onClick={() => dispatch(resetRange(viewType, showingRange))}>
+        {formatDate('Day')}
+      </Button>
+      <div className={classes.direction}>
+        <Button color='primary' onClick={() => dispatch(setPrevRange(viewType, showingRange))}>
           <ChevronLeft />
         </Button>
-        <Button /* className={panel.dateRange} */ onClick={() => {} /*  this.props.setSelection() */}>Сегодня</Button>
-        <Button onClick={() => {} /* this.props.setDateRange('next') */}>
+        <Typography variant='button'>{formatDate(viewType, showingRange)}</Typography>
+        <Button color='primary' onClick={() => dispatch(setNextRange(viewType, showingRange))}>
           <ChevronRight />
         </Button>
       </div>
-
-      <Button onClick={() => dispatch(setViewType('Week'))}>Неделя</Button>
-      <Button onClick={() => dispatch(setViewType('Month'))}>Месяц</Button>
-      <Button onClick={() => dispatch(setViewType('Year'))}>Год</Button>
-    </>
+      <ButtonGroup className={classes.viewChanger}>
+        <Button color='primary' onClick={() => dispatch(setViewType('Day'))}>
+          День
+        </Button>
+        <Button color='primary' onClick={() => dispatch(setViewType('Week'))}>
+          Неделя
+        </Button>
+        <Button color='primary' onClick={() => dispatch(setViewType('Month'))}>
+          Месяц
+        </Button>
+        <Button color='primary' onClick={() => dispatch(setViewType('Year'))}>
+          Год
+        </Button>
+      </ButtonGroup>
+    </div>
   );
 }

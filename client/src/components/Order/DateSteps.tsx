@@ -3,8 +3,8 @@ import { Stepper, Step, StepLabel, CardContent } from '@material-ui/core';
 import { iOrder } from '../../store/order/types';
 import { DatePicker } from '@material-ui/pickers';
 import { handleChange } from '../../store/order/actions';
-import { useSelector, useDispatch } from 'react-redux';
-import { State } from '../../store';
+import { /* useSelector, */ useDispatch } from 'react-redux';
+// import { State } from '../../store';
 
 interface iProps {
   order: iOrder,
@@ -14,7 +14,7 @@ interface iProps {
 export default function DateSteps(props: iProps) {
   const dispatch = useDispatch()
   const { order, isEdit } = props;
-  const { isPending, error, errorMessage } = useSelector((state: State) => state.order);
+  // const { isPending, error, errorMessage } = useSelector((state: State) => state.order);
   const activeStep = findActiveStep(order);
   const steps = buildSteps(order);
   return (

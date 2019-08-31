@@ -6,13 +6,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Paper from '@material-ui/core/Paper';
+// import Toolbar from '@material-ui/core/Toolbar';
+// import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+// import IconButton from '@material-ui/core/IconButton';
+// import Tooltip from '@material-ui/core/Tooltip';
+// import DeleteIcon from '@material-ui/icons/Delete';
+// import FilterListIcon from '@material-ui/icons/FilterList';
 import { useSelector } from 'react-redux';
 import { State } from '../../store';
 import { getAllOrders } from '../../store/archive/actions';
@@ -101,11 +101,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-interface EnhancedTableToolbarProps {
+/* interface EnhancedTableToolbarProps {
   numSelected: number;
-}
+} */
 
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
+/* const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const { numSelected } = props;
   return (
     <Toolbar>
@@ -128,12 +128,12 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     </Toolbar>
   );
 };
-
+ */
 export default function Archive() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllOrders());
-  }, []);
+  }, [dispatch]);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof iOrder>('title');
   const [selected, setSelected] = useState<string[]>([]);

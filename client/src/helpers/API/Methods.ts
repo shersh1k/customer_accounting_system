@@ -2,6 +2,7 @@ import API, { HTTP } from '.';
 import { iUser } from '../../store/user/types';
 import { iOrder, iNote, iExpense } from '../../store/order/types';
 import { iNewOrder } from '../../store/newOrder/types';
+import { Interval } from '../../store/calendar/types';
 
 export function Generate() {
   return API(HTTP.GET, '/generate', true);
@@ -33,6 +34,10 @@ export function GetLastTenOrders() {
 
 export function GetAllOrders() {
   return API(HTTP.GET, '/api/orders', true);
+}
+
+export function GetOrdersByRange(range: Interval) {
+  return API(HTTP.GET, `/api/orders/byRange?from=${range.start.toString()}&to=${range.end.toString()}`, true);
 }
 
 export function GetOrder(slug: string) {
