@@ -7,23 +7,23 @@ import { /* useSelector, */ useDispatch } from 'react-redux';
 // import { State } from '../../store';
 
 interface iProps {
-  order: iOrder,
-  isEdit?: boolean
+  order: iOrder;
+  isEdit?: boolean;
 }
 
 export default function DateSteps(props: iProps) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { order, isEdit } = props;
   // const { isPending, error, errorMessage } = useSelector((state: State) => state.order);
   const activeStep = findActiveStep(order);
   const steps = buildSteps(order);
   return (
-    <CardContent>
+    <CardContent style={{ padding: 0 }}>
       <Stepper style={{ padding: 0 }} activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={index}>
             <StepLabel>
-              <span>{label.title}</span>
+              <span style={{ fontSize: '12px' }}>{label.title}</span>
               <br />
               {isEdit && (
                 <DatePicker
@@ -34,7 +34,9 @@ export default function DateSteps(props: iProps) {
                   onChange={date => dispatch(handleChange(label.name, date))}
                 />
               )}
-              {!isEdit && <span>{label.date && new Date(label.date).toLocaleDateString()}</span>}
+              {!isEdit && (
+                <span style={{ fontSize: '12px' }}>{label.date && new Date(label.date).toLocaleDateString()}</span>
+              )}
             </StepLabel>
           </Step>
         ))}
@@ -54,7 +56,7 @@ function findActiveStep(order: iOrder) {
 interface iStep {
   title: string;
   date?: Date;
-  name: keyof iOrder;//'dateOrder' | 'dateStartWork' | 'dateDeadline' | 'dateFinishWork' | 'datePay';
+  name: keyof iOrder; //'dateOrder' | 'dateStartWork' | 'dateDeadline' | 'dateFinishWork' | 'datePay';
 }
 
 function buildSteps(order: iOrder) {

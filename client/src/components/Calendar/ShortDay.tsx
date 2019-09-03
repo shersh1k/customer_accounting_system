@@ -10,8 +10,8 @@ export default function ShortDay(props: iProps) {
   const classes = ShortDayStyles();
   return (
     <div className={classes.day}>
-      {props.day.events.map(item => (
-        <div>{item.title}</div>
+      {props.day.events.map((item, index) => (
+        <div key={index}>{item.title}</div>
       ))}
     </div>
   );

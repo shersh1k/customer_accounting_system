@@ -40,6 +40,10 @@ const AppStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('lg')]: {
         minWidth: '200px'
       }
+    },
+    content: {
+      margin: 10,
+      width: 'calc(100% - 22px)'
     }
   })
 );

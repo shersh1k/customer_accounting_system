@@ -92,7 +92,6 @@ export function addExpense(expense: iExpense) {
 
 export function addNote(note: iNote) {
   return (dispatch: Dispatch<LoginActionTypes>) => {
-    debugger;
     dispatch({
       type: PUT_NOTE_REQUEST,
       isPending: true

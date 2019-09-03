@@ -52,20 +52,22 @@ export default function App(props: iProps) {
                 </Hidden>
               )}
             </div>
-            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-              <Switch>
-                {!token && <Route path='/' render={redirectToLogin} />}
-                <Route exact path='/' component={OrderLists} />
-                <Route path='/login' render={redirectToMain(token)} />
-                <Route path='/archive' component={Archive} />
-                <Route path='/calendar' component={Calendar} />
-                <Route path='/stats' component={Stats} />
-                <Route path='/readme' component={ReadMe} />
-                <Route path='/neworder' component={NewOrder} />
-                <Route path='/orders/:order' component={Order} />
-                <Route component={NoMatch} />
-              </Switch>
-            </MuiPickersUtilsProvider>
+            <div className={classes.content}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
+                <Switch>
+                  {!token && <Route path='/' render={redirectToLogin} />}
+                  <Route exact path='/' component={OrderLists} />
+                  <Route path='/login' render={redirectToMain(token)} />
+                  <Route path='/archive' component={Archive} />
+                  <Route path='/calendar' component={Calendar} />
+                  <Route path='/stats' component={Stats} />
+                  <Route path='/readme' component={ReadMe} />
+                  <Route path='/neworder' component={NewOrder} />
+                  <Route path='/orders/:order' component={Order} />
+                  <Route component={NoMatch} />
+                </Switch>
+              </MuiPickersUtilsProvider>
+            </div>
           </main>
         </Container>
       </div>

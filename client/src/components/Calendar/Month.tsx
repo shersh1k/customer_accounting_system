@@ -1,5 +1,4 @@
 import React from 'react';
-
 import ShortDay from './ShortDay';
 import { useSelector } from 'react-redux';
 import { State } from '../../store';

@@ -2,9 +2,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 const RootStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      width: '100%'
-    }
+    root: {}
   })
 );
 const ShortDayStyles = makeStyles((theme: Theme) =>
@@ -30,7 +28,7 @@ const DayStyles = makeStyles((theme: Theme) =>
 const WeekStyles = makeStyles((theme: Theme) =>
   createStyles({
     week: {
-      display: 'flex'
+      display: 'flex',
     }
   })
 );
@@ -54,6 +52,7 @@ const PanelStyles = makeStyles((theme: Theme) =>
   createStyles({
     panel: {
       display: 'flex',
+      margin: 10,
       flexFlow: 'row wrap',
       justifyContent: 'space-around'
     },

@@ -1,16 +1,18 @@
 import React from 'react';
-
-import ShortDay from './ShortDay';
 import { useSelector } from 'react-redux';
 import { State } from '../../store';
 import { DayStyles } from '../../styles/CalendarStyles';
 
 export default function Day() {
-  const classes = DayStyles();
   const { days } = useSelector((state: State) => state.calendar);
+  if (!days.length) return null;
+  const orders = days[0].events;
+  const classes = DayStyles();
   return (
     <div className={classes.day}>
-      {days.map((day, index) => day.events.map(event => <div key={index}>{event.title}</div>))}
+      {orders.map((event, index) => (
+        <div key={index}>{event.title}</div>
+      ))}
     </div>
   );
 }

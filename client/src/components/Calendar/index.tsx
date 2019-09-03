@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 
 import Panel from './Panel';
 import Day from './Day';
@@ -11,23 +11,23 @@ import { State } from '../../store';
 import { RootStyles } from '../../styles/CalendarStyles';
 
 export default function Calendar() {
-  const classes = RootStyles();
   const dispatch = useDispatch();
   const { viewType, showingRange /*  isPending, error, errorMessage  */ } = useSelector(
     (state: State) => state.calendar
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(getOrdersForCalendar(showingRange));
-  }, [dispatch, showingRange, viewType]);
+  }, [dispatch, showingRange]);
 
+  const classes = RootStyles();
   return (
     <div className={classes.root}>
       <Panel />
-      {viewType === 'Day' && <Day />}
-      {viewType === 'Week' && <Week />}
-      {viewType === 'Month' && <Month />}
       {viewType === 'Year' && <Year />}
+      {viewType === 'Month' && <Month />}
+      {viewType === 'Week' && <Week />}
+      {viewType === 'Day' && <Day />}
     </div>
   );
 }

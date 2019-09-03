@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, Hidden, ButtonGroup } from '@material-ui/core';
+import { Button, Typography, ButtonGroup } from '@material-ui/core';
 import { setViewType, setNextRange, setPrevRange, resetRange } from '../../store/calendar/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';

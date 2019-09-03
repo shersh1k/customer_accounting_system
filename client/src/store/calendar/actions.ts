@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { cancel } from '../../helpers/API'; //импортируем canceller (один на всех, или все таки на каждый запрос разный создается? надо как-то проверить)
 import { GetOrdersByRange } from '../../helpers/API/Methods';
 import {
   GET_CALENDAR_ORDERS_REQUEST,
@@ -57,6 +58,7 @@ export function resetRange(viewType: ViewType, currentRange: Interval) {
 }
 
 export function getOrdersForCalendar(range: Interval) {
+  if (cancel) cancel('cancelled');
   return (dispatch: Dispatch<LoginActionTypes>) => {
     dispatch({
       type: GET_CALENDAR_ORDERS_REQUEST,
