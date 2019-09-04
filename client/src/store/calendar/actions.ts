@@ -11,10 +11,19 @@ import {
   SET_CALENDAR_NEXT_RANGE,
   SET_CALENDAR_PREV_RANGE,
   RESSET_CALENDAR_RANGE,
+  APPLY_DATE_FILTER,
   Interval
 } from './types';
 import { getRange, getDays } from './CalendarHelper';
 import { addDays, subDays } from 'date-fns';
+
+export function dateFilter(neededDates: string[]) {
+  return (dispatch: Dispatch<LoginActionTypes>) => {
+    dispatch({
+      type: APPLY_DATE_FILTER
+    });
+  };
+}
 
 export function setViewType(viewType: ViewType) {
   return (dispatch: Dispatch<LoginActionTypes>) => {

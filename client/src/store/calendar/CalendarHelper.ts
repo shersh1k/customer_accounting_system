@@ -16,7 +16,7 @@ export function getDays(dateRange: Interval, events: iOrder[]): iDay[] {
     let isSelected: boolean = false;
     return {
       date: date,
-      events: events ? fillDayEvents(events, date) : [],
+      orders: events ? fillDayEvents(events, date) : [],
       isToday: new Date().setHours(8, 0, 0, 0) === date.setHours(8, 0, 0, 0),
       notCurrentMonth: undefined,
       isSelected: isSelected,

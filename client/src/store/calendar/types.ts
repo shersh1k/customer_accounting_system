@@ -5,6 +5,7 @@ export const SET_CALENDAR_VIEWTYPE = 'SET_CALENDAR_VIEWTYPE';
 export const SET_CALENDAR_NEXT_RANGE = 'SET_CALENDAR_NEXT_RANGE';
 export const SET_CALENDAR_PREV_RANGE = 'SET_CALENDAR_PREV_RANGE';
 export const RESSET_CALENDAR_RANGE = 'RESSET_CALENDAR_RANGE';
+export const APPLY_DATE_FILTER = 'APPLY_DATE_FILTER';
 
 export interface CalendarState {
   days: iDay[];
@@ -17,6 +18,10 @@ export interface CalendarState {
 }
 
 export type ViewType = 'Week' | 'Month' | 'Year' | 'Day';
+
+interface ApplyDateFilter {
+  type: typeof APPLY_DATE_FILTER;
+}
 
 interface SetViewType {
   type: typeof SET_CALENDAR_VIEWTYPE;
@@ -63,7 +68,8 @@ export type LoginActionTypes =
   | SetViewType
   | SetNextRange
   | SetPrevRange
-  | ResetRange;
+  | ResetRange
+  | ApplyDateFilter;
 
 export interface iOrder {
   title: string;
@@ -83,7 +89,7 @@ export interface iDateRange {
 }
 export interface iDay {
   date: Date;
-  events: iOrder[];
+  orders: iOrder[];
   isToday: boolean;
   isSelected: boolean;
   notCurrentMonth?: boolean;

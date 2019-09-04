@@ -2,7 +2,11 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 const RootStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {}
+    root: {
+      height: '100%',
+      display: 'flex',
+      flexFlow: 'column'
+    }
   })
 );
 const ShortDayStyles = makeStyles((theme: Theme) =>
@@ -10,8 +14,6 @@ const ShortDayStyles = makeStyles((theme: Theme) =>
     day: {
       overflow: 'hidden',
       width: '14.28%',
-      minHeight: 30,
-      maxHeight: 30,
       border: '1px solid black',
       boxSizing: 'border-box'
     }
@@ -21,7 +23,17 @@ const DayStyles = makeStyles((theme: Theme) =>
   createStyles({
     day: {
       display: 'flex',
-      flexFlow: 'column wrap'
+      flexFlow: 'column wrap',
+      margin: 5,
+      padding: 5,
+      height: '100%'
+    },
+    order: {
+      margin: 5
+    },
+    content: {
+      display: 'flex',
+      flexFlow: 'column'
     }
   })
 );
@@ -29,6 +41,7 @@ const WeekStyles = makeStyles((theme: Theme) =>
   createStyles({
     week: {
       display: 'flex',
+      height: '100%'
     }
   })
 );
@@ -72,7 +85,17 @@ const PanelStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         order: 0
       }
-    }
+    },
+    choosedDates: {
+      order: 4,
+      margin: theme.spacing(1),
+      minWidth: '50%'
+    },
+    chips: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+    chip: { margin: 2 }
   })
 );
 

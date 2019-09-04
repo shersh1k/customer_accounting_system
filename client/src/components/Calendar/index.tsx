@@ -24,10 +24,10 @@ export default function Calendar() {
   return (
     <div className={classes.root}>
       <Panel />
-      {viewType === 'Year' && <Year />}
-      {viewType === 'Month' && <Month />}
-      {viewType === 'Week' && <Week />}
       {viewType === 'Day' && <Day />}
+      {viewType === 'Week' && <Week />}
+      {viewType === 'Month' && <Month />}
+      {viewType === 'Year' && <Year />}
     </div>
   );
 }
