@@ -1,19 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import {
-  FormatListBulleted,
-  // ExitToApp,
-  Autorenew,
-  Info,
-  LibraryAdd,
-  CalendarToday,
-  TableChart,
-  ShowChart
-} from '@material-ui/icons';
-import { Generate } from '../../helpers/API/Methods';
-// import { store } from '../../store';
-// import { logout } from '../../store/user/actions';
+import { FormatListBulleted, Info, LibraryAdd, CalendarToday, TableChart, ShowChart } from '@material-ui/icons';
+import { Generator } from '../Generator';
 
 interface iProps {
   toggleDrawer?: (event: React.KeyboardEvent | React.MouseEvent) => void;
@@ -54,12 +43,7 @@ export default function SideMenu(props: iProps) {
         <ListItemText primary='Архив' />
       </ListItem>
       <ListItem divider />
-      <ListItem button onClick={() => Generate()}>
-        <ListItemIcon>
-          <Autorenew />
-        </ListItemIcon>
-        <ListItemText primary='Generate' />
-      </ListItem>
+      <Generator />
       <ListItem component={Link} to='/readme' button>
         <ListItemIcon>
           <Info />

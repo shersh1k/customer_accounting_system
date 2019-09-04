@@ -14,7 +14,7 @@ export function Expense(props: iProps) {
       <hr />
       <span>{cost} </span>
       <hr />
-      <span>{spendDate ? spendDate.toLocaleDateString() : ''}</span>
+      <span>{spendDate ? new Date(spendDate).toLocaleDateString() : ''}</span>
     </ListItem>
   );
 }

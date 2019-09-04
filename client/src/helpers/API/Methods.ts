@@ -3,9 +3,12 @@ import { iUser } from '../../store/user/types';
 import { iOrder, iNote, iExpense } from '../../store/order/types';
 import { iNewOrder } from '../../store/newOrder/types';
 import { Interval } from '../../store/calendar/types';
+import { iGenerateParams } from '../../components/Generator';
 
-export function Generate() {
-  return API(HTTP.GET, '/generate', true);
+export function Generate(params: iGenerateParams) {
+  const fromDate = params.fromDate ? params.fromDate.toString() : new Date(2018, 0, 1).toString();
+  const toDate = params.toDate ? params.toDate.toString() : new Date(2020, 0, 1).toString();
+  return API(HTTP.GET, `/generate?fromDate=${fromDate}&toDate=${toDate}&count=${params.count}`, true);
 }
 
 export function Register(data: iUser) {

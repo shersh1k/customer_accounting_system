@@ -78,8 +78,8 @@ interface iOrderJSON {
   description: string;
   dateOrder: Date;
   dateStartWork: Date;
-  dateFinishWork: Date;
   dateDeadline: Date;
+  dateFinishWork: Date;
   datePay: Date;
   expenses: iExpenseModel[];
   notes: iNoteModel[];

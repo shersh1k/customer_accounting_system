@@ -100,16 +100,11 @@ router.get('/byRange', auth.required, function(req, res, next) {
         {
           author: user.id,
           $or: [
-            { dateOrder: { $gte: from } },
-            { dateOrder: { $lte: to } },
-            { dateStartWork: { $gte: from } },
-            { dateStartWork: { $lte: to } },
-            { dateDeadline: { $gte: from } },
-            { dateDeadline: { $lte: to } },
-            { dateFinishWork: { $gte: from } },
-            { dateFinishWork: { $lte: to } },
-            { datePay: { $gte: from } },
-            { datePay: { $lte: to } }
+            { $and: [{ dateOrder: { $gte: from } }, { dateOrder: { $lte: to } }] },
+            { $and: [{ dateStartWork: { $gte: from } }, { dateStartWork: { $lte: to } }] },
+            { $and: [{ dateDeadline: { $gte: from } }, { dateDeadline: { $lte: to } }] },
+            { $and: [{ dateFinishWork: { $gte: from } }, { dateFinishWork: { $lte: to } }] },
+            { $and: [{ datePay: { $gte: from } }, { datePay: { $lte: to } }] }
           ]
         },
         function(err, docs) {

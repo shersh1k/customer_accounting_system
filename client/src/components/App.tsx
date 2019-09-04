@@ -41,19 +41,19 @@ export default function App(props: iProps) {
   const classes = AppStyles();
   return (
     <ConnectedRouter history={props.history}>
-      {token && <Navigation />}
-      <div className={classes.mainWrapper}>
-        <Container maxWidth='lg'>
-          <main className={classes.main}>
-            <div className={classes.menuDesktop}>
-              {token && (
-                <Hidden mdDown>
-                  <SideMenu />
-                </Hidden>
-              )}
-            </div>
-            <div className={classes.content}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
+        {token && <Navigation />}
+        <div className={classes.mainWrapper}>
+          <Container maxWidth='lg'>
+            <main className={classes.main}>
+              <div className={classes.menuDesktop}>
+                {token && (
+                  <Hidden mdDown>
+                    <SideMenu />
+                  </Hidden>
+                )}
+              </div>
+              <div className={classes.content}>
                 <Switch>
                   {!token && <Route path='/' render={redirectToLogin} />}
                   <Route exact path='/' component={OrderLists} />
@@ -66,11 +66,11 @@ export default function App(props: iProps) {
                   <Route path='/orders/:order' component={Order} />
                   <Route component={NoMatch} />
                 </Switch>
-              </MuiPickersUtilsProvider>
-            </div>
-          </main>
-        </Container>
-      </div>
+              </div>
+            </main>
+          </Container>
+        </div>
+      </MuiPickersUtilsProvider>
     </ConnectedRouter>
   );
 }
